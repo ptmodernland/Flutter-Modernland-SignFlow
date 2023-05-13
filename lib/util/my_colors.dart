@@ -7,6 +7,10 @@ class AppColors {
   // Use for the primary color of your app's theme (e.g., app bar, buttons)
   static const Color primaryColor = Color(0xFFF44336);
 
+  // Use for the primary color of your app's theme (e.g., app bar, buttons)
+  static const Color primaryColor2 = Color(0xFF000000);
+
+
   // Use for text and icons on light backgrounds (e.g., button text, icon color)
   static const Color textIconsColor = Color(0xFFFFFFFF);
 

@@ -9,30 +9,31 @@ class MyTheme {
   static const Color accentColor = AppColors.accentColor;
 
   // Font Styles
+  static const FontWeight light = FontWeight.w300;
   static const FontWeight regular = FontWeight.w400;
   static const FontWeight medium = FontWeight.w500;
   static const FontWeight bold = FontWeight.w700;
 
   // Text Styles
-  static TextStyle primaryTextStyle = GoogleFonts.poppins(
-    fontWeight: bold,
+  static final TextStyle myStylePrimaryTextStyle = GoogleFonts.poppins(
+    fontWeight: regular,
     fontSize: 16.0,
-    color: AppColors.textIconsColor,
+    color: AppColors.primaryColor2,
   );
 
-  static TextStyle secondaryTextStyle = GoogleFonts.poppins(
-    fontWeight: medium,
+  static TextStyle myStyleSecondaryTextStyle = GoogleFonts.poppins(
+    fontWeight: light,
     fontSize: 14.0,
-    color: AppColors.textIconsColor,
+    color: AppColors.secondaryTextColor,
   );
 
-  static TextStyle accentTextStyle = GoogleFonts.poppins(
+  static TextStyle myStyleAccentTextStyle = GoogleFonts.poppins(
     fontWeight: medium,
     fontSize: 14.0,
     color: AppColors.accentColor,
   );
 
-  static TextStyle buttonTextStyle = GoogleFonts.poppins(
+  static TextStyle myStyleButtonTextStyle = GoogleFonts.poppins(
     fontWeight: bold,
     fontSize: 16.0,
     color: AppColors.textIconsColor,
