@@ -1,8 +1,5 @@
-import 'package:bwa_cozy/util/my_colors.dart';
 import 'package:bwa_cozy/util/my_theme.dart';
 import 'package:bwa_cozy/widget/citycard/city_ui_model.dart';
-import 'package:flutter/material.dart';
-
 import 'package:flutter/material.dart';
 
 class CityCard extends StatelessWidget {
@@ -12,10 +9,17 @@ class CityCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    var cardWidth = 140.0;
+    var cardHeight= 100.0;
+
+    var photoWidth  = cardWidth;
+    var photoHeight = 100.0;
+
     return Container(
-      margin: EdgeInsets.only(left: 10, right: 10),
-      width: 200,
-      height: 200,
+      margin: EdgeInsets.only(left: 5, right: 5,bottom: 10,top: 10),
+      width: cardWidth,
+      height: cardHeight,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10),
         color: Colors.grey[50],
@@ -39,29 +43,30 @@ class CityCard extends StatelessWidget {
                     topRight: Radius.circular(10)),
                 child: Image.asset(
                   this.cityUIModel.photoAsset, // Replace with your image URL
-                  width: 200,
-                  height: 150,
+                  width: photoWidth,
+                  height: photoHeight,
                   fit: BoxFit.cover,
                 ),
               ),
-              Align(
-                alignment: Alignment.topRight,
-                child: Container(
-                  width: 35,
-                  decoration: BoxDecoration(
-                    color: Colors.deepPurple,
-                    borderRadius: BorderRadius.only(
-                      bottomLeft: Radius.circular(20),
-                      topRight: Radius.circular(10),
-                    ),
-                  ),
-                  child: ClipRRect(
-                    borderRadius:
+              this.cityUIModel.isFavorited ?
+                   Align(
+                    alignment: Alignment.topRight,
+                    child: Container(
+                      width: 35,
+                      decoration: BoxDecoration(
+                        color: Colors.deepPurple,
+                        borderRadius: BorderRadius.only(
+                          bottomLeft: Radius.circular(20),
+                          topRight: Radius.circular(10),
+                        ),
+                      ),
+                      child: ClipRRect(
+                        borderRadius:
                         BorderRadius.only(bottomLeft: Radius.circular(20)),
-                    child: Image.asset("asset/img/dummy/icon_star.png"),
-                  ),
-                ),
-              )
+                        child: Image.asset("asset/img/dummy/icon_star.png"),
+                      ),
+                    ),
+                  ) : Container()
             ],
           ),
           SizedBox(height: 10),

@@ -3,6 +3,8 @@ import 'package:bwa_cozy/util/my_theme.dart';
 import 'package:bwa_cozy/util/resposiveness.dart';
 import 'package:bwa_cozy/widget/citycard/city_card.dart';
 import 'package:bwa_cozy/widget/citycard/city_ui_model.dart';
+import 'package:bwa_cozy/widget/recommended_space/recommended_space_ui_model.dart';
+import 'package:bwa_cozy/widget/recommended_space/recommended_space_widget.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatelessWidget {
@@ -39,7 +41,8 @@ class HomePage extends StatelessWidget {
                     .copyWith(fontSize: 20, color: AppColors.primaryColor2),
               ),
               Container(
-                height: 250,
+                height: 275,
+                margin: EdgeInsets.only(top: 20),
                 child: ListView(scrollDirection: Axis.horizontal, children: [
                   CityCard(
                       cityUIModel: CityUIModel(
@@ -68,8 +71,9 @@ class HomePage extends StatelessWidget {
                   CityCard(
                       cityUIModel: CityUIModel(
                     name: "Vakasa City",
-                        photoAsset: "asset/img/dummy/city_1.png",
-                        photoUrl: "https://www.modernland.co.id/uploads/default/files/25b0f3abac4587b57d710d0e21579df2.jpg",
+                    photoAsset: "asset/img/dummy/city_1.png",
+                    photoUrl:
+                        "https://www.modernland.co.id/uploads/default/files/25b0f3abac4587b57d710d0e21579df2.jpg",
                     description:
                         "Discover Vakasa City, a city that embodies progress, innovation, and endless opportunities. This dynamic and evolving city is a hub for businesses, entrepreneurs, and ambitious individuals seeking growth and success. With its state-of-the-art infrastructure, world-class facilities, and strategic location, Vakasa City provides a fertile ground for economic development. The city offers a diverse range of industries, a vibrant cultural scene, and a strong entrepreneurial ecosystem. Whether you're looking to establish a thriving business or embrace a fulfilling lifestyle, Vakasa City is the place to be.",
                   )),
@@ -81,7 +85,37 @@ class HomePage extends StatelessWidget {
                             "Indulge in luxury and sophistication at Novotel Gajah Mada, a premier hotel located in the heart of the city. With its elegant design, impeccable service, and top-notch amenities, Novotel Gajah Mada offers a truly remarkable experience for both business and leisure travelers. The hotel features luxurious accommodations, world-class dining options, well-equipped conference facilities, and a range of recreational amenities. Its strategic location provides easy access to major attractions, shopping districts, and cultural landmarks. Experience unparalleled comfort and hospitality at Novotel Gajah Mada, where every stay is a memorable one."),
                   ),
                 ]),
-              )
+              ),
+              SizedBox(
+                height: 20,
+              ),
+              Text(
+                "Recommended Spaces",
+                style: MyTheme.myStyleSecondaryTextStyle
+                    .copyWith(fontSize: 20, color: AppColors.primaryColor2),
+              ),
+              Container(
+                height: 275,
+                margin: EdgeInsets.only(top: 20),
+                child: ListView(
+                  primary: false,
+                  scrollDirection: Axis.vertical,
+                  children: [
+                    RecommendedSpaceWidget(
+                      uimodel: RecommendedSpaceUIModel(
+                        name: "Cluster Yossy",
+                        location: "Jakarta Garden City",
+                      ),
+                    ),
+                    RecommendedSpaceWidget(
+                      uimodel: RecommendedSpaceUIModel(
+                        name: "Gajah Mada Suit",
+                        location: "Novotel Gajah Mada ",
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             ],
           ),
         ),

@@ -5,7 +5,14 @@ class CityUIModel {
   String photoAsset = "";
   String webUrl = "";
   String description = "";
+  bool isFavorited = false;
 
-  CityUIModel({this.name= "" , this.id=-99, this.photoUrl="",this.webUrl ='',this.description="",this.photoAsset=""});
-
+  CityUIModel(
+      {this.name = "",
+      this.id = -99,
+      this.photoUrl = "",
+      this.webUrl = '',
+      this.description = "",
+      this.photoAsset = "",
+      this.isFavorited = false});
 }
