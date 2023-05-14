@@ -103,7 +103,7 @@ class RecommendedSpaceWidget extends StatelessWidget {
                           ],
                         ),
                       ),
-                      SizedBox(height: 7),
+                      SizedBox(height: 10),
                     ],
                   ),
                   Align(

@@ -5,6 +5,8 @@ import 'package:bwa_cozy/widget/citycard/city_card.dart';
 import 'package:bwa_cozy/widget/citycard/city_ui_model.dart';
 import 'package:bwa_cozy/widget/recommended_space/recommended_space_ui_model.dart';
 import 'package:bwa_cozy/widget/recommended_space/recommended_space_widget.dart';
+import 'package:bwa_cozy/widget/tips_and_trick/tips_and_trick_ui_model.dart';
+import 'package:bwa_cozy/widget/tips_and_trick/tips_and_trick_widget.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatelessWidget {
@@ -111,6 +113,35 @@ class HomePage extends StatelessWidget {
                       uimodel: RecommendedSpaceUIModel(
                         name: "Gajah Mada Suit",
                         location: "Novotel Gajah Mada ",
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Text(
+                "Tips and Trick",
+                style: MyTheme.myStyleSecondaryTextStyle
+                    .copyWith(fontSize: 20, color: AppColors.primaryColor2),
+              ),
+              Container(
+                height: 275,
+                margin: EdgeInsets.only(top: 20),
+                child: ListView(
+                  primary: false,
+                  scrollDirection: Axis.vertical,
+                  children: [
+                    TipsAndTrickWidget(
+                      uimodel: TipsAndTrickUIModel(
+                        name: "Pedoman Aplikasi",
+                          description: "Terakhir diupdate : 12 Mei 2022",
+                          photoAsset: "asset/img/dummy/guideline_1.png"
+                      ),
+                    ),
+                    TipsAndTrickWidget(
+                      uimodel: TipsAndTrickUIModel(
+                          name: "Pedoman Penggunaan",
+                          description: "Terakhir diupdate : 12 Januari 2022",
+                          photoAsset: "asset/img/dummy/guideline_2.png"
                       ),
                     ),
                   ],

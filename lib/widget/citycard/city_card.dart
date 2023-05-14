@@ -11,7 +11,7 @@ class CityCard extends StatelessWidget {
   Widget build(BuildContext context) {
 
     var cardWidth = 140.0;
-    var cardHeight= 100.0;
+    var cardHeight= 50.0;
 
     var photoWidth  = cardWidth;
     var photoHeight = 100.0;
