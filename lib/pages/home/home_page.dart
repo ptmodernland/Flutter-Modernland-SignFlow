@@ -1,3 +1,5 @@
+import 'package:bwa_cozy/pages/detail/detail_project_page.dart';
+import 'package:bwa_cozy/pages/settings/settings_page.dart';
 import 'package:bwa_cozy/util/my_colors.dart';
 import 'package:bwa_cozy/util/my_theme.dart';
 import 'package:bwa_cozy/util/resposiveness.dart';
@@ -113,6 +115,19 @@ class HomePage extends StatelessWidget {
                       ),
                     ),
                     RecommendedSpaceWidget(
+                      onCardTap: (id) {
+                        // Handle the card tap event with the provided id
+                        print('Tapped on card with ID: $id');
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) {
+                            return DetailProjectPage(
+                              projectId: id,
+                            );
+                          }),
+                        );
+                        // Perform any other actions based on the id
+                      },
                       uimodel: RecommendedSpaceUIModel(
                         name: "Gajah Mada Suit",
                         location: "Novotel Gajah Mada ",
