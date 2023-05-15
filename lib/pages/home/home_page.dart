@@ -17,9 +17,12 @@ class HomePage extends StatelessWidget {
     return Scaffold(
       body: SafeArea(
         child: Padding(
-          padding: EdgeInsets.only(left: 15, right: 15, top: 20),
+          padding: EdgeInsets.only(left: 15, right: 15, top: 0),
           child: ListView(
             children: [
+              SizedBox(
+                height: 35,
+              ),
               Image.asset(
                 "asset/img/icons/logo_modernland.png",
                 width: ScreenUtil.getScreenWidth(context) * 0.1,
@@ -132,17 +135,15 @@ class HomePage extends StatelessWidget {
                   children: [
                     TipsAndTrickWidget(
                       uimodel: TipsAndTrickUIModel(
-                        name: "Pedoman Aplikasi",
+                          name: "Pedoman Aplikasi",
                           description: "Terakhir diupdate : 12 Mei 2022",
-                          photoAsset: "asset/img/dummy/guideline_1.png"
-                      ),
+                          photoAsset: "asset/img/dummy/guideline_1.png"),
                     ),
                     TipsAndTrickWidget(
                       uimodel: TipsAndTrickUIModel(
                           name: "Pedoman Penggunaan",
                           description: "Terakhir diupdate : 12 Januari 2022",
-                          photoAsset: "asset/img/dummy/guideline_2.png"
-                      ),
+                          photoAsset: "asset/img/dummy/guideline_2.png"),
                     ),
                   ],
                 ),

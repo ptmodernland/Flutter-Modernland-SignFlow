@@ -1,5 +1,5 @@
 import 'dart:ui';
-import 'package:bwa_cozy/pages/home/home_page.dart';
+import 'package:bwa_cozy/pages/container_home.dart';
 import 'package:bwa_cozy/util/my_colors.dart';
 import 'package:bwa_cozy/util/my_theme.dart';
 import 'package:flutter/material.dart';
@@ -404,7 +404,7 @@ class SplashScreenPage extends StatelessWidget {
                             Navigator.pop(context);
                             Navigator.pushReplacement(context,
                                 MaterialPageRoute(builder: (context) {
-                                  return HomePage();
+                                  return ContainerHomePage();
                                 }));
                           }
                         },

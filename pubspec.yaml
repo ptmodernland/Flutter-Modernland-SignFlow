@@ -39,6 +39,7 @@ dependencies:
   blur: ^3.0.0
   dio: ^5.1.2
   localstorage: ^4.0.0+1
+  stylish_bottom_bar: ^1.0.1
 dev_dependencies:
   flutter_test:
     sdk: flutter
