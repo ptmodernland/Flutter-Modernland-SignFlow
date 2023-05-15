@@ -1,10 +1,9 @@
 import 'package:bwa_cozy/pages/home/home_page.dart';
+import 'package:bwa_cozy/pages/settings/settings_page.dart';
 import 'package:bwa_cozy/pages/splash/splash_screen.dart';
 
 import 'package:flutter/material.dart';
 
-import 'package:bwa_cozy/pages/home/home_page.dart';
-import 'package:flutter/material.dart';
 
 class ContainerHomePage extends StatefulWidget {
   const ContainerHomePage({Key? key}) : super(key: key);
@@ -30,7 +29,7 @@ class _ContainerHomePageState extends State<ContainerHomePage> {
       child: Text("Contact"),
     ),
     Center(
-      child: Text("Settings"),
+      child: SettingsPage(),
     ),
   ];
 
