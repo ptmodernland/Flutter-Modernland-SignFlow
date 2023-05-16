@@ -3,9 +3,42 @@ import 'package:bwa_cozy/pages/container_home.dart';
 import 'package:bwa_cozy/util/my_colors.dart';
 import 'package:bwa_cozy/util/my_theme.dart';
 import 'package:flutter/material.dart';
+import 'package:quickalert/quickalert.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'dart:io';
 
-class SplashScreenPage extends StatelessWidget {
+class SplashScreenPage extends StatefulWidget {
   const SplashScreenPage({Key? key}) : super(key: key);
+
+  @override
+  State<SplashScreenPage> createState() => _SplashScreenPageState();
+}
+
+class _SplashScreenPageState extends State<SplashScreenPage> {
+
+  openwhatsapp(String number) async {
+    var whatsapp = "+" + number;
+    var whatsappURl_android =
+        "whatsapp://send?phone=" + whatsapp + "&text=Permintaan+reset+sandi";
+    var whatappURL_ios = "https://wa.me/$whatsapp?text=${Uri.parse("Permintaan+reset+sandi")}";
+    if (Platform.isIOS) {
+      // for iOS phone only
+      if (await canLaunch(whatappURL_ios)) {
+        await launch(whatappURL_ios, forceSafariVC: false);
+      } else {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: new Text("WhatsApp tidak terpasang")));
+      }
+    } else {
+      // android , web
+      if (await canLaunch(whatsappURl_android)) {
+        await launch(whatsappURl_android);
+      } else {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: new Text("WhatsApp tidak terpasang")));
+      }
+    }
+  }
 
   EdgeInsets setButtonLoginRegisterPadding(BuildContext context) {
     double screenHeight = MediaQuery.of(context).size.height;
@@ -27,7 +60,7 @@ class SplashScreenPage extends StatelessWidget {
   }
 
   double? setButtonLoginRegisterSize(double screenWidth, double screenHeight) {
-    return screenWidth >= 500 && screenHeight > 700 ? 28.0 : 24;
+    return screenWidth >= 500 && screenHeight > 700 ? 28.0 : 15;
   }
 
   double setHeaderTextSize(double screenWidth, double screenHeight) {
@@ -292,22 +325,75 @@ class SplashScreenPage extends StatelessWidget {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Row(
+                Column(
                   children: [
-                    Expanded(
-                      flex: MediaQuery.of(context).size.width > 600 ? 3 : 10,
-                      child: LayoutBuilder(
-                        builder: (context, constraints) {
-                          return Image.asset(
-                            "asset/img/icons/logo_modernland.png",
-                            width: constraints.maxWidth,
-                          );
-                        },
+                    Row(
+                      children: [
+                        Expanded(
+                          flex:
+                              MediaQuery.of(context).size.width > 600 ? 3 : 10,
+                          child: LayoutBuilder(
+                            builder: (context, constraints) {
+                              return Image.asset(
+                                "asset/img/icons/logo_modernland.png",
+                                width: constraints.maxWidth,
+                              );
+                            },
+                          ),
+                        ),
+                        Expanded(
+                          flex: MediaQuery.of(context).size.width > 600 ? 7 : 3,
+                          child: SizedBox(),
+                        ),
+                      ],
+                    ),
+                    Text(
+                      "Silakan klik salah satu nomor dibawah untuk permintaan reset password",
+                      style: MyTheme.myStyleSecondaryTextStyle,
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        openwhatsapp("+6282113530950");
+                      },
+                      child: Card(
+                        color: Colors.green,
+                        elevation: 4,
+                        margin: EdgeInsets.all(10),
+                        child: ListTile(
+                          title: Text(
+                            "Henry Augusta",
+                            style: MyTheme.myStyleSecondaryTextStyle
+                                .copyWith(color: Colors.white),
+                          ),
+                          subtitle: Text("082113530950"),
+                          trailing: CircleAvatar(
+                            backgroundImage: NetworkImage(
+                                "https://www.kindpng.com/picc/m/19-195256_whatsapp-icon-whatsapp-logo-jpg-download-hd-png.png"),
+                          ),
+                        ),
                       ),
                     ),
-                    Expanded(
-                      flex: MediaQuery.of(context).size.width > 600 ? 7 : 3,
-                      child: SizedBox(),
+                    GestureDetector(
+                      onTap: () {
+                        openwhatsapp("+6282113530950");
+                      },
+                      child: Card(
+                        color: Colors.green,
+                        elevation: 4,
+                        margin: EdgeInsets.all(10),
+                        child: ListTile(
+                          title: Text(
+                            "Henry Augusta",
+                            style: MyTheme.myStyleSecondaryTextStyle
+                                .copyWith(color: Colors.white),
+                          ),
+                          subtitle: Text("082113530950"),
+                          trailing: CircleAvatar(
+                            backgroundImage: NetworkImage(
+                                "https://www.kindpng.com/picc/m/19-195256_whatsapp-icon-whatsapp-logo-jpg-download-hd-png.png"),
+                          ),
+                        ),
+                      ),
                     ),
                   ],
                 ),
@@ -366,6 +452,8 @@ class SplashScreenPage extends StatelessWidget {
                         decoration: InputDecoration(
                           labelText: 'Username',
                           prefixIcon: Icon(Icons.person),
+                          contentPadding: const EdgeInsets.symmetric(
+                              vertical: 0.0, horizontal: 10.0),
                           // border: OutlineInputBorder(),
                         ),
                         validator: (value) {
@@ -382,6 +470,8 @@ class SplashScreenPage extends StatelessWidget {
                         decoration: InputDecoration(
                           labelText: 'Password',
                           prefixIcon: Icon(Icons.lock),
+                          contentPadding: const EdgeInsets.symmetric(
+                              vertical: 0.0, horizontal: 10.0),
                           // border: OutlineInputBorder(),
                         ),
                         validator: (value) {
@@ -404,8 +494,8 @@ class SplashScreenPage extends StatelessWidget {
                             Navigator.pop(context);
                             Navigator.pushReplacement(context,
                                 MaterialPageRoute(builder: (context) {
-                                  return ContainerHomePage();
-                                }));
+                              return ContainerHomePage();
+                            }));
                           }
                         },
                         child: Text('Submit'),

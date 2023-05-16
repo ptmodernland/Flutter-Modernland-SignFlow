@@ -15,10 +15,9 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      color: Colors.black,
       debugShowCheckedModeBanner: false,
-      home: DetailProjectPage(
-        projectId: 3,
-      ),
+      home: SplashScreenPage(),
     );
   }
 }

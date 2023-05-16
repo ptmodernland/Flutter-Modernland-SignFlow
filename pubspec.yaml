@@ -37,9 +37,14 @@ dependencies:
   cupertino_icons: ^1.0.2
   google_fonts: ^4.0.4
   blur: ^3.0.0
-  dio: ^5.1.2
+  dio: ^4.0.0
   localstorage: ^4.0.0+1
-  stylish_bottom_bar: ^1.0.1
+  http: ^0.13.6
+  equatable:
+  flutter_bloc:
+  url_launcher: ^6.1.11
+  quickalert: ^1.0.1
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
