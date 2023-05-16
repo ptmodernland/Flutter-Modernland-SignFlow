@@ -44,6 +44,8 @@ dependencies:
   flutter_bloc:
   url_launcher: ^6.1.11
   quickalert: ^1.0.1
+  device_info_plus: ^3.0.4
+  dart_ipify: ^1.1.1
 
 dev_dependencies:
   flutter_test:

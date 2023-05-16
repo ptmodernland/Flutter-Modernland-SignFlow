@@ -2,10 +2,13 @@ import 'dart:ui';
 import 'package:bwa_cozy/pages/container_home.dart';
 import 'package:bwa_cozy/util/my_colors.dart';
 import 'package:bwa_cozy/util/my_theme.dart';
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:quickalert/quickalert.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'dart:io';
+import 'package:dart_ipify/dart_ipify.dart';
 
 class SplashScreenPage extends StatefulWidget {
   const SplashScreenPage({Key? key}) : super(key: key);
@@ -15,29 +18,70 @@ class SplashScreenPage extends StatefulWidget {
 }
 
 class _SplashScreenPageState extends State<SplashScreenPage> {
-
   openwhatsapp(String number) async {
     var whatsapp = "+" + number;
     var whatsappURl_android =
         "whatsapp://send?phone=" + whatsapp + "&text=Permintaan+reset+sandi";
-    var whatappURL_ios = "https://wa.me/$whatsapp?text=${Uri.parse("Permintaan+reset+sandi")}";
+    var whatappURL_ios =
+        "https://wa.me/$whatsapp?text=${Uri.parse("Permintaan+reset+sandi")}";
     if (Platform.isIOS) {
       // for iOS phone only
       if (await canLaunch(whatappURL_ios)) {
         await launch(whatappURL_ios, forceSafariVC: false);
       } else {
-        ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: new Text("WhatsApp tidak terpasang")));
+        ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: new Text("WhatsApp tidak terpasang")));
       }
     } else {
       // android , web
       if (await canLaunch(whatsappURl_android)) {
         await launch(whatsappURl_android);
       } else {
-        ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: new Text("WhatsApp tidak terpasang")));
+        ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: new Text("WhatsApp tidak terpasang")));
       }
     }
+  }
+
+  Future<String> getDeviceInfo() async {
+    final DeviceInfoPlugin deviceInfoPlugin = DeviceInfoPlugin();
+    String deviceInfo = '';
+
+    try {
+      if (Platform.isAndroid) {
+        final androidInfo = await deviceInfoPlugin.androidInfo;
+        deviceInfo = 'Device Type: Android\n';
+        deviceInfo += 'Model: ${androidInfo.model}\n';
+        deviceInfo += 'Brand: ${androidInfo.brand}\n';
+      } else if (Platform.isIOS) {
+        final iosInfo = await deviceInfoPlugin.iosInfo;
+        deviceInfo = 'Device Type: iOS\n';
+        deviceInfo += 'Model: ${iosInfo.model}\n';
+        deviceInfo += 'Brand: ${iosInfo.name}\n';
+      }
+
+      String? ipAddress;
+      while (ipAddress == null) {
+        try {
+          ipAddress = await getIpAddress();
+        } catch (e) {
+          // Ignore the exception and continue the loop
+        }
+      }
+
+      deviceInfo += 'IP Address: $ipAddress';
+    } catch (e) {
+      deviceInfo = 'Failed to retrieve device information. because of $e';
+    }
+
+    return deviceInfo;
+  }
+
+  Future<String> getIpAddress() async {
+    final ipv4 = await Ipify.ipv4();
+    final address = InternetAddress(ipv4);
+    print("IP address is " + address.address.toString());
+    return address.address.toString();
   }
 
   EdgeInsets setButtonLoginRegisterPadding(BuildContext context) {
@@ -82,7 +126,7 @@ class _SplashScreenPageState extends State<SplashScreenPage> {
     if (screenWidth >= 500 && screenHeight > 700) {
       return 18.0;
     } else {
-      return 12.0;
+      return 14.0;
     }
   }
 
@@ -302,6 +346,77 @@ class _SplashScreenPageState extends State<SplashScreenPage> {
                             ],
                           ),
                         ),
+                        GestureDetector(
+                          onTap: () {
+                            showModalBottomSheet(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return Container(
+                                  padding: EdgeInsets.all(16.0),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.stretch,
+                                    children: [
+                                      Image.asset(
+                                        "asset/img/icons/logo_modernland.png",
+                                        width: screenWidth * 0.1,
+                                      ),
+                                      Text(
+                                        'Device Information',
+                                        style: TextStyle(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      SizedBox(height: 16.0),
+                                      FutureBuilder(
+                                        future: getDeviceInfo(),
+                                        builder: (context, snapshot) {
+                                          if (snapshot.hasData) {
+                                            return Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.stretch,
+                                              children: [
+                                                Text(snapshot.data ?? ""),
+                                                ElevatedButton(
+                                                  onPressed: () {
+                                                    Clipboard.setData(
+                                                        ClipboardData(
+                                                            text:
+                                                                snapshot.data ??
+                                                                    ""));
+                                                    QuickAlert.show(
+                                                      context: context,
+                                                      type: QuickAlertType.info,
+                                                      text:
+                                                          'Device information copied to clipboard : '+snapshot.data.toString(),
+                                                    );
+                                                  },
+                                                  child:
+                                                      Text("Copy to Clipboard"),
+                                                ),
+                                              ],
+                                            );
+                                          } else {
+                                            return Text("Loading");
+                                          }
+                                        },
+                                      )
+                                    ],
+                                  ),
+                                );
+                              },
+                            );
+                          },
+                          child: Container(
+                            margin: EdgeInsets.only(top: 5),
+                            child: Text(
+                              "Lihat Informasi Device",
+                              style: MyTheme.myStyleSecondaryTextStyle
+                                  .copyWith(fontSize: 11),
+                            ),
+                          ),
+                        )
                       ],
                     ),
                   ),
