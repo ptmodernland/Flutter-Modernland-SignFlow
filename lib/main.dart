@@ -1,6 +1,7 @@
 import 'package:bwa_cozy/pages/container_home.dart';
 import 'package:bwa_cozy/pages/detail/detail_project_page.dart';
 import 'package:bwa_cozy/pages/home/home_page.dart';
+import 'package:bwa_cozy/pages/login_new_page.dart';
 import 'package:bwa_cozy/pages/splash/splash_screen.dart';
 import 'package:flutter/material.dart';
 
@@ -17,7 +18,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       color: Colors.black,
       debugShowCheckedModeBanner: false,
-      home: SplashScreenPage(),
+      home: LoginNewPage(),
     );
   }
 }

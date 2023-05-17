@@ -1,0 +1,83 @@
+import 'package:bwa_cozy/bloc/login/login_bloc.dart';
+import 'package:bwa_cozy/bloc/login/login_event.dart';
+import 'package:bwa_cozy/bloc/login/login_payload.dart';
+import 'package:bwa_cozy/bloc/login/login_state.dart';
+import 'package:bwa_cozy/repos/login_repository.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+class LoginNewPage extends StatefulWidget {
+  @override
+  State<LoginNewPage> createState() => _LoginNewPageState();
+}
+
+class _LoginNewPageState extends State<LoginNewPage> {
+  final TextEditingController usernameController = TextEditingController();
+
+  final TextEditingController passwordController = TextEditingController();
+
+  @override
+  Widget build(BuildContext context) {
+    LoginRepository loginRepository = LoginRepository();
+    final loginBloc = LoginBloc(loginRepository);
+
+    return Scaffold(
+      appBar: AppBar(title: Text('Login')),
+      body: BlocProvider(
+        create: (context) => loginBloc,
+        child: Column(
+          children: [
+            TextField(
+              controller: usernameController,
+              decoration: InputDecoration(labelText: 'Username'),
+            ),
+            TextField(
+              controller: passwordController,
+              decoration: InputDecoration(labelText: 'Password'),
+              obscureText: true,
+            ),
+            ElevatedButton(
+              onPressed: () {
+                final payload = LoginPayload(
+                    username: usernameController.text,
+                    password: passwordController.text,
+                );
+                loginBloc.add(LoginButtonPressed(payload));
+              },
+              child: Text('Login'),
+            ),
+            BlocBuilder<LoginBloc, LoginState>(
+              builder: (context, state) {
+                if (state is LoginInitial) {
+                  return Text("Silakan Masukkan Username dan Password");
+                }
+                if (state is LoginLoading) {
+                  return Center(child: CircularProgressIndicator());
+                } else if (state is LoginFailure) {
+                  return Column(
+                    children: [
+                      Text('Login failed: ${state.error}'),
+                      ElevatedButton(
+                        onPressed: () {
+                          final payload = LoginPayload(
+                            username: usernameController.text,
+                            password: passwordController.text,
+                          );
+                          loginBloc.add(LoginButtonPressed(payload));
+                        },
+                        child: Text('Retry'),
+                      ),
+                    ],
+                  );
+                } else if (state is LoginSuccess) {
+                  return Text('Login successful!');
+                }
+                return Container();
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
