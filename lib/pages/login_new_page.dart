@@ -3,6 +3,7 @@ import 'package:bwa_cozy/bloc/login/login_event.dart';
 import 'package:bwa_cozy/bloc/login/login_payload.dart';
 import 'package:bwa_cozy/bloc/login/login_state.dart';
 import 'package:bwa_cozy/repos/login_repository.dart';
+import 'package:bwa_cozy/widget/core/custom_text_input.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -27,14 +28,31 @@ class _LoginNewPageState extends State<LoginNewPage> {
         create: (context) => loginBloc,
         child: Column(
           children: [
-            TextField(
-              controller: usernameController,
-              decoration: InputDecoration(labelText: 'Username'),
+            CustomTextInput(
+              textEditController: usernameController,
+              hintTextString: 'Enter User name',
+              inputType: InputType.Default,
+              enableBorder: true,
+              themeColor: Theme.of(context).primaryColor,
+              cornerRadius: 48.0,
+              maxLength: 24,
+              prefixIcon: Icon(Icons.person, color: Theme.of(context).primaryColor),
+              textColor: Colors.black,
+              errorMessage: 'User name cannot be empty',
+              labelText: 'User Name',
             ),
-            TextField(
-              controller: passwordController,
-              decoration: InputDecoration(labelText: 'Password'),
-              obscureText: true,
+            CustomTextInput(
+              textEditController: passwordController,
+              hintTextString: 'Enter User name',
+              inputType: InputType.Password,
+              enableBorder: true,
+              themeColor: Theme.of(context).primaryColor,
+              cornerRadius: 48.0,
+              maxLength: 24,
+              prefixIcon: Icon(Icons.lock_clock_outlined, color: Theme.of(context).primaryColor),
+              textColor: Colors.black,
+              errorMessage: 'Password cant be empty',
+              labelText: 'Password',
             ),
             ElevatedButton(
               onPressed: () {

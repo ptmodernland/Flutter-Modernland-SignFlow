@@ -3,6 +3,7 @@ import 'package:bwa_cozy/pages/container_home.dart';
 import 'package:bwa_cozy/pages/login_new_page.dart';
 import 'package:bwa_cozy/util/my_colors.dart';
 import 'package:bwa_cozy/util/my_theme.dart';
+import 'package:bwa_cozy/widget/core/custom_text_input.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -537,6 +538,10 @@ class _SplashScreenPageState extends State<SplashScreenPage> {
     return showDialog(
       context: context,
       builder: (BuildContext context) {
+
+        double screenHeight = MediaQuery.of(context).size.height;
+        double screenWidth = MediaQuery.of(context).size.width;
+
         return Dialog(
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(20),
@@ -565,63 +570,103 @@ class _SplashScreenPageState extends State<SplashScreenPage> {
                     ),
                   ],
                 ),
+                Text(
+                  "Silakan login menggunakan kredensial anda.",
+                  style: MyTheme.myStyleSecondaryTextStyle.copyWith(
+                    fontSize: setSubHeaderTextSize(
+                        screenWidth, screenHeight),
+                  ),
+                  textAlign: TextAlign.start,
+                ),
                 Form(
                   key: _formKey,
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      TextFormField(
-                        controller: _usernameController,
-                        decoration: InputDecoration(
-                          labelText: 'Username',
-                          prefixIcon: Icon(Icons.person),
-                          contentPadding: const EdgeInsets.symmetric(
-                              vertical: 0.0, horizontal: 10.0),
-                          // border: OutlineInputBorder(),
-                        ),
-                        validator: (value) {
+                      CustomTextInput(
+                        textEditController: _usernameController,
+                        hintTextString: 'Username',
+                        inputType: InputType.Default,
+                        enableBorder: true,
+                        themeColor: Theme.of(context).primaryColor,
+                        cornerRadius: 18.0,
+                        textValidator: (value) {
                           if (value?.isEmpty ?? true) {
-                            return 'Please enter a username';
+                            return 'Input Username terlebih dahulu';
                           }
                           return null;
                         },
+                        maxLength: 900,
+                        prefixIcon: Icon(Icons.lock_clock_outlined, color: Theme.of(context).primaryColor),
+                        textColor: Colors.black,
+                        errorMessage: 'Username cant be empty',
+                        labelText: 'Username',
                       ),
-                      SizedBox(height: 16),
-                      TextFormField(
-                        controller: _passwordController,
-                        obscureText: true,
-                        decoration: InputDecoration(
-                          labelText: 'Password',
-                          prefixIcon: Icon(Icons.lock),
-                          contentPadding: const EdgeInsets.symmetric(
-                              vertical: 0.0, horizontal: 10.0),
-                          // border: OutlineInputBorder(),
-                        ),
-                        validator: (value) {
+                      SizedBox(height: 5),
+                      CustomTextInput(
+                        textEditController: _passwordController,
+                        hintTextString: 'Enter Password',
+                        inputType: InputType.Password,
+                        enableBorder: true,
+                        textValidator: (value) {
                           if (value?.isEmpty ?? true) {
-                            return 'Please enter a password';
+                            return 'Input Password terlebih dahulu';
                           }
                           return null;
                         },
+                        themeColor: Theme.of(context).primaryColor,
+                        cornerRadius: 18.0,
+                        maxLength: 900,
+                        prefixIcon: Icon(Icons.lock_clock_outlined, color: Theme.of(context).primaryColor),
+                        textColor: Colors.black,
+                        errorMessage: 'Password cant be empty',
+                        labelText: 'Password',
                       ),
                       SizedBox(height: 16),
-                      ElevatedButton(
-                        onPressed: () {
-                          if (_formKey.currentState?.validate() ?? true) {
-                            // Perform login or submit logic here
-                            // You can access the entered username and password using
-                            // _usernameController.text and _passwordController.text
-                            print('Username: ${_usernameController.text}');
-                            print('Password: ${_passwordController.text}');
-                            // Close the bottom sheet
-                            Navigator.pop(context);
-                            Navigator.pushReplacement(context,
-                                MaterialPageRoute(builder: (context) {
-                              return ContainerHomePage();
-                            }));
-                          }
-                        },
-                        child: Text('Submit'),
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: ElevatedButton(
+                          style: ButtonStyle(
+                            padding:
+                            MaterialStateProperty.all<EdgeInsets>(
+                              setButtonLoginRegisterPadding(context),
+                            ),
+                            shape: MaterialStateProperty.all<
+                                RoundedRectangleBorder>(
+                              RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(18.0),
+                                side:
+                                BorderSide(color: Colors.transparent),
+                              ),
+                            ),
+                            backgroundColor:
+                            MaterialStateProperty.all<Color>(
+                                Colors.black),
+                          ),
+                          child: Text(
+                            "Submit",
+                            style: MyTheme.myStylePrimaryTextStyle
+                                .copyWith(
+                                fontSize: setButtonLoginRegisterSize(
+                                    screenWidth, screenHeight),
+                                color: Colors.white),
+                          ),
+                          onPressed: () {
+                            if (_formKey.currentState?.validate() ?? true) {
+                              // Perform login or submit logic here
+                              // You can access the entered username and password using
+                              // _usernameController.text and _passwordController.text
+                              print('Username: ${_usernameController.text}');
+                              print('Password: ${_passwordController.text}');
+                              // Close the bottom sheet
+                              Navigator.pop(context);
+                              Navigator.pushReplacement(context,
+                                  MaterialPageRoute(builder: (context) {
+                                return ContainerHomePage();
+                              }));
+                            }
+                          },
+                        ),
                       ),
                     ],
                   ),

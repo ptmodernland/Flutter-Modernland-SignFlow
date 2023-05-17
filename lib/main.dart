@@ -18,6 +18,10 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       color: Colors.black,
       debugShowCheckedModeBanner: false,
+
+      theme: ThemeData(
+        primaryColor: Colors.black, // Change this to your desired color
+      ),
       home: SplashScreenPage(),
     );
   }
