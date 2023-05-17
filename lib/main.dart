@@ -18,7 +18,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       color: Colors.black,
       debugShowCheckedModeBanner: false,
-      home: LoginNewPage(),
+      home: SplashScreenPage(),
     );
   }
 }

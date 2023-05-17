@@ -1,5 +1,6 @@
 import 'dart:ui';
 import 'package:bwa_cozy/pages/container_home.dart';
+import 'package:bwa_cozy/pages/login_new_page.dart';
 import 'package:bwa_cozy/util/my_colors.dart';
 import 'package:bwa_cozy/util/my_theme.dart';
 import 'package:device_info_plus/device_info_plus.dart';
@@ -197,9 +198,16 @@ class _SplashScreenPageState extends State<SplashScreenPage> {
                     margin: EdgeInsets.only(top: 20),
                     child: Column(
                       children: [
-                        Image.asset(
-                          "asset/img/icons/logo_modernland.png",
-                          width: screenWidth * 0.5,
+                        GestureDetector(
+                          child: Image.asset(
+                            "asset/img/icons/logo_modernland.png",
+                            width: screenWidth * 0.5,
+                          ),
+                          onDoubleTap: (){
+                            Navigator.push(context, MaterialPageRoute(builder: (context){
+                              return LoginNewPage();
+                            }));
+                          },
                         ),
                         Container(
                           margin: EdgeInsets.only(left: 20, right: 20),

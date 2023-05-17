@@ -5,18 +5,18 @@ import 'package:shared_preferences/shared_preferences.dart';
 class SessionManager {
   static const String _userKey = 'user';
 
-  static Future<void> saveUser(User user) async {
+  static Future<void> saveUser(UserDTO user) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     final String userJson = json.encode(user.toJson());
     await prefs.setString(_userKey, userJson);
   }
 
-  static Future<User?> getUser() async {
+  static Future<UserDTO?> getUser() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     final String? userJson = prefs.getString(_userKey);
     if (userJson != null) {
       final Map<String, dynamic> userMap = json.decode(userJson);
-      return User.fromJson(userMap);
+      return UserDTO.fromJson(userMap);
     }
     return null;
   }
@@ -26,13 +26,13 @@ class SessionManager {
     await prefs.remove(_userKey);
   }
 
-  static Future<void> saveUserInSession(User user) async {
+  static Future<void> saveUserInSession(UserDTO user) async {
     await SessionManager.saveUser(user);
     print('User saved in session.');
   }
 
-  static Future<User?> getUserFromSession() async {
-    User? savedUser = await SessionManager.getUser();
+  static Future<UserDTO?> getUserFromSession() async {
+    UserDTO? savedUser = await SessionManager.getUser();
     if (savedUser != null) {
       print('Retrieved User:');
       print(savedUser.idUser);

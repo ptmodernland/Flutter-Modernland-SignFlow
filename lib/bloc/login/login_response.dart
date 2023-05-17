@@ -1,6 +1,6 @@
 
 
-class User {
+class UserDTO {
   String idUser;
   String username;
   String nama;
@@ -9,7 +9,7 @@ class User {
   String jk;
   bool status;
 
-  User({
+  UserDTO({
     required this.idUser,
     required this.username,
     required this.nama,
@@ -19,8 +19,8 @@ class User {
     required this.status,
   });
 
-  factory User.fromJson(Map<String, dynamic> json) {
-    return User(
+  factory UserDTO.fromJson(Map<String, dynamic> json) {
+    return UserDTO(
       idUser: json['id_user'],
       username: json['username'],
       nama: json['nama'],
