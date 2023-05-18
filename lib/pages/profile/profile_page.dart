@@ -14,7 +14,6 @@ class ProfilePage extends StatelessWidget {
     double screenHeight = MediaQuery.of(context).size.height;
     double screenWidth = MediaQuery.of(context).size.width;
 
-
     String getUserRole(String role) {
       if (role == 'head') {
         return 'Head of Division/Department';
@@ -75,8 +74,19 @@ class ProfilePage extends StatelessWidget {
                       child: Container(
                         child: Column(
                           children: [
-                            ProfileMenuItemWidget(),
-                            ProfileMenuItemWidget(),
+                            ProfileMenuItemWidget(
+                              onClick: () {},
+                              title: "Ganti Password",
+                              description: "Ganti Password Yang Digunakan Untuk Login",
+                              imageAsset: "asset/img/icons/icon_security_shield.svg",
+                            ),
+                            ProfileMenuItemWidget(
+                              onClick: () {},
+                              title: "Ganti PIN",
+                              description: "Ganti pin yang digunakan untuk approval/reject dokumen",
+                              imageAsset:
+                                  "asset/img/icons/icon_security_shield.svg",
+                            ),
                             Container(
                               margin: EdgeInsets.all(10),
                               width: double.infinity,
@@ -114,32 +124,6 @@ class ProfilePage extends StatelessWidget {
                                   ),
                                 ),
                               ),
-                            ),
-                            FutureBuilder<UserDTO?>(
-                              future: SessionManager.getUser(),
-                              builder: (context, snapshot) {
-                                if (snapshot.connectionState ==
-                                    ConnectionState.waiting) {
-                                  // While the future is loading, show a loading indicator or placeholder
-                                  return CircularProgressIndicator();
-                                } else if (snapshot.hasData &&
-                                    snapshot.data != null) {
-                                  UserDTO user = snapshot.data!;
-                                  return Column(
-                                    children: [
-                                      Text('ID: ${user.idUser}'),
-                                      Text('Username: ${user.username}'),
-                                      Text('Name: ${user.nama}'),
-                                      Text('Level: ${user.level}'),
-                                      Text('Email: ${user.email}'),
-                                      Text('Gender: ${user.jk}'),
-                                      Text('Status: ${user.status}'),
-                                    ],
-                                  );
-                                } else {
-                                  return Text('User not found');
-                                }
-                              },
                             ),
                           ],
                         ),
@@ -229,62 +213,75 @@ class ProfilePage extends StatelessWidget {
 }
 
 class ProfileMenuItemWidget extends StatelessWidget {
+  final Function? onClick;
+  final String title;
+  final String description;
+  final String imageAsset;
+
   const ProfileMenuItemWidget({
-    super.key,
-  });
+    Key? key,
+    this.onClick,
+    this.title = "",
+    this.description = "",
+    this.imageAsset = "",
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.only(left: 10, right: 10, top: 5, bottom: 5),
-      decoration: BoxDecoration(
-        color: Color(0xFFEFF1F3),
-        borderRadius: BorderRadius.all(Radius.circular(20)),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.max,
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          Expanded(
-            flex: 1,
-            child: SvgPicture.asset(
-              "asset/img/icons/icon_security_shield.svg",
-              width: double.infinity,
-              height: 20,
-              fit: BoxFit.contain,
-            ),
-          ),
-          Expanded(
-            flex: 5,
-            child: Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.all(Radius.circular(20)),
-              ),
-              padding:
-                  EdgeInsets.only(left: 10, right: 10, top: 20, bottom: 20),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Text(
-                    "Ganti Password",
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                    style: MyTheme.myStylePrimaryTextStyle.copyWith(),
-                  ),
-                  Text(
-                    "Ganti Password Yang Digunakan Untuk Login",
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                    style: MyTheme.myStylePrimaryTextStyle.copyWith(
-                      fontSize: 12
+    return GestureDetector(
+      onTap: () {
+        onClick?.call();
+      },
+      child: Container(
+        margin: EdgeInsets.only(left: 10, right: 10, top: 5, bottom: 5),
+        decoration: BoxDecoration(
+          color: Color(0xFFEFF1F3),
+          borderRadius: BorderRadius.all(Radius.circular(20)),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Expanded(
+                flex: 1,
+                child: SvgPicture.asset(
+                  imageAsset,
+                  width: double.infinity,
+                  height: 20,
+                  fit: BoxFit.contain,
+                )),
+            Expanded(
+              flex: 5,
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.all(Radius.circular(20)),
+                ),
+                padding:
+                    EdgeInsets.only(left: 10, right: 10, top: 20, bottom: 20),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Text(
+                      title,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: MyTheme.myStylePrimaryTextStyle.copyWith(),
                     ),
-                  ),
-                ],
+                    Text(
+                      description,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: MyTheme.myStylePrimaryTextStyle.copyWith(
+                        fontSize: 12,
+                      ),
+                    ),
+                  ],
+                ),
               ),
-            ),
-          )
-        ],
+            )
+          ],
+        ),
       ),
     );
   }
