@@ -49,11 +49,27 @@ Future<dynamic> showLoginFormDialog({
                     BlocListener<LoginBloc, LoginState>(
                       listener: (context, state) {
                         // Navigate to next screen
+
+                        if(state is AuthStateLogoutSuccess){
+                          QuickAlert.show(
+                            context: context,
+                            type: QuickAlertType.success,
+                            text: state.message.toString(),
+                          );
+                        }
                         if (state is AuthStateLoginSuccess) {
                           QuickAlert.show(
                             context: context,
                             type: QuickAlertType.success,
                             text: state.message.toString(),
+                          );
+
+                          Navigator.pushAndRemoveUntil(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => ContainerHomePage()),
+                            (route) =>
+                                false, // This will remove all routes from the stack
                           );
                         }
 
@@ -148,9 +164,23 @@ Future<dynamic> showLoginFormDialog({
                           BlocBuilder<LoginBloc, LoginState>(
                             builder: (context, state) {
                               if (state is AuthStateFailure) {
-                                return Text(
-                                  state.error,
-                                  style: TextStyle(color: Colors.red),
+                                return Column(
+                                  children: [
+                                    Text(
+                                      state.error,
+                                      style: TextStyle(color: Colors.red),
+                                    ),
+                                    GestureDetector(
+                                      child: Text(
+                                        "Klik untuk unbind device",
+                                        style: TextStyle(color: Colors.blue),
+                                      ),
+                                      onTap: () {
+                                        loginBloc.add(LogoutButtonPressed(
+                                            usernameController.text));
+                                      },
+                                    )
+                                  ],
                                 );
                               }
 
@@ -195,7 +225,8 @@ Future<dynamic> showLoginFormDialog({
                                       loginBloc);
                                 }
 
-                                if (state is AuthStateLoginSuccess) {
+                                if (state is AuthStateLoginSuccess ||
+                                    state is AuthStateLogoutSuccess) {
                                   return showLoginButton(
                                       context,
                                       screenWidth,
@@ -382,7 +413,7 @@ EdgeInsets setButtonLoginRegisterPadding(BuildContext context) {
   double screenWidth = MediaQuery.of(context).size.width;
 
   print("screen height : $screenHeight");
-  print("screen height : $screenWidth");
+  print("screen width : $screenWidth");
 
   if (screenWidth >= 500 && screenHeight > 600) {
     return EdgeInsets.symmetric(
@@ -410,6 +441,11 @@ double? setButtonLoginRegisterSize(double screenWidth, double screenHeight) {
   if (screenWidth > 500 && screenWidth < 1000) {
     return 15;
   }
+
+  if (screenHeight > 500 && screenWidth > 1000) {
+    return 15;
+  }
+
   return screenWidth >= 500 && screenHeight > 700 ? 25.0 : 15;
 }
 

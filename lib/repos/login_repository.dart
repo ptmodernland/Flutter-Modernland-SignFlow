@@ -55,4 +55,45 @@ class LoginRepository {
       throw Exception('An error occurred '+error.toString());
     }
   }
+
+  Future<ResponseWrapper<bool>> unbindDevice(String username) async {
+    try {
+      // Prepare the request
+      var url = Uri.parse('https://approval.modernland.co.id/androidiom/proses_logout.php');
+      // Set the form data
+      var body = {
+        'username': username,
+      };
+      print("logoutLog Username " + username);
+      // Send the request
+      var response = await http.post(url, body: body);
+      // Get the response body as a string
+      var responseBody = response.body;
+      print("168_login_code: " + response.statusCode.toString());
+      print("168_login_response: $responseBody");
+      var jsonResponse = jsonDecode(responseBody);
+      // Extract the code and message fields
+      bool resStatus = jsonResponse['status'];
+      var resMessage = jsonResponse['pesan'];
+
+      final result = jsonDecode(response.body);
+      print(result.toString());
+
+      if (response.statusCode == 200) {
+        print("resStatus : "+resStatus.toString());
+        if (resStatus) {
+          SessionManager.removeUser();
+          return ResponseWrapper(true, ResourceStatus.Success, "Logout Berhasil");
+        } else {
+          print("userDTOError : "+responseBody);
+          return ResponseWrapper(null, ResourceStatus.Error, resMessage);
+        }
+      } else {
+        return ResponseWrapper(null, ResourceStatus.Error, resMessage);
+      }
+    } catch (error) {
+      throw Exception('An error occurred '+error.toString());
+    }
+  }
+
 }

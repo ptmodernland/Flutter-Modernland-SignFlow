@@ -1,4 +1,5 @@
 import 'package:bwa_cozy/bloc/login/login_response.dart';
+import 'package:bwa_cozy/pages/splash/splash_screen.dart';
 import 'package:bwa_cozy/util/my_theme.dart';
 import 'package:bwa_cozy/util/storage/sessionmanager/session_manager.dart';
 import 'package:flutter/material.dart';
@@ -74,6 +75,11 @@ class ProfilePage extends StatelessWidget {
                       child: Container(
                         child: Column(
                           children: [
+                            Text(
+                              "General",style: MyTheme.myStylePrimaryTextStyle.copyWith(
+
+                            ),
+                            ),
                             ProfileMenuItemWidget(
                               onClick: () {},
                               title: "Ganti Password",
@@ -91,7 +97,14 @@ class ProfilePage extends StatelessWidget {
                               margin: EdgeInsets.all(10),
                               width: double.infinity,
                               child: ElevatedButton(
-                                onPressed: () {},
+                                onPressed: () {
+                                  SessionManager.removeUserFromSession();
+                                  Navigator.pushAndRemoveUntil(
+                                    context,
+                                    MaterialPageRoute(builder: (context) => SplashScreenPage()),
+                                        (route) => false,
+                                  );
+                                },
                                 style: ButtonStyle(
                                   shape: MaterialStateProperty.all<
                                       RoundedRectangleBorder>(

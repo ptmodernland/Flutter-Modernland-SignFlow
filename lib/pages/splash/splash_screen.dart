@@ -39,9 +39,10 @@ class _SplashScreenPageState extends State<SplashScreenPage> {
   }
 
   void navigateToHomePage() {
-    Navigator.pushReplacement(
+    Navigator.pushAndRemoveUntil(
       context,
       MaterialPageRoute(builder: (context) => ContainerHomePage()),
+          (route) => false, // This will remove all routes from the stack
     );
   }
 
