@@ -1,6 +1,7 @@
 import 'package:bwa_cozy/bloc/_wrapper/response_wrapper.dart';
 import 'package:bwa_cozy/bloc/login/login_payload.dart';
 import 'package:bwa_cozy/bloc/login/login_response.dart';
+import 'package:bwa_cozy/util/storage/sessionmanager/session_manager.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
@@ -37,11 +38,14 @@ class LoginRepository {
       final result = jsonDecode(response.body);
 
       if (response.statusCode == 200) {
+        print("resStatus : "+resStatus.toString());
         if (resStatus) {
           var user = UserDTO.fromJson(result);
-          return ResponseWrapper(
-              user, ResourceStatus.Success, "Login Berhasil");
+          print("userDTO : "+user.toString());
+          SessionManager.saveUser(user);
+          return ResponseWrapper(user, ResourceStatus.Success, "Login Berhasil");
         } else {
+          print("userDTOError : "+responseBody);
           return ResponseWrapper(null, ResourceStatus.Error, resMessage);
         }
       } else {

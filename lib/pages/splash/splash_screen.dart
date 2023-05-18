@@ -1,28 +1,20 @@
 import 'dart:ui';
 import 'package:bwa_cozy/bloc/login/login_bloc.dart';
+import 'package:bwa_cozy/bloc/login/login_response.dart';
+import 'package:bwa_cozy/bloc/login/login_state.dart';
 import 'package:bwa_cozy/pages/container_home.dart';
+import 'package:bwa_cozy/pages/home/home_page.dart';
 import 'package:bwa_cozy/pages/login_new_page.dart';
 import 'package:bwa_cozy/pages/splash/login_sheet.dart';
+import 'package:bwa_cozy/util/model/device_information_model.dart';
 import 'package:bwa_cozy/util/my_colors.dart';
 import 'package:bwa_cozy/util/my_theme.dart';
-import 'package:bwa_cozy/widget/core/custom_text_input.dart';
-import 'package:dart_ipify/dart_ipify.dart';
-import 'package:device_info_plus/device_info_plus.dart';
+import 'package:bwa_cozy/util/storage/sessionmanager/session_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:quickalert/quickalert.dart';
-import 'package:url_launcher/url_launcher.dart';
-import 'dart:io';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:bwa_cozy/bloc/login/login_bloc.dart';
-import 'package:bwa_cozy/bloc/login/login_event.dart';
-import 'package:bwa_cozy/bloc/login/login_payload.dart';
-import 'package:bwa_cozy/bloc/login/login_state.dart';
 import 'package:bwa_cozy/repos/login_repository.dart';
-import 'package:bwa_cozy/widget/core/custom_text_input.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-
 
 class SplashScreenPage extends StatefulWidget {
   const SplashScreenPage({Key? key}) : super(key: key);
@@ -31,86 +23,27 @@ class SplashScreenPage extends StatefulWidget {
   State<SplashScreenPage> createState() => _SplashScreenPageState();
 }
 
+
 class _SplashScreenPageState extends State<SplashScreenPage> {
 
-  openwhatsapp(String number) async {
-    var whatsapp = "+" + number;
-    var whatsappURl_android =
-        "whatsapp://send?phone=" + whatsapp + "&text=Permintaan+reset+sandi";
-    var whatappURL_ios =
-        "https://wa.me/$whatsapp?text=${Uri.parse("Permintaan+reset+sandi")}";
-    if (Platform.isIOS) {
-      // for iOS phone only
-      if (await canLaunch(whatappURL_ios)) {
-        await launch(whatappURL_ios, forceSafariVC: false);
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: new Text("WhatsApp tidak terpasang")));
-      }
+  void checkUserAndNavigate() async {
+    UserDTO? user = await SessionManager.getUser();
+    if (user != null) {
+      print("user is logged in as "+ user.username);
+      navigateToHomePage();
     } else {
-      // android , web
-      if (await canLaunch(whatsappURl_android)) {
-        await launch(whatsappURl_android);
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: new Text("WhatsApp tidak terpasang")));
-      }
+      print("user is not logged in");
+      // Handle the case when user is not available
+      // For example, show a login screen or a splash screen
     }
   }
 
-  Future<String> getDeviceInfo() async {
-    final DeviceInfoPlugin deviceInfoPlugin = DeviceInfoPlugin();
-    String deviceInfo = '';
-
-    try {
-      if (Platform.isAndroid) {
-        final androidInfo = await deviceInfoPlugin.androidInfo;
-        deviceInfo = 'Device Type: Android\n';
-        deviceInfo += 'Model: ${androidInfo.model}\n';
-        deviceInfo += 'Brand: ${androidInfo.brand}\n';
-      } else if (Platform.isIOS) {
-        final iosInfo = await deviceInfoPlugin.iosInfo;
-        deviceInfo = 'Device Type: iOS\n';
-        deviceInfo += 'Model: ${iosInfo.model}\n';
-        deviceInfo += 'Brand: ${iosInfo.name}\n';
-      }
-
-      String? ipAddress;
-      while (ipAddress == null) {
-        try {
-          ipAddress = await getIpAddress();
-        } catch (e) {
-          // Ignore the exception and continue the loop
-        }
-      }
-
-      deviceInfo += 'IP Address: $ipAddress';
-    } catch (e) {
-      deviceInfo = 'Failed to retrieve device information. because of $e';
-    }
-
-    return deviceInfo;
+  void navigateToHomePage() {
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => ContainerHomePage()),
+    );
   }
-
-  Future<String> getIpAddress() async {
-    final ipv4 = await Ipify.ipv4();
-    final address = InternetAddress(ipv4);
-    print("IP address is " + address.address.toString());
-    return address.address.toString();
-  }
-
-
-
-
-  double setHeaderTextSize(double screenWidth, double screenHeight) {
-    if (screenWidth >= 500 && screenHeight > 700) {
-      return 28.0;
-    } else {
-      return 22.0;
-    }
-  }
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -118,11 +51,22 @@ class _SplashScreenPageState extends State<SplashScreenPage> {
     final _usernameController = TextEditingController();
     final _passwordController = TextEditingController();
 
+    DeviceInformationModel deviceInformation;
+
+    @override
+    void initState() {
+      super.initState();
+      checkUserAndNavigate();
+    }
+
     LoginRepository loginRepository = LoginRepository();
     final loginBloc = LoginBloc(loginRepository);
 
     double screenHeight = MediaQuery.of(context).size.height;
     double screenWidth = MediaQuery.of(context).size.width;
+
+    checkUserAndNavigate();
+
 
     return Scaffold(
         backgroundColor: Colors.white,
@@ -179,8 +123,9 @@ class _SplashScreenPageState extends State<SplashScreenPage> {
                             "asset/img/icons/logo_modernland.png",
                             width: screenWidth * 0.5,
                           ),
-                          onDoubleTap: (){
-                            Navigator.push(context, MaterialPageRoute(builder: (context){
+                          onDoubleTap: () {
+                            Navigator.push(context,
+                                MaterialPageRoute(builder: (context) {
                               return LoginNewPage();
                             }));
                           },
@@ -265,33 +210,44 @@ class _SplashScreenPageState extends State<SplashScreenPage> {
                             children: [
                               ElevatedButton(
                                 onPressed: () {
-                                  showLoginFormDialog(context, _formKey,
-                                      _usernameController, _passwordController);
+                                  showLoginFormDialog(
+                                      context: context,
+                                      formKey: _formKey,
+                                      loginBloc: loginBloc,
+                                      loginRepo: loginRepository,
+                                      passwordController:
+                                      _passwordController,
+                                      usernameController:
+                                      _usernameController);
                                 },
                                 style: ButtonStyle(
-                                  padding:
-                                      MaterialStateProperty.all<EdgeInsets>(
-                                    setButtonLoginRegisterPadding(context),
+                                  padding: MaterialStateProperty.all<
+                                      EdgeInsets>(
+                                    setButtonLoginRegisterPadding(
+                                        context),
                                   ),
                                   shape: MaterialStateProperty.all<
                                       RoundedRectangleBorder>(
                                     RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(18.0),
-                                      side:
-                                          BorderSide(color: Colors.transparent),
+                                      borderRadius:
+                                      BorderRadius.circular(18.0),
+                                      side: BorderSide(
+                                          color: Colors.transparent),
                                     ),
                                   ),
                                   backgroundColor:
-                                      MaterialStateProperty.all<Color>(
-                                          Colors.black),
+                                  MaterialStateProperty.all<Color>(
+                                      Colors.black),
                                 ),
                                 child: Text(
                                   "Login",
                                   style: MyTheme.myStylePrimaryTextStyle
                                       .copyWith(
-                                          fontSize: setButtonLoginRegisterSize(
-                                              screenWidth, screenHeight),
-                                          color: Colors.white),
+                                      fontSize:
+                                      setButtonLoginRegisterSize(
+                                          screenWidth,
+                                          screenHeight),
+                                      color: Colors.white),
                                 ),
                               ),
                               ElevatedButton(
@@ -361,19 +317,23 @@ class _SplashScreenPageState extends State<SplashScreenPage> {
                                               crossAxisAlignment:
                                                   CrossAxisAlignment.stretch,
                                               children: [
-                                                Text(snapshot.data ?? ""),
+                                                Text(snapshot
+                                                        .data?.deviceInfoString
+                                                        .toString() ??
+                                                    ""),
                                                 ElevatedButton(
                                                   onPressed: () {
-                                                    Clipboard.setData(
-                                                        ClipboardData(
-                                                            text:
-                                                                snapshot.data ??
-                                                                    ""));
+                                                    Clipboard.setData(ClipboardData(
+                                                        text: snapshot.data
+                                                                ?.deviceInfoString ??
+                                                            ""));
                                                     QuickAlert.show(
                                                       context: context,
                                                       type: QuickAlertType.info,
                                                       text:
-                                                          'Device information copied to clipboard : '+snapshot.data.toString(),
+                                                          'Device information copied to clipboard : ' +
+                                                              snapshot.data
+                                                                  .toString(),
                                                     );
                                                   },
                                                   child:
@@ -452,7 +412,7 @@ class _SplashScreenPageState extends State<SplashScreenPage> {
                     ),
                     GestureDetector(
                       onTap: () {
-                        openwhatsapp("+6282113530950");
+                        openwhatsapp(context, "+6282113530950");
                       },
                       child: Card(
                         color: Colors.green,
@@ -474,7 +434,7 @@ class _SplashScreenPageState extends State<SplashScreenPage> {
                     ),
                     GestureDetector(
                       onTap: () {
-                        openwhatsapp("+6282113530950");
+                        openwhatsapp(context, "+6282113530950");
                       },
                       child: Card(
                         color: Colors.green,
@@ -504,6 +464,4 @@ class _SplashScreenPageState extends State<SplashScreenPage> {
       },
     );
   }
-
-
 }

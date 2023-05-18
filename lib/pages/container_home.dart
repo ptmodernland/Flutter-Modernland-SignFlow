@@ -1,4 +1,5 @@
 import 'package:bwa_cozy/pages/home/home_page.dart';
+import 'package:bwa_cozy/pages/profile/profile_page.dart';
 import 'package:bwa_cozy/pages/settings/settings_page.dart';
 import 'package:bwa_cozy/pages/splash/splash_screen.dart';
 
@@ -29,7 +30,7 @@ class _ContainerHomePageState extends State<ContainerHomePage> {
       child: Text("Contact"),
     ),
     Center(
-      child: SettingsPage(),
+      child: ProfilePage(),
     ),
   ];
 

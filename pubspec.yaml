@@ -47,7 +47,7 @@ dependencies:
   device_info_plus: ^3.0.4
   dart_ipify: ^1.1.1
   shared_preferences: ^2.1.1
-
+  awesome_dialog: ^3.0.2
 dev_dependencies:
   flutter_test:
     sdk: flutter

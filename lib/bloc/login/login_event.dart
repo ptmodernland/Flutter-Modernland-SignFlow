@@ -8,4 +8,8 @@ class LoginButtonPressed extends LoginEvent {
   LoginButtonPressed(this.payload);
 }
 
+class LoginButtonInit extends LoginEvent {
+  LoginButtonInit();
+}
+
 
