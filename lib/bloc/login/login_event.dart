@@ -12,4 +12,10 @@ class LoginButtonInit extends LoginEvent {
   LoginButtonInit();
 }
 
+class LogoutButtonPressed extends LoginEvent{
+  final String username;
+
+  LogoutButtonPressed(this.username);
+}
+
 

@@ -49,7 +49,7 @@ Future<dynamic> showLoginFormDialog({
                     BlocListener<LoginBloc, LoginState>(
                       listener: (context, state) {
                         // Navigate to next screen
-                        if (state is LoginSuccess) {
+                        if (state is AuthStateLoginSuccess) {
                           QuickAlert.show(
                             context: context,
                             type: QuickAlertType.success,
@@ -57,7 +57,7 @@ Future<dynamic> showLoginFormDialog({
                           );
                         }
 
-                        if (state is LoginFailure) {
+                        if (state is AuthStateFailure) {
                           QuickAlert.show(
                             context: context,
                             type: QuickAlertType.error,
@@ -147,7 +147,7 @@ Future<dynamic> showLoginFormDialog({
                           ),
                           BlocBuilder<LoginBloc, LoginState>(
                             builder: (context, state) {
-                              if (state is LoginFailure) {
+                              if (state is AuthStateFailure) {
                                 return Text(
                                   state.error,
                                   style: TextStyle(color: Colors.red),
@@ -162,7 +162,7 @@ Future<dynamic> showLoginFormDialog({
                             alignment: Alignment.centerLeft,
                             child: BlocBuilder<LoginBloc, LoginState>(
                               builder: (context, state) {
-                                if (state is LoginInitial) {
+                                if (state is AuthStateInitial) {
                                   return showLoginButton(
                                       context,
                                       screenWidth,
@@ -173,7 +173,7 @@ Future<dynamic> showLoginFormDialog({
                                       loginBloc);
                                 }
 
-                                if (state is LoginLoading) {
+                                if (state is AuthStateLoading) {
                                   Container(
                                     width: screenWidth * 0.1,
                                     child: Center(
@@ -184,7 +184,7 @@ Future<dynamic> showLoginFormDialog({
                                   );
                                 }
 
-                                if (state is LoginFailure) {
+                                if (state is AuthStateFailure) {
                                   return showLoginButton(
                                       context,
                                       screenWidth,
@@ -195,7 +195,7 @@ Future<dynamic> showLoginFormDialog({
                                       loginBloc);
                                 }
 
-                                if (state is LoginSuccess) {
+                                if (state is AuthStateLoginSuccess) {
                                   return showLoginButton(
                                       context,
                                       screenWidth,

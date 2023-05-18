@@ -7,26 +7,26 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 class LoginBloc extends Bloc<LoginEvent, LoginState> {
   final LoginRepository _loginRepository;
 
-  LoginBloc(this._loginRepository) : super(LoginInitial()) {
+  LoginBloc(this._loginRepository) : super(AuthStateInitial()) {
     on<LoginButtonInit>((event, emit) async {
-      emit(LoginLoading());
+      emit(AuthStateLoading());
       print("login loading");
     });
 
     on<LoginButtonPressed>((event, emit) async {
-      emit(LoginLoading());
+      emit(AuthStateLoading());
       print("login loading");
       try {
         final request = await _loginRepository.login(event.payload);
         if (request.data != null) {
-          emit(LoginSuccess(
+          emit(AuthStateLoginSuccess(
               loginSuccessPayload: request.data!, //not null
               message: request.message ?? ""));
         } else {
-          emit(LoginFailure(error: request.message ?? ""));
+          emit(AuthStateFailure(error: request.message ?? ""));
         }
       } catch (e) {
-        emit(LoginFailure(error: e.toString() ?? ""));
+        emit(AuthStateFailure(error: e.toString() ?? ""));
       }
     });
   }

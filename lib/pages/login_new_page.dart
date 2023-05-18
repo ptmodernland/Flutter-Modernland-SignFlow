@@ -66,12 +66,12 @@ class _LoginNewPageState extends State<LoginNewPage> {
             ),
             BlocBuilder<LoginBloc, LoginState>(
               builder: (context, state) {
-                if (state is LoginInitial) {
+                if (state is AuthStateInitial) {
                   return Text("Silakan Masukkan Username dan Password");
                 }
-                if (state is LoginLoading) {
+                if (state is AuthStateLoading) {
                   return Center(child: CircularProgressIndicator());
-                } else if (state is LoginFailure) {
+                } else if (state is AuthStateFailure) {
                   return Column(
                     children: [
                       Text('Login failed: ${state.error}'),
@@ -87,7 +87,7 @@ class _LoginNewPageState extends State<LoginNewPage> {
                       ),
                     ],
                   );
-                } else if (state is LoginSuccess) {
+                } else if (state is AuthStateLoginSuccess) {
                   return Text('Login successful!');
                 }
                 return Container();
