@@ -1,19 +1,30 @@
+import 'package:bwa_cozy/bloc/login/login_bloc.dart';
+import 'package:bwa_cozy/bloc/login/login_event.dart';
 import 'package:bwa_cozy/bloc/login/login_response.dart';
+import 'package:bwa_cozy/bloc/login/login_state.dart';
 import 'package:bwa_cozy/pages/splash/splash_screen.dart';
+import 'package:bwa_cozy/repos/login_repository.dart';
 import 'package:bwa_cozy/util/my_theme.dart';
 import 'package:bwa_cozy/util/storage/sessionmanager/session_manager.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:quickalert/models/quickalert_type.dart';
+import 'package:quickalert/quickalert.dart';
 
 class ProfilePage extends StatelessWidget {
   const ProfilePage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    var user = SessionManager.getUser();
+    var username = "";
 
     double screenHeight = MediaQuery.of(context).size.height;
     double screenWidth = MediaQuery.of(context).size.width;
+
+    LoginRepository loginRepository = LoginRepository();
+    final loginBloc = LoginBloc(loginRepository);
 
     String getUserRole(String role) {
       if (role == 'head') {
@@ -29,195 +40,266 @@ class ProfilePage extends StatelessWidget {
       top: false,
       child: Scaffold(
         backgroundColor: Colors.white,
-        body: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Container(
-                width: double.infinity,
-                child: Stack(
-                  children: [
-                    Container(
-                      margin: EdgeInsets.all(20),
-                      child: Image.asset(
-                        "asset/img/icons/logo_modernland.png",
-                        width: screenWidth * 0.2,
-                      ),
-                    ),
-                    Container(
-                      decoration: BoxDecoration(
-                        color: Colors.redAccent,
-                        image: DecorationImage(
-                          image: AssetImage(
-                              'asset/img/background/bg_pattern_fp.png'),
-                          repeat: ImageRepeat.repeat,
+        body: BlocProvider(
+          create: (BuildContext context) {
+            return loginBloc;
+          },
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Container(
+                  width: double.infinity,
+                  child: Stack(
+                    children: [
+                      Container(
+                        margin: EdgeInsets.all(20),
+                        child: Image.asset(
+                          "asset/img/icons/logo_modernland.png",
+                          width: screenWidth * 0.2,
                         ),
                       ),
-                      height: 210,
-                      width: double.infinity,
-                    ),
-                  ],
-                ),
-              ),
-              Container(
-                color: Colors.white,
-                width: MediaQuery.sizeOf(context).width,
-                child: Stack(
-                  children: [
-                    Container(
-                      padding: EdgeInsets.only(top: 200),
-                      width: double.infinity,
-                      transform: Matrix4.translationValues(0.0, -20.0, 0.0),
-                      decoration: BoxDecoration(
-                        borderRadius:
-                            BorderRadius.vertical(top: Radius.circular(30.0)),
+                      Container(
+                        decoration: BoxDecoration(
+                          color: Colors.redAccent,
+                          image: DecorationImage(
+                            image: AssetImage(
+                                'asset/img/background/bg_pattern_fp.png'),
+                            repeat: ImageRepeat.repeat,
+                          ),
+                        ),
+                        height: 210,
+                        width: double.infinity,
                       ),
-                      child: Container(
-                        child: Column(
-                          children: [
-                            Text(
-                              "General",style: MyTheme.myStylePrimaryTextStyle.copyWith(
-
-                            ),
-                            ),
-                            ProfileMenuItemWidget(
-                              onClick: () {},
-                              title: "Ganti Password",
-                              description: "Ganti Password Yang Digunakan Untuk Login",
-                              imageAsset: "asset/img/icons/icon_security_shield.svg",
-                            ),
-                            ProfileMenuItemWidget(
-                              onClick: () {},
-                              title: "Ganti PIN",
-                              description: "Ganti pin yang digunakan untuk approval/reject dokumen",
-                              imageAsset:
-                                  "asset/img/icons/icon_security_shield.svg",
-                            ),
-                            Container(
-                              margin: EdgeInsets.all(10),
-                              width: double.infinity,
-                              child: ElevatedButton(
-                                onPressed: () {
-                                  SessionManager.removeUserFromSession();
-                                  Navigator.pushAndRemoveUntil(
-                                    context,
-                                    MaterialPageRoute(builder: (context) => SplashScreenPage()),
-                                        (route) => false,
-                                  );
-                                },
-                                style: ButtonStyle(
-                                  shape: MaterialStateProperty.all<
-                                      RoundedRectangleBorder>(
-                                    RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(18.0),
-                                      side: BorderSide(
-                                          color: Colors.black, width: 1),
+                    ],
+                  ),
+                ),
+                Container(
+                  color: Colors.white,
+                  width: MediaQuery.sizeOf(context).width,
+                  child: Stack(
+                    children: [
+                      BlocListener<LoginBloc, LoginState>(
+                        listener: (context, state) {
+                          if (state is AuthStateLogoutSuccess) {
+                            QuickAlert.show(
+                              context: context,
+                              type: QuickAlertType.success,
+                              text: state.message.toString(),
+                              onConfirmBtnTap: (){
+                                SessionManager.removeUserFromSession();
+                                Navigator.pushAndRemoveUntil(
+                                  context,
+                                  MaterialPageRoute(builder: (context) => SplashScreenPage()),
+                                      (route) => false,
+                                );
+                              }
+                            );
+                          }
+                          if (state is AuthStateFailure) {
+                            QuickAlert.show(
+                                context: context,
+                                type: QuickAlertType.loading,
+                                text: "Sedang logout dari aplikasi",
+                                showCancelBtn: false,
+                                title: "Loading",
+                                autoCloseDuration: Duration(seconds: 3));
+                          }
+                          if (state is AuthStateFailure) {
+                            QuickAlert.show(
+                              context: context,
+                              type: QuickAlertType.error,
+                              text: state.error.toString(),
+                            );
+                          }
+                        },
+                        child: Container(),
+                      ),
+                      Container(
+                        padding: EdgeInsets.only(top: 200),
+                        width: double.infinity,
+                        transform: Matrix4.translationValues(0.0, -20.0, 0.0),
+                        decoration: BoxDecoration(
+                          borderRadius:
+                              BorderRadius.vertical(top: Radius.circular(30.0)),
+                        ),
+                        child: Container(
+                          child: Column(
+                            children: [
+                              Container(
+                                margin: EdgeInsets.all(10),
+                                width: double.infinity,
+                                child: ElevatedButton(
+                                  onPressed: () {
+                                    showDialog(
+                                      context: context,
+                                      builder: (BuildContext context) =>
+                                          CupertinoAlertDialog(
+                                        title: Text("Logout"),
+                                        content: Text(
+                                            "Anda akan keluar dari aplikasi ini. Apakah Anda yakin?"),
+                                        actions: <Widget>[
+                                          CupertinoDialogAction(
+                                            child: Text("Kembali ke Aplikasi"),
+                                            onPressed: () {
+                                              // Perform any action here
+                                              // Dismiss the dialog
+                                              Navigator.of(context).pop();
+                                            },
+                                          ),
+                                          CupertinoDialogAction(
+                                            isDefaultAction: true,
+                                            child: Text("Ya"),
+                                            onPressed: () {
+                                              loginBloc.add(LogoutButtonPressed(
+                                                  username));
+                                              // Perform any action here
+                                              // Dismiss the dialog
+                                              Navigator.of(context).pop();
+                                            },
+                                          ),
+                                        ],
+                                      ),
+                                    );
+                                  },
+                                  style: ButtonStyle(
+                                    shape: MaterialStateProperty.all<
+                                        RoundedRectangleBorder>(
+                                      RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(18.0),
+                                        side: BorderSide(
+                                            color: Colors.black, width: 1),
+                                      ),
+                                    ),
+                                    backgroundColor:
+                                        MaterialStateProperty.all<Color>(
+                                            Colors.black),
+                                  ),
+                                  child: Container(
+                                    child: Row(
+                                      children: [
+                                        Icon(
+                                          Icons.logout,
+                                          // Specify the logout icon here
+                                          color: Colors.white,
+                                        ),
+                                        SizedBox(width: 15),
+                                        // Add some spacing between the icon and text
+                                        Text(
+                                          "Logout",
+                                          style: MyTheme
+                                              .myStyleSecondaryTextStyle
+                                              .copyWith(color: Colors.white),
+                                        ),
+                                      ],
                                     ),
                                   ),
-                                  backgroundColor:
-                                      MaterialStateProperty.all<Color>(
-                                          Colors.black),
                                 ),
+                              ),
+                              Text(
+                                "General",
+                                style:
+                                    MyTheme.myStylePrimaryTextStyle.copyWith(),
+                              ),
+                              ProfileMenuItemWidget(
+                                onClick: () {},
+                                title: "Ganti Password",
+                                description:
+                                    "Ganti Password Yang Digunakan Untuk Login",
+                                imageAsset:
+                                    "asset/img/icons/icon_security_shield.svg",
+                              ),
+                              ProfileMenuItemWidget(
+                                onClick: () {},
+                                title: "Ganti PIN",
+                                description:
+                                    "Ganti pin yang digunakan untuk approval/reject dokumen",
+                                imageAsset:
+                                    "asset/img/icons/icon_security_shield.svg",
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      Container(
+                        transform: Matrix4.translationValues(0.0, -60.0, 0.0),
+                        child: Center(
+                          child: Column(
+                            children: [
+                              ClipRRect(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(10)),
                                 child: Container(
-                                  child: Row(
-                                    children: [
-                                      Icon(
-                                        Icons.logout,
-                                        // Specify the logout icon here
-                                        color: Colors.white,
-                                      ),
-                                      SizedBox(width: 15),
-                                      // Add some spacing between the icon and text
-                                      Text(
-                                        "Logout",
-                                        style: MyTheme.myStyleSecondaryTextStyle
-                                            .copyWith(color: Colors.white),
+                                  decoration: BoxDecoration(
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.grey.withOpacity(0.5),
+                                        // Shadow color
+                                        spreadRadius: 2,
+                                        // Spread radius
+                                        blurRadius: 5,
+                                        // Blur radius
+                                        offset: Offset(0,
+                                            3), // Offset in the x and y direction
                                       ),
                                     ],
                                   ),
+                                  child: Image.network(
+                                    "http://feylabs.my.id/music/assets/album/1c8f05a2cd0464a2216b0b6c20ddb50d.jpg",
+                                    // Replace with your image URL
+                                    width: 120,
+                                    height: 120,
+                                    fit: BoxFit.cover,
+                                  ),
                                 ),
                               ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    Container(
-                      transform: Matrix4.translationValues(0.0, -60.0, 0.0),
-                      child: Center(
-                        child: Column(
-                          children: [
-                            ClipRRect(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(10)),
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.grey.withOpacity(0.5),
-                                      // Shadow color
-                                      spreadRadius: 2,
-                                      // Spread radius
-                                      blurRadius: 5,
-                                      // Blur radius
-                                      offset: Offset(0,
-                                          3), // Offset in the x and y direction
-                                    ),
-                                  ],
-                                ),
-                                child: Image.network(
-                                  "http://feylabs.my.id/music/assets/album/1c8f05a2cd0464a2216b0b6c20ddb50d.jpg",
-                                  // Replace with your image URL
-                                  width: 120,
-                                  height: 120,
-                                  fit: BoxFit.cover,
-                                ),
+                              FutureBuilder<UserDTO?>(
+                                future: SessionManager.getUser(),
+                                builder: (context, snapshot) {
+                                  if (snapshot.connectionState ==
+                                      ConnectionState.waiting) {
+                                    // While the future is loading, show a loading indicator or placeholder
+                                    return CircularProgressIndicator();
+                                  } else if (snapshot.hasData &&
+                                      snapshot.data != null) {
+                                    UserDTO user = snapshot.data!;
+                                    username = user.username;
+                                    return Column(
+                                      children: [
+                                        SizedBox(
+                                          height: 20,
+                                        ),
+                                        Text(
+                                          user.nama,
+                                          style: MyTheme.myStylePrimaryTextStyle
+                                              .copyWith(
+                                                  fontSize: 20,
+                                                  fontWeight: FontWeight.w900),
+                                        ),
+                                        Text('(${getUserRole(user.level)})'),
+                                        Text(
+                                          user.email,
+                                          style:
+                                              MyTheme.myStyleSecondaryTextStyle,
+                                        ),
+                                        Text('Username: ${user.username}'),
+                                      ],
+                                    );
+                                  } else {
+                                    return Text('User not found');
+                                  }
+                                },
                               ),
-                            ),
-                            FutureBuilder<UserDTO?>(
-                              future: SessionManager.getUser(),
-                              builder: (context, snapshot) {
-                                if (snapshot.connectionState ==
-                                    ConnectionState.waiting) {
-                                  // While the future is loading, show a loading indicator or placeholder
-                                  return CircularProgressIndicator();
-                                } else if (snapshot.hasData &&
-                                    snapshot.data != null) {
-                                  UserDTO user = snapshot.data!;
-                                  return Column(
-                                    children: [
-                                      SizedBox(
-                                        height: 20,
-                                      ),
-                                      Text(
-                                        user.nama,
-                                        style: MyTheme.myStylePrimaryTextStyle
-                                            .copyWith(
-                                                fontSize: 20,
-                                                fontWeight: FontWeight.w900),
-                                      ),
-                                      Text('(${getUserRole(user.level)})'),
-                                      Text(
-                                        user.email,
-                                        style:
-                                            MyTheme.myStyleSecondaryTextStyle,
-                                      ),
-                                      Text('Username: ${user.username}'),
-                                    ],
-                                  );
-                                } else {
-                                  return Text('User not found');
-                                }
-                              },
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
-                      ),
-                    )
-                  ],
+                      )
+                    ],
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
