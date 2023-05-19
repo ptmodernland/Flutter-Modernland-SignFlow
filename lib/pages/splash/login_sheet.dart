@@ -64,12 +64,20 @@ Future<dynamic> showLoginFormDialog({
                             text: state.message.toString(),
                           );
 
+
                           Navigator.pushAndRemoveUntil(
                             context,
-                            MaterialPageRoute(
-                                builder: (context) => ContainerHomePage()),
-                            (route) =>
-                                false, // This will remove all routes from the stack
+                            PageRouteBuilder(
+                              pageBuilder: (context, animation, secondaryAnimation) => ContainerHomePage(),
+                              transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                                return FadeTransition(
+                                  opacity: animation,
+                                  child: child,
+                                );
+                              },
+                              transitionDuration: Duration(milliseconds: 1500),
+                            ),
+                                (route) => false,
                           );
                         }
 

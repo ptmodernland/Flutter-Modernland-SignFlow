@@ -15,10 +15,10 @@ class AuthStateLoginSuccess extends LoginState {
       this.message = "Selamat menggunakan aplikasi Modernland Approval"});
 }
 
-class AuthStateChangePinPassword extends LoginState {
+class AuthStateChangePinPasswordSuccess extends LoginState {
   final String message;
 
-  AuthStateChangePinPassword({this.message = ""});
+  AuthStateChangePinPasswordSuccess({this.message = ""});
 }
 
 class AuthStateLogoutSuccess extends LoginState {

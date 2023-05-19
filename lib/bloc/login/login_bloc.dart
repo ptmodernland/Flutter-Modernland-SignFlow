@@ -29,6 +29,32 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       }
     });
 
+    on<ChangePinPasswordEvent>((event, emit) async {
+      emit(AuthStateLoading());
+      print("bloc change password loading");
+      try {
+        final request = await _loginRepository.changePinPassword(
+            newPassword: event.confirmNewPassword,
+            password: event.newPassword,
+            pin: event.newPin);
+        if (request.data != null) {
+          if(request.data==true){
+            emit(
+              AuthStateChangePinPasswordSuccess(message: request.message ?? ""),
+            );
+          }else{
+            emit(
+              AuthStateFailure(error: request.message ?? ""),
+            );
+          }
+        } else {
+          emit(AuthStateFailure(error: request.message ?? ""));
+        }
+      } catch (e) {
+        emit(AuthStateFailure(error: e.toString() ?? ""));
+      }
+    });
+
     on<LoginButtonPressed>((event, emit) async {
       emit(AuthStateLoading());
       print("login loading");

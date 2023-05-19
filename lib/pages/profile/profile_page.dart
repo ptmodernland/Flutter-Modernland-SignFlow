@@ -3,6 +3,7 @@ import 'package:bwa_cozy/bloc/login/login_event.dart';
 import 'package:bwa_cozy/bloc/login/login_response.dart';
 import 'package:bwa_cozy/bloc/login/login_state.dart';
 import 'package:bwa_cozy/pages/profile/changepin/change_password_page.dart';
+import 'package:bwa_cozy/pages/profile/changepin/change_pin_page.dart';
 import 'package:bwa_cozy/pages/splash/splash_screen.dart';
 import 'package:bwa_cozy/repos/login_repository.dart';
 import 'package:bwa_cozy/util/my_theme.dart';
@@ -91,7 +92,16 @@ class ProfilePage extends StatelessWidget {
                                 SessionManager.removeUserFromSession();
                                 Navigator.pushAndRemoveUntil(
                                   context,
-                                  MaterialPageRoute(builder: (context) => SplashScreenPage()),
+                                  PageRouteBuilder(
+                                    pageBuilder: (context, animation, secondaryAnimation) => SplashScreenPage(),
+                                    transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                                      return FadeTransition(
+                                        opacity: animation,
+                                        child: child,
+                                      );
+                                    },
+                                    transitionDuration: Duration(milliseconds: 1500),
+                                  ),
                                       (route) => false,
                                 );
                               }
@@ -145,7 +155,11 @@ class ProfilePage extends StatelessWidget {
                                     "asset/img/icons/icon_security_shield.svg",
                               ),
                               ProfileMenuItemWidget(
-                                onClick: () {},
+                                onClick: () {
+                                  Navigator.push(context, MaterialPageRoute(builder: (context){
+                                    return ChangePinPage();
+                                  }));
+                                },
                                 title: "Ganti PIN",
                                 description:
                                     "Ganti pin yang digunakan untuk approval/reject dokumen",

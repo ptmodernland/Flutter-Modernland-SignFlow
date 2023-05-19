@@ -24,6 +24,5 @@ class ChangePinPasswordEvent extends LoginEvent {
   final String? confirmNewPassword;
   final String? newPin;
 
-  ChangePinPasswordEvent(
-      {this.newPassword, this.confirmNewPassword, this.newPin});
+  ChangePinPasswordEvent({this.newPassword, this.confirmNewPassword, this.newPin});
 }

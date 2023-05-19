@@ -53,6 +53,7 @@ class _CustomTextInputState extends State<CustomTextInput> {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 8.0),
       child: TextFormField(
+
         controller: widget.textEditController,
         validator: widget.textValidator,
         decoration: InputDecoration(
