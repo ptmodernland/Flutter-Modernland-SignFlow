@@ -2,6 +2,7 @@ import 'package:bwa_cozy/bloc/login/login_bloc.dart';
 import 'package:bwa_cozy/bloc/login/login_event.dart';
 import 'package:bwa_cozy/bloc/login/login_response.dart';
 import 'package:bwa_cozy/bloc/login/login_state.dart';
+import 'package:bwa_cozy/pages/profile/changepin/change_password_page.dart';
 import 'package:bwa_cozy/pages/splash/splash_screen.dart';
 import 'package:bwa_cozy/repos/login_repository.dart';
 import 'package:bwa_cozy/util/my_theme.dart';
@@ -126,40 +127,66 @@ class ProfilePage extends StatelessWidget {
                         child: Container(
                           child: Column(
                             children: [
+                              Text(
+                                "General",
+                                style:
+                                    MyTheme.myStylePrimaryTextStyle.copyWith(),
+                              ),
+                              ProfileMenuItemWidget(
+                                onClick: () {
+                                  Navigator.push(context, MaterialPageRoute(builder: (context){
+                                    return ChangePasswordPage();
+                                  }));
+                                },
+                                title: "Ganti Password",
+                                description:
+                                    "Ganti Password Yang Digunakan Untuk Login",
+                                imageAsset:
+                                    "asset/img/icons/icon_security_shield.svg",
+                              ),
+                              ProfileMenuItemWidget(
+                                onClick: () {},
+                                title: "Ganti PIN",
+                                description:
+                                    "Ganti pin yang digunakan untuk approval/reject dokumen",
+                                imageAsset:
+                                    "asset/img/icons/icon_security_shield.svg",
+                              ),
                               Container(
                                 margin: EdgeInsets.all(10),
                                 width: double.infinity,
-                                child: ElevatedButton(
+                                child:
+                                ElevatedButton(
                                   onPressed: () {
                                     showDialog(
                                       context: context,
                                       builder: (BuildContext context) =>
                                           CupertinoAlertDialog(
-                                        title: Text("Logout"),
-                                        content: Text(
-                                            "Anda akan keluar dari aplikasi ini. Apakah Anda yakin?"),
-                                        actions: <Widget>[
-                                          CupertinoDialogAction(
-                                            child: Text("Kembali ke Aplikasi"),
-                                            onPressed: () {
-                                              // Perform any action here
-                                              // Dismiss the dialog
-                                              Navigator.of(context).pop();
-                                            },
+                                            title: Text("Logout"),
+                                            content: Text(
+                                                "Anda akan keluar dari aplikasi ini. Apakah Anda yakin?"),
+                                            actions: <Widget>[
+                                              CupertinoDialogAction(
+                                                child: Text("Kembali ke Aplikasi"),
+                                                onPressed: () {
+                                                  // Perform any action here
+                                                  // Dismiss the dialog
+                                                  Navigator.of(context).pop();
+                                                },
+                                              ),
+                                              CupertinoDialogAction(
+                                                isDefaultAction: true,
+                                                child: Text("Ya"),
+                                                onPressed: () {
+                                                  loginBloc.add(LogoutButtonPressed(
+                                                      username));
+                                                  // Perform any action here
+                                                  // Dismiss the dialog
+                                                  Navigator.of(context).pop();
+                                                },
+                                              ),
+                                            ],
                                           ),
-                                          CupertinoDialogAction(
-                                            isDefaultAction: true,
-                                            child: Text("Ya"),
-                                            onPressed: () {
-                                              loginBloc.add(LogoutButtonPressed(
-                                                  username));
-                                              // Perform any action here
-                                              // Dismiss the dialog
-                                              Navigator.of(context).pop();
-                                            },
-                                          ),
-                                        ],
-                                      ),
                                     );
                                   },
                                   style: ButtonStyle(
@@ -167,14 +194,14 @@ class ProfilePage extends StatelessWidget {
                                         RoundedRectangleBorder>(
                                       RoundedRectangleBorder(
                                         borderRadius:
-                                            BorderRadius.circular(18.0),
+                                        BorderRadius.circular(18.0),
                                         side: BorderSide(
                                             color: Colors.black, width: 1),
                                       ),
                                     ),
                                     backgroundColor:
-                                        MaterialStateProperty.all<Color>(
-                                            Colors.black),
+                                    MaterialStateProperty.all<Color>(
+                                        Colors.black),
                                   ),
                                   child: Container(
                                     child: Row(
@@ -196,27 +223,6 @@ class ProfilePage extends StatelessWidget {
                                     ),
                                   ),
                                 ),
-                              ),
-                              Text(
-                                "General",
-                                style:
-                                    MyTheme.myStylePrimaryTextStyle.copyWith(),
-                              ),
-                              ProfileMenuItemWidget(
-                                onClick: () {},
-                                title: "Ganti Password",
-                                description:
-                                    "Ganti Password Yang Digunakan Untuk Login",
-                                imageAsset:
-                                    "asset/img/icons/icon_security_shield.svg",
-                              ),
-                              ProfileMenuItemWidget(
-                                onClick: () {},
-                                title: "Ganti PIN",
-                                description:
-                                    "Ganti pin yang digunakan untuk approval/reject dokumen",
-                                imageAsset:
-                                    "asset/img/icons/icon_security_shield.svg",
                               ),
                             ],
                           ),

@@ -64,7 +64,7 @@ class _CustomTextInputState extends State<CustomTextInput> {
           focusedBorder: widget.enableBorder ? getBorder() : InputBorder.none,
           labelText: widget.labelText ?? widget.hintTextString as String,
           labelStyle: getTextStyle(),
-          prefixIcon: widget.prefixIcon ?? getPrefixIcon(),
+          prefixIcon: widget.prefixIcon ?? null,
           suffixIcon: getSuffixIcon(),
         ),
         onChanged: checkValidation,
