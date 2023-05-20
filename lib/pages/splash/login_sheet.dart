@@ -23,11 +23,12 @@ Future<dynamic> showLoginFormDialog({
   required GlobalKey<FormState> formKey,
   required TextEditingController usernameController,
   required TextEditingController passwordController,
-  required LoginBloc loginBloc,
-  required LoginRepository loginRepo,
 }) {
   double screenHeight = MediaQuery.of(context).size.height;
   double screenWidth = MediaQuery.of(context).size.width;
+
+  LoginRepository loginRepository = LoginRepository();
+  late final loginBloc = LoginBloc(loginRepository);
 
   return showModalBottomSheet(
       isScrollControlled: true,
