@@ -2,6 +2,8 @@ import 'package:bwa_cozy/bloc/login/login_bloc.dart';
 import 'package:bwa_cozy/bloc/login/login_event.dart';
 import 'package:bwa_cozy/bloc/login/login_response.dart';
 import 'package:bwa_cozy/bloc/login/login_state.dart';
+import 'package:bwa_cozy/bloc/notif/notif_bloc.dart';
+import 'package:bwa_cozy/bloc/notif/notif_event.dart';
 import 'package:bwa_cozy/pages/profile/changepin/change_password_page.dart';
 import 'package:bwa_cozy/pages/profile/changepin/change_pin_page.dart';
 import 'package:bwa_cozy/pages/splash/splash_screen.dart';
@@ -15,8 +17,21 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:quickalert/models/quickalert_type.dart';
 import 'package:quickalert/quickalert.dart';
 
-class ProfilePage extends StatelessWidget {
-  const ProfilePage({Key? key}) : super(key: key);
+class ProfilePage extends StatefulWidget {
+  final NotifCoreBloc? notifBloc;
+
+  const ProfilePage({Key? key, this.notifBloc = null}) : super(key: key);
+
+  @override
+  State<ProfilePage> createState() => _ProfilePageState();
+}
+
+class _ProfilePageState extends State<ProfilePage> {
+  @override
+  void initState() {
+    super.initState();
+    // this.widget.notifBloc?.add(NotifEventCount());
+  }
 
   @override
   Widget build(BuildContext context) {

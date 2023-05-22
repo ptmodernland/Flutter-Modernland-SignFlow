@@ -1,3 +1,4 @@
+import 'package:bwa_cozy/bloc/notif/notif_bloc.dart';
 import 'package:bwa_cozy/pages/detail/detail_project_page.dart';
 import 'package:bwa_cozy/pages/settings/settings_page.dart';
 import 'package:bwa_cozy/util/my_colors.dart';
@@ -12,7 +13,7 @@ import 'package:bwa_cozy/widget/tips_and_trick/tips_and_trick_widget.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatelessWidget {
-  const HomePage({Key? key}) : super(key: key);
+  const HomePage(NotifCoreBloc notifBloc, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

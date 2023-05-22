@@ -23,13 +23,11 @@ class SplashScreenPage extends StatefulWidget {
   State<SplashScreenPage> createState() => _SplashScreenPageState();
 }
 
-
 class _SplashScreenPageState extends State<SplashScreenPage> {
-
   void checkUserAndNavigate() async {
     UserDTO? user = await SessionManager.getUser();
     if (user != null) {
-      print("user is logged in as "+ user.username);
+      print("user is logged in as " + user.username);
       navigateToHomePage();
     } else {
       print("user is not logged in");
@@ -42,7 +40,8 @@ class _SplashScreenPageState extends State<SplashScreenPage> {
     Navigator.pushAndRemoveUntil(
       context,
       PageRouteBuilder(
-        pageBuilder: (context, animation, secondaryAnimation) => ContainerHomePage(),
+        pageBuilder: (context, animation, secondaryAnimation) =>
+            ContainerHomePage(),
         transitionsBuilder: (context, animation, secondaryAnimation, child) {
           return FadeTransition(
             opacity: animation,
@@ -51,9 +50,11 @@ class _SplashScreenPageState extends State<SplashScreenPage> {
         },
         transitionDuration: Duration(milliseconds: 1500),
       ),
-          (route) => false,
+      (route) => false,
     );
   }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -63,20 +64,19 @@ class _SplashScreenPageState extends State<SplashScreenPage> {
 
     DeviceInformationModel deviceInformation;
 
-    @override
-    void initState() {
-      super.initState();
-      checkUserAndNavigate();
+    void updateCounter(){
     }
 
-    LoginRepository loginRepository = LoginRepository();
-    final loginBloc = LoginBloc(loginRepository);
+    @override
+    void initState() {
+      checkUserAndNavigate();
+      super.initState();
+    }
 
     double screenHeight = MediaQuery.of(context).size.height;
     double screenWidth = MediaQuery.of(context).size.width;
 
     checkUserAndNavigate();
-
 
     return Scaffold(
         backgroundColor: Colors.white,
@@ -223,41 +223,33 @@ class _SplashScreenPageState extends State<SplashScreenPage> {
                                   showLoginFormDialog(
                                       context: context,
                                       formKey: _formKey,
-                                      loginBloc: loginBloc,
-                                      loginRepo: loginRepository,
-                                      passwordController:
-                                      _passwordController,
-                                      usernameController:
-                                      _usernameController);
+                                      passwordController: _passwordController,
+                                      usernameController: _usernameController);
                                 },
                                 style: ButtonStyle(
-                                  padding: MaterialStateProperty.all<
-                                      EdgeInsets>(
-                                    setButtonLoginRegisterPadding(
-                                        context),
+                                  padding:
+                                      MaterialStateProperty.all<EdgeInsets>(
+                                    setButtonLoginRegisterPadding(context),
                                   ),
                                   shape: MaterialStateProperty.all<
                                       RoundedRectangleBorder>(
                                     RoundedRectangleBorder(
-                                      borderRadius:
-                                      BorderRadius.circular(18.0),
-                                      side: BorderSide(
-                                          color: Colors.transparent),
+                                      borderRadius: BorderRadius.circular(18.0),
+                                      side:
+                                          BorderSide(color: Colors.transparent),
                                     ),
                                   ),
                                   backgroundColor:
-                                  MaterialStateProperty.all<Color>(
-                                      Colors.black),
+                                      MaterialStateProperty.all<Color>(
+                                          Colors.black),
                                 ),
                                 child: Text(
                                   "Login",
                                   style: MyTheme.myStylePrimaryTextStyle
                                       .copyWith(
-                                      fontSize:
-                                      setButtonLoginRegisterSize(
-                                          screenWidth,
-                                          screenHeight),
-                                      color: Colors.white),
+                                          fontSize: setButtonLoginRegisterSize(
+                                              screenWidth, screenHeight),
+                                          color: Colors.white),
                                 ),
                               ),
                               ElevatedButton(
