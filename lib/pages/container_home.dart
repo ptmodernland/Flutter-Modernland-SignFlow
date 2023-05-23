@@ -1,11 +1,11 @@
 import 'package:bwa_cozy/bloc/notif/notif_bloc.dart';
 import 'package:bwa_cozy/bloc/notif/notif_event.dart';
 import 'package:bwa_cozy/bloc/notif/notif_state.dart';
+import 'package:bwa_cozy/pages/approval/pbj/pbj_page.dart';
 import 'package:bwa_cozy/pages/home/home_page.dart';
 import 'package:bwa_cozy/pages/profile/profile_page.dart';
 import 'package:bwa_cozy/repos/notif_repository.dart';
 import 'package:flutter/cupertino.dart';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -16,7 +16,8 @@ class ContainerHomePage extends StatefulWidget {
   _ContainerHomePageState createState() => _ContainerHomePageState();
 }
 
-class _ContainerHomePageState extends State<ContainerHomePage> {
+class _ContainerHomePageState extends State<ContainerHomePage>
+    with WidgetsBindingObserver {
   int _selectedTab = 0;
 
   late NotifRepository notifRepository;
@@ -25,8 +26,25 @@ class _ContainerHomePageState extends State<ContainerHomePage> {
   List<Widget> _pages = [];
 
   @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      print("resumed");
+      setState(() {
+        notifBloc.add(NotifEventCount());
+      });
+    }
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance?.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance?.addObserver(this);
     notifRepository = NotifRepository();
     notifBloc = NotifCoreBloc(notifRepository);
     _pages = [
@@ -37,7 +55,7 @@ class _ContainerHomePageState extends State<ContainerHomePage> {
         child: Text("IOM"),
       ),
       Center(
-        child: Text("Permohonan Barang Jasa"),
+        child: ApprovalPBJMainPage(),
       ),
       Center(
         child: Text("Compare"),
@@ -46,7 +64,7 @@ class _ContainerHomePageState extends State<ContainerHomePage> {
         child: Text("Kasbon"),
       ),
       Center(
-        child: ProfilePage(),
+        child: Text("Realisasi"),
       ),
       Center(
         child: ProfilePage(notifBloc: notifBloc,),
@@ -56,6 +74,7 @@ class _ContainerHomePageState extends State<ContainerHomePage> {
 
   void _changeTab(int index) {
     setState(() {
+      notifBloc..add(NotifEventCount());
       _selectedTab = index;
     });
   }
@@ -176,10 +195,7 @@ class _BottomIconWithBadgeState extends State<BottomIconWithBadge> {
         var count = "";
         var title = "Home";
         Widget textOnMenu = Container();
-        BoxDecoration? badgeNotifDecoration = BoxDecoration(
-          color: Colors.red,
-          borderRadius: BorderRadius.circular(6),
-        );
+        BoxDecoration? badgeNotifDecoration = null;
 
         Widget icon = Icon(CupertinoIcons.alarm);
         if (widget.menuType == BottomMenuType.HOME) {
@@ -225,36 +241,24 @@ class _BottomIconWithBadgeState extends State<BottomIconWithBadge> {
         }
 
         if (state is NotifStateSuccess) {
-          print("UI Notif Counter success");
-
           if (widget.menuType == BottomMenuType.HOME) {
             title = "Comparison";
             icon = Icon(CupertinoIcons.home);
           }
           if (widget.menuType == BottomMenuType.IOM) {
             count = state.totalIom;
-            title = "IOM"; // Inter Office Message;
-            icon = Icon(CupertinoIcons.doc_on_doc_fill);
-          }
-          if (widget.menuType == BottomMenuType.PBJ) {
-            count = state.totalPermohonan;
-            title = "Permohonan Barang Jasa";
-            icon = Icon(CupertinoIcons.cart_fill);
           }
           if (widget.menuType == BottomMenuType.COMPARE) {
             count = state.totalCompare;
-            title = "Comparison";
-            icon = Icon(CupertinoIcons.shuffle_thick);
+          }
+          if (widget.menuType == BottomMenuType.PBJ) {
+            count = state.totalPermohonan;
           }
           if (widget.menuType == BottomMenuType.KASBON) {
             count = state.totalKasbon;
-            title = "Kasbon";
-            icon = Icon(CupertinoIcons.money_dollar_circle_fill);
           }
           if (widget.menuType == BottomMenuType.REALISASI) {
-            title = "Realisasi";
-            print("realisasi " + count);
-            icon = Icon(CupertinoIcons.checkmark_circle_fill);
+            count = state.totalRealisasi;
           }
           if (widget.menuType == BottomMenuType.SETTINGS) {
             title = "Settings";
@@ -263,6 +267,10 @@ class _BottomIconWithBadgeState extends State<BottomIconWithBadge> {
           if (count == "" || count == "0") {
             badgeNotifDecoration = null;
           } else {
+            badgeNotifDecoration = BoxDecoration(
+              color: Colors.red,
+              borderRadius: BorderRadius.circular(6),
+            );
             textOnMenu = Text(
               count,
               style: TextStyle(
