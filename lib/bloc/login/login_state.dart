@@ -2,21 +2,34 @@ import 'package:bwa_cozy/bloc/login/login_response.dart';
 
 abstract class LoginState {}
 
-class LoginInitial extends LoginState {}
+class AuthStateInitial extends LoginState {}
 
-class LoginLoading extends LoginState {}
+class AuthStateLoading extends LoginState {}
 
-class LoginSuccess extends LoginState {
+class AuthStateLoginSuccess extends LoginState {
   final UserDTO loginSuccessPayload;
   final String message;
 
-  LoginSuccess(
+  AuthStateLoginSuccess(
       {required this.loginSuccessPayload,
       this.message = "Selamat menggunakan aplikasi Modernland Approval"});
 }
 
-class LoginFailure extends LoginState {
+class AuthStateChangePinPasswordSuccess extends LoginState {
+  final String message;
+
+  AuthStateChangePinPasswordSuccess({this.message = ""});
+}
+
+class AuthStateLogoutSuccess extends LoginState {
+  final String username;
+  final String message;
+
+  AuthStateLogoutSuccess({this.username = "", this.message = ""});
+}
+
+class AuthStateFailure extends LoginState {
   final String error;
 
-  LoginFailure({required this.error});
+  AuthStateFailure({required this.error});
 }

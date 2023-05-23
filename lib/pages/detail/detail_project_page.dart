@@ -25,7 +25,8 @@ class DetailProjectPage extends StatelessWidget {
     return Scaffold(
         body: SafeArea(
           bottom: false,
-          child: Stack(
+          child:
+          Stack(
             children: [
               Image.asset(
                 "asset/img/dummy/detail_project_placeholder.png",

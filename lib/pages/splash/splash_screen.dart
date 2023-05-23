@@ -1,15 +1,20 @@
 import 'dart:ui';
+import 'package:bwa_cozy/bloc/login/login_bloc.dart';
+import 'package:bwa_cozy/bloc/login/login_response.dart';
+import 'package:bwa_cozy/bloc/login/login_state.dart';
 import 'package:bwa_cozy/pages/container_home.dart';
+import 'package:bwa_cozy/pages/home/home_page.dart';
 import 'package:bwa_cozy/pages/login_new_page.dart';
+import 'package:bwa_cozy/pages/splash/login_sheet.dart';
+import 'package:bwa_cozy/util/model/device_information_model.dart';
 import 'package:bwa_cozy/util/my_colors.dart';
 import 'package:bwa_cozy/util/my_theme.dart';
-import 'package:device_info_plus/device_info_plus.dart';
+import 'package:bwa_cozy/util/storage/sessionmanager/session_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:quickalert/quickalert.dart';
-import 'package:url_launcher/url_launcher.dart';
-import 'dart:io';
-import 'package:dart_ipify/dart_ipify.dart';
+import 'package:bwa_cozy/repos/login_repository.dart';
 
 class SplashScreenPage extends StatefulWidget {
   const SplashScreenPage({Key? key}) : super(key: key);
@@ -19,125 +24,37 @@ class SplashScreenPage extends StatefulWidget {
 }
 
 class _SplashScreenPageState extends State<SplashScreenPage> {
-  openwhatsapp(String number) async {
-    var whatsapp = "+" + number;
-    var whatsappURl_android =
-        "whatsapp://send?phone=" + whatsapp + "&text=Permintaan+reset+sandi";
-    var whatappURL_ios =
-        "https://wa.me/$whatsapp?text=${Uri.parse("Permintaan+reset+sandi")}";
-    if (Platform.isIOS) {
-      // for iOS phone only
-      if (await canLaunch(whatappURL_ios)) {
-        await launch(whatappURL_ios, forceSafariVC: false);
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: new Text("WhatsApp tidak terpasang")));
-      }
+  void checkUserAndNavigate() async {
+    UserDTO? user = await SessionManager.getUser();
+    if (user != null) {
+      print("user is logged in as " + user.username);
+      navigateToHomePage();
     } else {
-      // android , web
-      if (await canLaunch(whatsappURl_android)) {
-        await launch(whatsappURl_android);
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: new Text("WhatsApp tidak terpasang")));
-      }
+      print("user is not logged in");
+      // Handle the case when user is not available
+      // For example, show a login screen or a splash screen
     }
   }
 
-  Future<String> getDeviceInfo() async {
-    final DeviceInfoPlugin deviceInfoPlugin = DeviceInfoPlugin();
-    String deviceInfo = '';
-
-    try {
-      if (Platform.isAndroid) {
-        final androidInfo = await deviceInfoPlugin.androidInfo;
-        deviceInfo = 'Device Type: Android\n';
-        deviceInfo += 'Model: ${androidInfo.model}\n';
-        deviceInfo += 'Brand: ${androidInfo.brand}\n';
-      } else if (Platform.isIOS) {
-        final iosInfo = await deviceInfoPlugin.iosInfo;
-        deviceInfo = 'Device Type: iOS\n';
-        deviceInfo += 'Model: ${iosInfo.model}\n';
-        deviceInfo += 'Brand: ${iosInfo.name}\n';
-      }
-
-      String? ipAddress;
-      while (ipAddress == null) {
-        try {
-          ipAddress = await getIpAddress();
-        } catch (e) {
-          // Ignore the exception and continue the loop
-        }
-      }
-
-      deviceInfo += 'IP Address: $ipAddress';
-    } catch (e) {
-      deviceInfo = 'Failed to retrieve device information. because of $e';
-    }
-
-    return deviceInfo;
+  void navigateToHomePage() {
+    Navigator.pushAndRemoveUntil(
+      context,
+      PageRouteBuilder(
+        pageBuilder: (context, animation, secondaryAnimation) =>
+            ContainerHomePage(),
+        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+          return FadeTransition(
+            opacity: animation,
+            child: child,
+          );
+        },
+        transitionDuration: Duration(milliseconds: 1500),
+      ),
+      (route) => false,
+    );
   }
 
-  Future<String> getIpAddress() async {
-    final ipv4 = await Ipify.ipv4();
-    final address = InternetAddress(ipv4);
-    print("IP address is " + address.address.toString());
-    return address.address.toString();
-  }
 
-  EdgeInsets setButtonLoginRegisterPadding(BuildContext context) {
-    double screenHeight = MediaQuery.of(context).size.height;
-    double screenWidth = MediaQuery.of(context).size.width;
-
-    if (screenWidth >= 500 && screenHeight > 600) {
-      EdgeInsets.symmetric(
-          vertical: MediaQuery.of(context).size.width > 500 ? 15.0 : 8.5,
-          horizontal: MediaQuery.of(context).size.width > 500 ? 50.0 : 25.0);
-    } else {
-      EdgeInsets.symmetric(
-          vertical: MediaQuery.of(context).size.width > 500 ? 15.0 : 8.5,
-          horizontal: MediaQuery.of(context).size.width > 500 ? 50.0 : 25.0);
-    }
-
-    return EdgeInsets.symmetric(
-        vertical: MediaQuery.of(context).size.width > 500 ? 15.0 : 8.5,
-        horizontal: MediaQuery.of(context).size.width > 500 ? 50.0 : 25.0);
-  }
-
-  double? setButtonLoginRegisterSize(double screenWidth, double screenHeight) {
-    return screenWidth >= 500 && screenHeight > 700 ? 28.0 : 15;
-  }
-
-  double setHeaderTextSize(double screenWidth, double screenHeight) {
-    if (screenWidth >= 500 && screenHeight > 700) {
-      return 28.0;
-    } else {
-      return 22.0;
-    }
-  }
-
-  Alignment setLoginRegisterButtonAlignment(
-      double screenWidth, double screenHeight) {
-    return screenWidth >= 500 && screenHeight >= 700
-        ? Alignment.centerLeft
-        : Alignment.centerLeft;
-  }
-
-  double setSubHeaderTextSize(double screenWidth, double screenHeight) {
-    if (screenWidth >= 500 && screenHeight > 700) {
-      return 18.0;
-    } else {
-      return 14.0;
-    }
-  }
-
-  AssetImage setFooterImage(double screenWidth, double screenHeight) {
-    if (screenWidth < 500) {
-      return AssetImage("asset/img/home/home_footer_mobile.png");
-    } else {
-      return AssetImage("asset/img/home/home_footer_landscape.png");
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -145,8 +62,21 @@ class _SplashScreenPageState extends State<SplashScreenPage> {
     final _usernameController = TextEditingController();
     final _passwordController = TextEditingController();
 
+    DeviceInformationModel deviceInformation;
+
+    void updateCounter(){
+    }
+
+    @override
+    void initState() {
+      checkUserAndNavigate();
+      super.initState();
+    }
+
     double screenHeight = MediaQuery.of(context).size.height;
     double screenWidth = MediaQuery.of(context).size.width;
+
+    checkUserAndNavigate();
 
     return Scaffold(
         backgroundColor: Colors.white,
@@ -203,8 +133,9 @@ class _SplashScreenPageState extends State<SplashScreenPage> {
                             "asset/img/icons/logo_modernland.png",
                             width: screenWidth * 0.5,
                           ),
-                          onDoubleTap: (){
-                            Navigator.push(context, MaterialPageRoute(builder: (context){
+                          onDoubleTap: () {
+                            Navigator.push(context,
+                                MaterialPageRoute(builder: (context) {
                               return LoginNewPage();
                             }));
                           },
@@ -289,8 +220,11 @@ class _SplashScreenPageState extends State<SplashScreenPage> {
                             children: [
                               ElevatedButton(
                                 onPressed: () {
-                                  showLoginFormDialog(context, _formKey,
-                                      _usernameController, _passwordController);
+                                  showLoginFormDialog(
+                                      context: context,
+                                      formKey: _formKey,
+                                      passwordController: _passwordController,
+                                      usernameController: _usernameController);
                                 },
                                 style: ButtonStyle(
                                   padding:
@@ -385,19 +319,23 @@ class _SplashScreenPageState extends State<SplashScreenPage> {
                                               crossAxisAlignment:
                                                   CrossAxisAlignment.stretch,
                                               children: [
-                                                Text(snapshot.data ?? ""),
+                                                Text(snapshot
+                                                        .data?.deviceInfoString
+                                                        .toString() ??
+                                                    ""),
                                                 ElevatedButton(
                                                   onPressed: () {
-                                                    Clipboard.setData(
-                                                        ClipboardData(
-                                                            text:
-                                                                snapshot.data ??
-                                                                    ""));
+                                                    Clipboard.setData(ClipboardData(
+                                                        text: snapshot.data
+                                                                ?.deviceInfoString ??
+                                                            ""));
                                                     QuickAlert.show(
                                                       context: context,
                                                       type: QuickAlertType.info,
                                                       text:
-                                                          'Device information copied to clipboard : '+snapshot.data.toString(),
+                                                          'Device information copied to clipboard : ' +
+                                                              snapshot.data
+                                                                  .toString(),
                                                     );
                                                   },
                                                   child:
@@ -476,7 +414,7 @@ class _SplashScreenPageState extends State<SplashScreenPage> {
                     ),
                     GestureDetector(
                       onTap: () {
-                        openwhatsapp("+6282113530950");
+                        openwhatsapp(context, "+6282113530950");
                       },
                       child: Card(
                         color: Colors.green,
@@ -498,7 +436,7 @@ class _SplashScreenPageState extends State<SplashScreenPage> {
                     ),
                     GestureDetector(
                       onTap: () {
-                        openwhatsapp("+6282113530950");
+                        openwhatsapp(context, "+6282113530950");
                       },
                       child: Card(
                         color: Colors.green,
@@ -519,112 +457,6 @@ class _SplashScreenPageState extends State<SplashScreenPage> {
                       ),
                     ),
                   ],
-                ),
-                SizedBox(height: 16),
-              ],
-            ),
-          ),
-        );
-      },
-    );
-  }
-
-  Future<dynamic> showLoginFormDialog(
-      BuildContext context,
-      GlobalKey<FormState> _formKey,
-      TextEditingController _usernameController,
-      TextEditingController _passwordController) {
-    return showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return Dialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20),
-          ),
-          child: Container(
-            padding: EdgeInsets.all(20),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Row(
-                  children: [
-                    Expanded(
-                      flex: MediaQuery.of(context).size.width > 600 ? 3 : 10,
-                      child: LayoutBuilder(
-                        builder: (context, constraints) {
-                          return Image.asset(
-                            "asset/img/icons/logo_modernland.png",
-                            width: constraints.maxWidth,
-                          );
-                        },
-                      ),
-                    ),
-                    Expanded(
-                      flex: MediaQuery.of(context).size.width > 600 ? 7 : 3,
-                      child: SizedBox(),
-                    ),
-                  ],
-                ),
-                Form(
-                  key: _formKey,
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      TextFormField(
-                        controller: _usernameController,
-                        decoration: InputDecoration(
-                          labelText: 'Username',
-                          prefixIcon: Icon(Icons.person),
-                          contentPadding: const EdgeInsets.symmetric(
-                              vertical: 0.0, horizontal: 10.0),
-                          // border: OutlineInputBorder(),
-                        ),
-                        validator: (value) {
-                          if (value?.isEmpty ?? true) {
-                            return 'Please enter a username';
-                          }
-                          return null;
-                        },
-                      ),
-                      SizedBox(height: 16),
-                      TextFormField(
-                        controller: _passwordController,
-                        obscureText: true,
-                        decoration: InputDecoration(
-                          labelText: 'Password',
-                          prefixIcon: Icon(Icons.lock),
-                          contentPadding: const EdgeInsets.symmetric(
-                              vertical: 0.0, horizontal: 10.0),
-                          // border: OutlineInputBorder(),
-                        ),
-                        validator: (value) {
-                          if (value?.isEmpty ?? true) {
-                            return 'Please enter a password';
-                          }
-                          return null;
-                        },
-                      ),
-                      SizedBox(height: 16),
-                      ElevatedButton(
-                        onPressed: () {
-                          if (_formKey.currentState?.validate() ?? true) {
-                            // Perform login or submit logic here
-                            // You can access the entered username and password using
-                            // _usernameController.text and _passwordController.text
-                            print('Username: ${_usernameController.text}');
-                            print('Password: ${_passwordController.text}');
-                            // Close the bottom sheet
-                            Navigator.pop(context);
-                            Navigator.pushReplacement(context,
-                                MaterialPageRoute(builder: (context) {
-                              return ContainerHomePage();
-                            }));
-                          }
-                        },
-                        child: Text('Submit'),
-                      ),
-                    ],
-                  ),
                 ),
                 SizedBox(height: 16),
               ],
