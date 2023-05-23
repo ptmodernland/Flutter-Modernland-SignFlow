@@ -12,22 +12,38 @@ class ItemApprovalWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     Color statusColor = isApproved
         ? Colors.green
-        : Colors.red; // Define color based on approval status
+        : Color(0xFFFF7A7B); // Define color based on approval status
 
     return Container(
       margin: EdgeInsets.only(left: 20, right: 20, bottom: 10),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10),
         border: Border.all(
-          color: Color(0xFFFF7A7B),
+          color: statusColor,
           width: 2,
         ),
       ),
       child: Stack(
         children: [
-          Container(
-            width: 2,
-            color: Colors.blue,
+          Positioned(
+            left: -5,
+            // Position the container at the left edge
+            top: 20,
+            // Align it with the top of the second container
+            bottom: 20,
+            // Stretch it to match the height of the second container
+            child: Container(
+              key: Key("okee"),
+              width: 10,
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.all(Radius.circular(99)),
+                  color: statusColor, // Use the defined color
+                ),
+                padding: EdgeInsets.only(top: 20, bottom: 20),
+                height: 110,
+              ),
+            ),
           ),
           Container(
             margin: EdgeInsets.only(left: 10, right: 10),
