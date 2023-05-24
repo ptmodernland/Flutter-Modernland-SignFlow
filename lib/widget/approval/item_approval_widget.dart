@@ -31,7 +31,8 @@ class ItemApprovalWidget extends StatelessWidget {
     if (personImage != "") {
       uiImage = CircleAvatar(
         radius: 10.0,
-        backgroundImage: NetworkImage('https://via.placeholder.com/150'),
+        backgroundImage: NetworkImage(
+            'http://feylabs.my.id/fm/mdln_asset/mdln_circle_placeholder.png'),
         backgroundColor: Colors.transparent,
       );
     }
@@ -48,6 +49,18 @@ class ItemApprovalWidget extends StatelessWidget {
     if (personImage != "" && personName != "") {
       uiImagePersonNameSeparator = SizedBox(
         height: 20,
+      );
+    }
+
+    if (personImage == "" && personName != "") {
+      uiImagePersonNameSeparator = SizedBox(
+        height: 20,
+      );
+      uiImage = CircleAvatar(
+        radius: 10.0,
+        backgroundImage: NetworkImage(
+            'http://feylabs.my.id/fm/mdln_asset/mdln_circle_placeholder.png'),
+        backgroundColor: Colors.transparent,
       );
     }
 

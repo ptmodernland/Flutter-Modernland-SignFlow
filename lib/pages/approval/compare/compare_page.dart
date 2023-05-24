@@ -14,14 +14,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
-class ApprovalPBJMainPage extends StatefulWidget {
-  const ApprovalPBJMainPage({Key? key}) : super(key: key);
+class ApprovalCompareMainPage extends StatefulWidget {
+  const ApprovalCompareMainPage({Key? key}) : super(key: key);
 
   @override
-  State<ApprovalPBJMainPage> createState() => _ApprovalPBJMainPageState();
+  State<ApprovalCompareMainPage> createState() =>
+      _ApprovalCompareMainPageState();
 }
 
-class _ApprovalPBJMainPageState extends State<ApprovalPBJMainPage> {
+class _ApprovalCompareMainPageState extends State<ApprovalCompareMainPage> {
   @override
   Widget build(BuildContext context) {
     double screenHeight = MediaQuery.of(context).size.height;
@@ -69,7 +70,7 @@ class _ApprovalPBJMainPageState extends State<ApprovalPBJMainPage> {
                                     Align(
                                       alignment: Alignment.center,
                                       child: Text(
-                                        "Permohonan Barang dan Jasa",
+                                        "Comparison",
                                         style: MyTheme.myStylePrimaryTextStyle
                                             .copyWith(
                                                 color: Colors.white,
@@ -125,7 +126,7 @@ class _ApprovalPBJMainPageState extends State<ApprovalPBJMainPage> {
                                                     is NotifStateFailure) {}
                                                 if (state
                                                     is NotifStateSuccess) {
-                                                  count = state.totalPermohonan;
+                                                  count = state.totalCompare;
                                                 }
                                                 return MenuItemApprovalWidget(
                                                   unreadBadgeCount: count,
@@ -191,7 +192,7 @@ class _ApprovalPBJMainPageState extends State<ApprovalPBJMainPage> {
                       BlocProvider(
                         create: (BuildContext context) {
                           return approvalBloc
-                            ..add(RequestDataEvent(ApprovalListType.PBJ));
+                            ..add(RequestDataEvent(ApprovalListType.COMPARE));
                         },
                         child: BlocBuilder<ApprovalMainPageBloc,
                             ApprovalMainPageState>(
@@ -200,7 +201,8 @@ class _ApprovalPBJMainPageState extends State<ApprovalPBJMainPage> {
                             Widget dataList = Text("");
                             if (state is ApprovalMainPageStateLoading) {}
                             if (state is ApprovalMainPageStateFailure) {}
-                            if (state is ApprovalMainPageStateSuccessListPBJ) {
+                            if (state
+                                is ApprovalMainPageStateSuccessListCompare) {
                               var pbjList = state.datas;
                               dataList = ListView.builder(
                                 itemCount: pbjList.length,
@@ -215,14 +217,11 @@ class _ApprovalPBJMainPageState extends State<ApprovalPBJMainPage> {
                                   return ItemApprovalWidget(
                                     isApproved: isApproved,
                                     itemCode: (index + 1).toString() +
-                                        " " +
-                                        pbjItem.noPermintaan +
-                                        "(" +
+                                        pbjItem.noCompare +
                                         pbjList.length.toString(),
                                     date: pbjItem.tglPermintaan,
-                                    departmentTitle: pbjItem.jenis,
                                     personName: pbjItem.namaUser,
-                                    personImage: "",
+                                    departmentTitle: "Comparison Request",
                                   );
                                 },
                               );

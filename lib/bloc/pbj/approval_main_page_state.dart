@@ -1,4 +1,5 @@
 import 'package:bwa_cozy/bloc/login/login_response.dart';
+import 'package:bwa_cozy/bloc/pbj/list_all_compare_dto.dart';
 import 'package:bwa_cozy/bloc/pbj/list_all_pbj_dto.dart';
 
 abstract class ApprovalMainPageState {}
@@ -20,6 +21,12 @@ class ApprovalMainPageStateSuccessListPBJ extends ApprovalMainPageState {
   final List<ListAllPbjDTO> datas;
 
   ApprovalMainPageStateSuccessListPBJ({this.datas = const []});
+}
+
+class ApprovalMainPageStateSuccessListCompare extends ApprovalMainPageState {
+  final List<ListAllCompareDTO> datas;
+
+  ApprovalMainPageStateSuccessListCompare({this.datas = const []});
 }
 
 class ApprovalMainPageStateFailure extends ApprovalMainPageState {
