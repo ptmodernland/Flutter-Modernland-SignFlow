@@ -1,8 +1,8 @@
 import 'dart:convert';
 
 import 'package:bwa_cozy/bloc/_wrapper/response_wrapper.dart';
-import 'package:bwa_cozy/bloc/pbj/list_all_compare_dto.dart';
-import 'package:bwa_cozy/bloc/pbj/list_all_pbj_dto.dart';
+import 'package:bwa_cozy/bloc/pbj/dto/list_all_compare_dto.dart';
+import 'package:bwa_cozy/bloc/pbj/dto/list_all_pbj_dto.dart';
 import 'package:bwa_cozy/util/storage/sessionmanager/session_manager.dart';
 import 'package:http/http.dart' as http;
 
