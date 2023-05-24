@@ -125,7 +125,7 @@ class _ApprovalKasbonMainPageState extends State<ApprovalKasbonMainPage> {
                                                     is NotifStateFailure) {}
                                                 if (state
                                                     is NotifStateSuccess) {
-                                                  count = state.totalCompare;
+                                                  count = state.totalKasbon;
                                                 }
                                                 return MenuItemApprovalWidget(
                                                   unreadBadgeCount: count,
@@ -191,7 +191,7 @@ class _ApprovalKasbonMainPageState extends State<ApprovalKasbonMainPage> {
                       BlocProvider(
                         create: (BuildContext context) {
                           return approvalBloc
-                            ..add(RequestDataEvent(ApprovalListType.COMPARE));
+                            ..add(RequestDataEvent(ApprovalListType.KASBON));
                         },
                         child: BlocBuilder<ApprovalMainPageBloc,
                             ApprovalMainPageState>(
@@ -201,7 +201,7 @@ class _ApprovalKasbonMainPageState extends State<ApprovalKasbonMainPage> {
                             if (state is ApprovalMainPageStateLoading) {}
                             if (state is ApprovalMainPageStateFailure) {}
                             if (state
-                                is ApprovalMainPageStateSuccessListCompare) {
+                                is ApprovalMainPageStateSuccessListKasbon) {
                               var pbjList = state.datas;
                               dataList = ListView.builder(
                                 itemCount: pbjList.length,
@@ -216,11 +216,11 @@ class _ApprovalKasbonMainPageState extends State<ApprovalKasbonMainPage> {
                                   return ItemApprovalWidget(
                                     isApproved: isApproved,
                                     itemCode: (index + 1).toString() +
-                                        pbjItem.noCompare +
+                                        pbjItem.no_kasbon +
                                         pbjList.length.toString(),
                                     date: pbjItem.tglPermintaan,
                                     personName: pbjItem.namaUser,
-                                    departmentTitle: "Comparison Request",
+                                    departmentTitle: "KASBON",
                                   );
                                 },
                               );
