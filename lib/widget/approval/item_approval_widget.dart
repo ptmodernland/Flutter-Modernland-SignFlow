@@ -1,15 +1,56 @@
 import 'package:bwa_cozy/util/my_theme.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class ItemApprovalWidget extends StatelessWidget {
   final bool
       isApproved; // Add a boolean property to determine the approval status
+  final itemCode;
+  final date;
+  final departmentTitle;
+  final personName;
+  final personImage;
 
-  const ItemApprovalWidget({Key? key, this.isApproved = false})
+  const ItemApprovalWidget(
+      {Key? key,
+      this.isApproved = false,
+      this.itemCode = "",
+      this.date = "",
+      this.departmentTitle = "",
+      this.personName = "",
+      this.personImage = ""})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    Widget? uiImage = Container();
+    Widget? uiImagePersonNameSeparator = Container();
+    Widget? uiPersonName = Container();
+    Widget dateText = generateDateText(date);
+
+    if (personImage != "") {
+      uiImage = CircleAvatar(
+        radius: 10.0,
+        backgroundImage: NetworkImage('https://via.placeholder.com/150'),
+        backgroundColor: Colors.transparent,
+      );
+    }
+
+    if (personName != "") {
+      uiPersonName = Text(
+        personName,
+        style: MyTheme.myStylePrimaryTextStyle.copyWith(
+          fontSize: 12,
+        ),
+      );
+    }
+
+    if (personImage != "" && personName != "") {
+      uiImagePersonNameSeparator = SizedBox(
+        height: 20,
+      );
+    }
+
     Color statusColor = isApproved
         ? Colors.green
         : Color(0xFFFF7A7B); // Define color based on approval status
@@ -58,37 +99,22 @@ class ItemApprovalWidget extends StatelessWidget {
                       left: 0, top: 10, right: 5.0, bottom: 10),
                   child: Row(
                     children: [
-                      CircleAvatar(
-                        radius: 10.0,
-                        backgroundImage:
-                            NetworkImage('https://via.placeholder.com/150'),
-                        backgroundColor: Colors.transparent,
-                      ),
-                      SizedBox(
-                        width: 10,
-                      ),
-                      Text(
-                        "Yessy Permatasari",
-                        style: MyTheme.myStylePrimaryTextStyle.copyWith(
-                          fontSize: 12,
-                        ),
-                      ),
+                      uiImage,
+                      uiImagePersonNameSeparator,
+                      uiPersonName
                     ],
                   ),
                 ),
                 Text(
-                  "IT Department",
+                  departmentTitle,
                   style: MyTheme.myStylePrimaryTextStyle
                       .copyWith(fontWeight: FontWeight.w700, fontSize: 15),
                 ),
                 Text(
-                  "#PRGCC221079",
+                  itemCode,
                   style: MyTheme.myStylePrimaryTextStyle.copyWith(fontSize: 12),
                 ),
-                Text(
-                  "Dikirim 3 hari yang lalu",
-                  style: MyTheme.myStylePrimaryTextStyle.copyWith(fontSize: 10),
-                ),
+                dateText,
                 Align(
                   alignment: Alignment.centerRight,
                   child: Container(
@@ -115,5 +141,42 @@ class ItemApprovalWidget extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  Widget generateDateText(date) {
+    try {
+      DateTime currentDate = DateTime.now();
+      DateTime providedDate = DateFormat("dd-MMMM-yyyy").parse(date);
+
+      Duration difference = providedDate.difference(currentDate).abs();
+      bool isMoreThan5Days = difference.inDays.abs() > 5;
+
+      String text = "";
+
+      if (difference.inDays.abs() >= 30) {
+        int months = difference.inDays ~/ 30;
+        text = 'Dikirim $months bulan yang lalu';
+      } else if (difference.inDays.abs() < 30) {
+        text = 'Dikirim ${difference.inDays} hari yang lalu';
+      } else if (difference.inHours.abs() < 20) {
+        int hours = difference.inHours;
+        int minutes = difference.inMinutes.remainder(60);
+        text = 'Dikirim $hours jam $minutes menit yang lalu';
+      } else {
+        int minutes = difference.inDays.abs();
+        text = 'Dikirim pada $date';
+      }
+      return Text(text,
+          style:
+              MyTheme.myStylePrimaryTextStyle.copyWith(fontSize: 10).copyWith(
+                    color: isMoreThan5Days ? Colors.red : Colors.black,
+                  ));
+    } catch (e) {
+      print("error gan tanggal : " + e.toString());
+      return Text(date,
+          style: MyTheme.myStylePrimaryTextStyle
+              .copyWith(fontSize: 10)
+              .copyWith());
+    }
   }
 }

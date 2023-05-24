@@ -14,14 +14,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
-class ApprovalPBJMainPage extends StatefulWidget {
-  const ApprovalPBJMainPage({Key? key}) : super(key: key);
+class TestAllPBJPage extends StatefulWidget {
+  const TestAllPBJPage({Key? key}) : super(key: key);
 
   @override
-  State<ApprovalPBJMainPage> createState() => _ApprovalPBJMainPageState();
+  State<TestAllPBJPage> createState() => _TestAllPBJPageState();
 }
 
-class _ApprovalPBJMainPageState extends State<ApprovalPBJMainPage> {
+class _TestAllPBJPageState extends State<TestAllPBJPage> {
   @override
   Widget build(BuildContext context) {
     double screenHeight = MediaQuery.of(context).size.height;

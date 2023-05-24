@@ -2,9 +2,11 @@ import 'package:bwa_cozy/bloc/notif/notif_bloc.dart';
 import 'package:bwa_cozy/bloc/notif/notif_event.dart';
 import 'package:bwa_cozy/bloc/notif/notif_state.dart';
 import 'package:bwa_cozy/pages/approval/pbj/pbj_page.dart';
+import 'package:bwa_cozy/pages/approval/pbj/test_all_pbj.dart';
 import 'package:bwa_cozy/pages/home/home_page.dart';
 import 'package:bwa_cozy/pages/profile/profile_page.dart';
 import 'package:bwa_cozy/repos/notif_repository.dart';
+import 'package:bwa_cozy/util/enum/menu_type.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -61,7 +63,7 @@ class _ContainerHomePageState extends State<ContainerHomePage>
         child: Text("Compare"),
       ),
       Center(
-        child: Text("Kasbon"),
+        child: TestAllPBJPage(),
       ),
       Center(
         child: Text("Realisasi"),
@@ -92,10 +94,12 @@ class _ContainerHomePageState extends State<ContainerHomePage>
       create: (BuildContext context) {
         return notifBloc..add(NotifEventCount());
       },
-      child: Scaffold(
-        // appBar: AppBar(),
-        body: _pages[_selectedTab],
-        bottomNavigationBar: buildBottomNavigationBar(notifBloc),
+      child: SafeArea(
+        child: Scaffold(
+          // appBar: AppBar(),
+          body: _pages[_selectedTab],
+          bottomNavigationBar: buildBottomNavigationBar(notifBloc),
+        ),
       ),
     );
   }
@@ -166,16 +170,6 @@ class _ContainerHomePageState extends State<ContainerHomePage>
   }
 }
 
-enum BottomMenuType {
-  HOME,
-  IOM,
-  PBJ,
-  REALISASI,
-  KASBON,
-  COMPARE,
-  SETTINGS,
-}
-
 class BottomIconWithBadge extends StatefulWidget {
   final NotifCoreBloc mNotifBloc;
   final BottomMenuType menuType;
@@ -226,7 +220,6 @@ class _BottomIconWithBadgeState extends State<BottomIconWithBadge> {
           title = "Settings";
           icon = Icon(CupertinoIcons.settings);
         }
-        print(BottomMenuType.values.toString() + " " + count.toString());
 
         if (state is NotifStateInitial) {
           print("UI Notif Counter Initial");
