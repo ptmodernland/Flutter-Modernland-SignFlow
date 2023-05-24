@@ -203,6 +203,30 @@ class _ApprovalKasbonMainPageState extends State<ApprovalKasbonMainPage> {
                             if (state
                                 is ApprovalMainPageStateSuccessListKasbon) {
                               var pbjList = state.datas;
+                              if (pbjList.isEmpty) {
+                                return Container(
+                                  margin: EdgeInsets.only(
+                                      top: 50, left: 20, right: 20),
+                                  alignment: Alignment.center,
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Image.network(
+                                        'http://feylabs.my.id/fm/mdln_asset/mdln_empty_image.png',
+                                        // Adjust the image properties as per your requirement
+                                      ),
+                                      SizedBox(height: 10),
+                                      Text(
+                                        'Belum Ada Request Baru',
+                                        style: TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              }
                               dataList = ListView.builder(
                                 itemCount: pbjList.length,
                                 shrinkWrap: true,
@@ -215,12 +239,11 @@ class _ApprovalKasbonMainPageState extends State<ApprovalKasbonMainPage> {
                                   }
                                   return ItemApprovalWidget(
                                     isApproved: isApproved,
-                                    itemCode: (index + 1).toString() +
-                                        pbjItem.no_kasbon +
-                                        pbjList.length.toString(),
+                                    itemCode: pbjItem.no_kasbon,
                                     date: pbjItem.tglPermintaan,
+                                    departmentTitle: pbjItem.jenis,
                                     personName: pbjItem.namaUser,
-                                    departmentTitle: "KASBON",
+                                    personImage: "",
                                   );
                                 },
                               );

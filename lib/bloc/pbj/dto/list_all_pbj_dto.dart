@@ -5,6 +5,7 @@ class ListAllPbjDTO {
   final String status;
   final String approve;
   final String tglPermintaan;
+  final String department;
 
   ListAllPbjDTO({
     required this.noPermintaan,
@@ -13,6 +14,7 @@ class ListAllPbjDTO {
     required this.status,
     required this.approve,
     required this.tglPermintaan,
+    required this.department,
   });
 
   factory ListAllPbjDTO.fromJson(Map<String, dynamic> json) {
@@ -20,6 +22,7 @@ class ListAllPbjDTO {
       noPermintaan: json['no_permintaan'],
       namaUser: json['namaUser'],
       jenis: json['jenis'],
+      department: json['departemen'],
       status: json['status'],
       approve: json['approve'],
       tglPermintaan: json['tgl_permintaan'],

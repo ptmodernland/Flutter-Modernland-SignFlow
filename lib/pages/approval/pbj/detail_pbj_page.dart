@@ -14,14 +14,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
-class ApprovalPBJMainPage extends StatefulWidget {
-  const ApprovalPBJMainPage({Key? key}) : super(key: key);
+class DetailPBJPage extends StatefulWidget {
+  const DetailPBJPage({Key? key}) : super(key: key);
 
   @override
-  State<ApprovalPBJMainPage> createState() => _ApprovalPBJMainPageState();
+  State<DetailPBJPage> createState() => _DetailPBJPageState();
 }
 
-class _ApprovalPBJMainPageState extends State<ApprovalPBJMainPage> {
+class _DetailPBJPageState extends State<DetailPBJPage> {
   @override
   Widget build(BuildContext context) {
     double screenHeight = MediaQuery.of(context).size.height;
@@ -238,7 +238,7 @@ class _ApprovalPBJMainPageState extends State<ApprovalPBJMainPage> {
                                     isApproved: isApproved,
                                     itemCode: pbjItem.noPermintaan,
                                     date: pbjItem.tglPermintaan,
-                                    departmentTitle: pbjItem.department,
+                                    departmentTitle: pbjItem.jenis,
                                     personName: pbjItem.namaUser,
                                     personImage: "",
                                   );

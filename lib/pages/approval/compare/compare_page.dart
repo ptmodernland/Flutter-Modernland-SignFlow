@@ -204,6 +204,32 @@ class _ApprovalCompareMainPageState extends State<ApprovalCompareMainPage> {
                             if (state
                                 is ApprovalMainPageStateSuccessListCompare) {
                               var pbjList = state.datas;
+
+                              if (pbjList.isEmpty) {
+                                return Container(
+                                  margin: EdgeInsets.only(
+                                      top: 50, left: 20, right: 20),
+                                  alignment: Alignment.center,
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Image.network(
+                                        'http://feylabs.my.id/fm/mdln_asset/mdln_empty_image.png',
+                                        // Adjust the image properties as per your requirement
+                                      ),
+                                      SizedBox(height: 10),
+                                      Text(
+                                        'Belum Ada Request Baru',
+                                        style: TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              }
+
                               dataList = ListView.builder(
                                 itemCount: pbjList.length,
                                 shrinkWrap: true,
