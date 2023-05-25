@@ -1,9 +1,9 @@
+import 'package:bwa_cozy/bloc/all_approval/approval_main_page_bloc.dart';
+import 'package:bwa_cozy/bloc/all_approval/approval_main_page_event.dart';
+import 'package:bwa_cozy/bloc/all_approval/approval_main_page_state.dart';
 import 'package:bwa_cozy/bloc/notif/notif_bloc.dart';
 import 'package:bwa_cozy/bloc/notif/notif_event.dart';
 import 'package:bwa_cozy/bloc/notif/notif_state.dart';
-import 'package:bwa_cozy/bloc/pbj/approval_main_page_bloc.dart';
-import 'package:bwa_cozy/bloc/pbj/approval_main_page_event.dart';
-import 'package:bwa_cozy/bloc/pbj/approval_main_page_state.dart';
 import 'package:bwa_cozy/pages/approval/pbj/detail_pbj_page.dart';
 import 'package:bwa_cozy/repos/approval_main_page_repository.dart';
 import 'package:bwa_cozy/repos/notif_repository.dart';
@@ -73,8 +73,8 @@ class _ApprovalPBJMainPageState extends State<ApprovalPBJMainPage> {
                                         "Permohonan Barang dan Jasa",
                                         style: MyTheme.myStylePrimaryTextStyle
                                             .copyWith(
-                                                color: Colors.white,
-                                                fontWeight: FontWeight.w800),
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.w800),
                                       ),
                                     ),
                                     Spacer(),
@@ -99,7 +99,7 @@ class _ApprovalPBJMainPageState extends State<ApprovalPBJMainPage> {
                           children: [
                             Container(
                               margin:
-                                  EdgeInsets.only(top: 20, left: 0, right: 0),
+                              EdgeInsets.only(top: 20, left: 0, right: 0),
                               width: double.infinity,
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.vertical(
@@ -117,57 +117,57 @@ class _ApprovalPBJMainPageState extends State<ApprovalPBJMainPage> {
                                           child: Column(
                                             children: [
                                               BlocBuilder<NotifCoreBloc,
-                                                      NotifCoreState>(
+                                                  NotifCoreState>(
                                                   builder: (context, state) {
-                                                var count = "";
-                                                if (state
+                                                    var count = "";
+                                                    if (state
                                                     is NotifStateLoading) {}
-                                                if (state
+                                                    if (state
                                                     is NotifStateFailure) {}
-                                                if (state
+                                                    if (state
                                                     is NotifStateSuccess) {
-                                                  count = state.totalPermohonan;
-                                                }
-                                                return MenuItemApprovalWidget(
-                                                  unreadBadgeCount: count,
-                                                  onLeftTapFunction: () {
-                                                    Fluttertoast.showToast(
-                                                        msg: "Left",
-                                                        toastLength:
+                                                      count = state.totalPermohonan;
+                                                    }
+                                                    return MenuItemApprovalWidget(
+                                                      unreadBadgeCount: count,
+                                                      onLeftTapFunction: () {
+                                                        Fluttertoast.showToast(
+                                                            msg: "Left",
+                                                            toastLength:
                                                             Toast.LENGTH_SHORT,
-                                                        gravity:
+                                                            gravity:
                                                             ToastGravity.CENTER,
-                                                        timeInSecForIosWeb: 1,
-                                                        backgroundColor:
+                                                            timeInSecForIosWeb: 1,
+                                                            backgroundColor:
                                                             Colors.red,
-                                                        textColor: Colors.white,
-                                                        fontSize: 16.0);
-                                                  },
-                                                  onRightTapFunction: () {
-                                                    Fluttertoast.showToast(
-                                                        msg: "Right",
-                                                        toastLength:
+                                                            textColor: Colors.white,
+                                                            fontSize: 16.0);
+                                                      },
+                                                      onRightTapFunction: () {
+                                                        Fluttertoast.showToast(
+                                                            msg: "Right",
+                                                            toastLength:
                                                             Toast.LENGTH_SHORT,
-                                                        gravity:
+                                                            gravity:
                                                             ToastGravity.CENTER,
-                                                        timeInSecForIosWeb: 1,
-                                                        backgroundColor:
+                                                            timeInSecForIosWeb: 1,
+                                                            backgroundColor:
                                                             Colors.red,
-                                                        textColor: Colors.white,
-                                                        fontSize: 16.0);
-                                                  },
-                                                );
-                                              }),
+                                                            textColor: Colors.white,
+                                                            fontSize: 16.0);
+                                                      },
+                                                    );
+                                                  }),
                                             ],
                                           ),
                                         )),
                                     Container(
                                       margin:
-                                          EdgeInsets.only(left: 20, right: 20),
+                                      EdgeInsets.only(left: 20, right: 20),
                                       child: Row(
                                         mainAxisSize: MainAxisSize.max,
                                         crossAxisAlignment:
-                                            CrossAxisAlignment.start,
+                                        CrossAxisAlignment.start,
                                         children: [
                                           Text(
                                             "Request Terbaru",
@@ -242,16 +242,16 @@ class _ApprovalPBJMainPageState extends State<ApprovalPBJMainPage> {
                                     date: pbjItem.tglPermintaan,
                                     departmentTitle: pbjItem.department,
                                     personName:
-                                        pbjItem.status + pbjItem.namaUser,
+                                    pbjItem.status + pbjItem.namaUser,
                                     personImage: "",
                                     onPressed: (String requiredId) {
                                       Fluttertoast.showToast(
                                           msg: requiredId.toString());
                                       Navigator.push(context,
                                           MaterialPageRoute(builder: (context) {
-                                        return DetailPBJPage(
-                                            noPermintaan: requiredId);
-                                      }));
+                                            return DetailPBJPage(
+                                                noPermintaan: requiredId);
+                                          }));
                                     },
                                   );
                                 },

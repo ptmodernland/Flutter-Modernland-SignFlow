@@ -13,3 +13,11 @@ class RequestPBJDetailEvent extends ApprovalMainPageEvent {
 
   RequestPBJDetailEvent(this.noPermintaan);
 }
+
+class SendQPBJApprove extends ApprovalMainPageEvent {
+  final String noPermintaan;
+  final String pin;
+  final String comment;
+
+  SendQPBJApprove({this.noPermintaan = "", this.pin = "", this.comment = "-"});
+}

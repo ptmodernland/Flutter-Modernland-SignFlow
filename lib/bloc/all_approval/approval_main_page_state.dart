@@ -1,8 +1,7 @@
-import 'package:bwa_cozy/bloc/login/login_response.dart';
-import 'package:bwa_cozy/bloc/pbj/dto/detail_pbj_dto.dart';
-import 'package:bwa_cozy/bloc/pbj/dto/list_all_compare_dto.dart';
-import 'package:bwa_cozy/bloc/pbj/dto/list_all_pbj_dto.dart';
-import 'package:bwa_cozy/bloc/pbj/dto/list_all_pbj_kasbon_dto.dart';
+import 'package:bwa_cozy/bloc/all_approval/dto/detail_pbj_dto.dart';
+import 'package:bwa_cozy/bloc/all_approval/dto/list_all_compare_dto.dart';
+import 'package:bwa_cozy/bloc/all_approval/dto/list_all_pbj_dto.dart';
+import 'package:bwa_cozy/bloc/all_approval/dto/list_all_pbj_kasbon_dto.dart';
 
 abstract class ApprovalMainPageState {}
 
@@ -10,13 +9,11 @@ class ApprovalMainPageStateInitial extends ApprovalMainPageState {}
 
 class ApprovalMainPageStateLoading extends ApprovalMainPageState {}
 
-class AuthStateLoginSuccess extends ApprovalMainPageState {
-  final UserDTO loginSuccessPayload;
+class ApprovalMainPageStateSuccess extends ApprovalMainPageState {
   final String message;
 
-  AuthStateLoginSuccess(
-      {required this.loginSuccessPayload,
-      this.message = "Selamat menggunakan aplikasi Modernland Approval"});
+  ApprovalMainPageStateSuccess(
+      {this.message = "Selamat menggunakan aplikasi Modernland Approval"});
 }
 
 class ApprovalMainPageStateSuccessListPBJ extends ApprovalMainPageState {
@@ -47,4 +44,10 @@ class ApprovalMainPageStateFailure extends ApprovalMainPageState {
   final String error;
 
   ApprovalMainPageStateFailure({required this.error});
+}
+
+class PBJStateFailure extends ApprovalMainPageState {
+  final String error;
+
+  PBJStateFailure({required this.error});
 }

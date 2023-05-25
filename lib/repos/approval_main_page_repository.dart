@@ -1,14 +1,15 @@
 import 'dart:convert';
 
 import 'package:bwa_cozy/bloc/_wrapper/response_wrapper.dart';
-import 'package:bwa_cozy/bloc/pbj/dto/detail_pbj_dto.dart';
-import 'package:bwa_cozy/bloc/pbj/dto/list_all_compare_dto.dart';
-import 'package:bwa_cozy/bloc/pbj/dto/list_all_pbj_dto.dart';
-import 'package:bwa_cozy/bloc/pbj/dto/list_all_pbj_kasbon_dto.dart';
+import 'package:bwa_cozy/bloc/all_approval/dto/detail_pbj_dto.dart';
+import 'package:bwa_cozy/bloc/all_approval/dto/list_all_compare_dto.dart';
+import 'package:bwa_cozy/bloc/all_approval/dto/list_all_pbj_dto.dart';
+import 'package:bwa_cozy/bloc/all_approval/dto/list_all_pbj_kasbon_dto.dart';
 import 'package:bwa_cozy/util/storage/sessionmanager/session_manager.dart';
 import 'package:http/http.dart' as http;
 
 class ApprovalMainPageRepository {
+  //use this to get all waiting PBJ
   Future<ResponseWrapper<List<ListAllPbjDTO>>> getPBJWaitingList() async {
     var logTag = "Getting PBJ";
     try {
@@ -55,6 +56,7 @@ class ApprovalMainPageRepository {
     return ResponseWrapper(null, ResourceStatus.Success, "Login Berhasil");
   }
 
+  //use this to get all waiting Comparison
   Future<ResponseWrapper<List<ListAllCompareDTO>>>
       getCompareWaitingList() async {
     var logTag = "Getting PBJ";
@@ -102,6 +104,7 @@ class ApprovalMainPageRepository {
     return ResponseWrapper(null, ResourceStatus.Success, "Login Berhasil");
   }
 
+  //use this to see PBJ Detail
   Future<ResponseWrapper<DetailPBJDTO>> getPBJDetail(
       String idPermintaan) async {
     var logTag = "Getting Detail PBJ";
@@ -135,6 +138,7 @@ class ApprovalMainPageRepository {
     }
   }
 
+  //use this to get all Kasbon
   Future<ResponseWrapper<List<ListAllKasbonDTO>>> getKasbonWaitingList() async {
     var logTag = "Getting Kasbon";
     try {
@@ -178,6 +182,56 @@ class ApprovalMainPageRepository {
       }
     } catch (error) {
       print("error on ApprovalMainPageRepository (Kasbon) " + error.toString());
+      return ResponseWrapper(null, ResourceStatus.Error, error.toString());
+    }
+  }
+
+  //use this to approve a PBJ
+  Future<ResponseWrapper<String>> approvePBJ({
+    String noPermintaan = "",
+    String comment = "",
+    String pin = "",
+  }) async {
+    var logTag = "Approve PBJ";
+    try {
+      print("trying $logTag");
+      var userID = "";
+      var usersession = await SessionManager.getUserFromSession();
+      if (usersession != null) {
+        userID = usersession.idUser;
+      }
+      // Prepare the request
+      var url = Uri.parse(
+          'https://approval.modernland.co.id/androidiom/proses_approve_pbj.jsp?' +
+              userID);
+
+      var body = {
+        'no_permintaan': noPermintaan,
+        'id_user': userID ?? '',
+        'comment': comment ?? null,
+        'passwordUser': pin ?? '',
+      };
+
+      // Set the form data
+      print("$logTag" + "SS");
+      var response = await http.post(url, body: body);
+      var responseBody = response.body;
+      var jsonResponse = jsonDecode(responseBody);
+      bool resStatus = jsonResponse['status'];
+      var resMessage = jsonResponse['pesan'];
+      final result = jsonDecode(response.body);
+      print(result.toString());
+      if (response.statusCode == 200) {
+        print("result $logTag 200");
+        var jsonResponse = jsonDecode(responseBody);
+        print("result $logTag Success");
+        return ResponseWrapper("Success", ResourceStatus.Success, "Success");
+      } else {
+        print("result $logTag Terjadi Kesalahan");
+        return ResponseWrapper(null, ResourceStatus.Error, "Terjadi Kesalahan");
+      }
+    } catch (error) {
+      print("error on $logTag " + error.toString());
       return ResponseWrapper(null, ResourceStatus.Error, error.toString());
     }
   }
