@@ -9,14 +9,15 @@ class CustomTextInput extends StatefulWidget {
 
   const CustomTextInput({
     this.hintTextString = '',
+    this.minLines = 1,
     this.textValidator = null,
     this.textEditController = null,
     this.inputType = InputType.Default,
     this.enableBorder = true,
     required this.themeColor,
     this.cornerRadius = 12.0,
-    this.maxLength = 12,
-    this.prefixIcon  = null,
+    this.maxLength = 99999999999,
+    this.prefixIcon = null,
     this.textColor = null,
     this.errorMessage = '',
     this.labelText = '',
@@ -29,6 +30,7 @@ class CustomTextInput extends StatefulWidget {
   final InputType inputType;
   final bool enableBorder;
   final Color themeColor;
+  final int? minLines;
   final double cornerRadius;
   final int maxLength;
   final Widget? prefixIcon;
@@ -69,9 +71,13 @@ class _CustomTextInputState extends State<CustomTextInput> {
           suffixIcon: getSuffixIcon(),
         ),
         onChanged: checkValidation,
+        minLines: widget.minLines,
+        maxLines: 999,
         keyboardType: getInputType(),
         obscureText: widget.inputType == InputType.Password && !visibility,
-        maxLength: widget.inputType == InputType.PaymentCard ? 19 : widget.maxLength ?? getMaxLength(),
+        maxLength: widget.inputType == InputType.PaymentCard
+            ? 19
+            : widget.maxLength ?? getMaxLength(),
         style: TextStyle(
           color: widget.textColor ?? Colors.black,
         ),
@@ -83,8 +89,10 @@ class _CustomTextInputState extends State<CustomTextInput> {
   //get border of textinput filed
   OutlineInputBorder getBorder() {
     return OutlineInputBorder(
-      borderRadius: BorderRadius.all(Radius.circular(widget.cornerRadius ?? 12.0)),
-      borderSide: BorderSide(width: 2, color: widget.themeColor ?? Theme.of(context).primaryColor),
+      borderRadius:
+          BorderRadius.all(Radius.circular(widget.cornerRadius ?? 5.0)),
+      borderSide: BorderSide(
+          width: 1, color: widget.themeColor ?? Theme.of(context).primaryColor),
       gapPadding: 2,
     );
   }

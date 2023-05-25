@@ -7,11 +7,15 @@ import 'package:bwa_cozy/bloc/pbj/approval_main_page_state.dart';
 import 'package:bwa_cozy/repos/approval_main_page_repository.dart';
 import 'package:bwa_cozy/repos/notif_repository.dart';
 import 'package:bwa_cozy/util/core/url/base_url.dart';
+import 'package:bwa_cozy/util/enum/action_type.dart';
 import 'package:bwa_cozy/util/my_theme.dart';
 import 'package:bwa_cozy/widget/approval/document_detail_widget.dart';
 import 'package:bwa_cozy/widget/approval/item_approval_widget.dart';
+import 'package:bwa_cozy/widget/core/custom_text_input.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class DetailPBJPage extends StatefulWidget {
   const DetailPBJPage({Key? key, required this.noPermintaan}) : super(key: key);
@@ -22,16 +26,27 @@ class DetailPBJPage extends StatefulWidget {
 }
 
 class _DetailPBJPageState extends State<DetailPBJPage> {
+  final _formKey = GlobalKey<FormState>();
+  final _newPasswordController = TextEditingController();
+
+  late NotifRepository notifRepository;
+  late NotifCoreBloc notifBloc;
+  late ApprovalMainPageRepository approvalRepo;
+  late ApprovalMainPageBloc approvalBloc;
+
+  @override
+  void initState() {
+    super.initState();
+    notifRepository = NotifRepository();
+    notifBloc = NotifCoreBloc(notifRepository);
+    approvalRepo = ApprovalMainPageRepository();
+    approvalBloc = ApprovalMainPageBloc(approvalRepo);
+  }
+
   @override
   Widget build(BuildContext context) {
     double screenHeight = MediaQuery.of(context).size.height;
     double screenWidth = MediaQuery.of(context).size.width;
-
-    NotifRepository notifRepository = NotifRepository();
-    NotifCoreBloc notifBloc = NotifCoreBloc(notifRepository);
-
-    ApprovalMainPageRepository approvalRepo = ApprovalMainPageRepository();
-    ApprovalMainPageBloc approvalBloc = ApprovalMainPageBloc(approvalRepo);
 
     return SafeArea(
       bottom: false,
@@ -111,7 +126,7 @@ class _DetailPBJPageState extends State<DetailPBJPage> {
                           children: [
                             Container(
                               margin:
-                                  EdgeInsets.only(top: 20, left: 0, right: 0),
+                              EdgeInsets.only(top: 20, left: 0, right: 0),
                               width: double.infinity,
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.vertical(
@@ -129,29 +144,29 @@ class _DetailPBJPageState extends State<DetailPBJPage> {
                                           child: Column(
                                             children: [
                                               BlocBuilder<NotifCoreBloc,
-                                                      NotifCoreState>(
+                                                  NotifCoreState>(
                                                   builder: (context, state) {
-                                                var count = "";
-                                                if (state
+                                                    var count = "";
+                                                    if (state
                                                     is NotifStateLoading) {}
-                                                if (state
+                                                    if (state
                                                     is NotifStateFailure) {}
-                                                if (state
+                                                    if (state
                                                     is NotifStateSuccess) {
-                                                  count = state.totalPermohonan;
-                                                }
-                                                return Container();
-                                              }),
+                                                      count = state.totalPermohonan;
+                                                    }
+                                                    return Container();
+                                                  }),
                                             ],
                                           ),
                                         )),
                                     Container(
                                       margin:
-                                          EdgeInsets.only(left: 20, right: 20),
+                                      EdgeInsets.only(left: 20, right: 20),
                                       child: Row(
                                         mainAxisSize: MainAxisSize.max,
                                         crossAxisAlignment:
-                                            CrossAxisAlignment.start,
+                                        CrossAxisAlignment.start,
                                         children: [
                                           Text(
                                             "Detail Request #" +
@@ -213,7 +228,7 @@ class _DetailPBJPageState extends State<DetailPBJPage> {
                                       width: MediaQuery.sizeOf(context).width,
                                       child: Column(
                                         crossAxisAlignment:
-                                            CrossAxisAlignment.stretch,
+                                        CrossAxisAlignment.stretch,
                                         children: [
                                           Text(
                                             "Detail Dokumen",
@@ -230,7 +245,7 @@ class _DetailPBJPageState extends State<DetailPBJPage> {
                                           ),
                                           Row(
                                             crossAxisAlignment:
-                                                CrossAxisAlignment.start,
+                                            CrossAxisAlignment.start,
                                             children: [
                                               Expanded(
                                                 child: DocumentDetailWidget(
@@ -248,13 +263,13 @@ class _DetailPBJPageState extends State<DetailPBJPage> {
                                           ),
                                           Row(
                                             crossAxisAlignment:
-                                                CrossAxisAlignment.start,
+                                            CrossAxisAlignment.start,
                                             children: [
                                               Expanded(
                                                   child: DocumentDetailWidget(
-                                                title: "Nama Karyawan",
-                                                content: data.namaUser,
-                                              )),
+                                                    title: "Nama Karyawan",
+                                                    content: data.namaUser,
+                                                  )),
                                               Expanded(
                                                 child: DocumentDetailWidget(
                                                   title: "Department",
@@ -265,16 +280,16 @@ class _DetailPBJPageState extends State<DetailPBJPage> {
                                           ),
                                           Row(
                                             crossAxisAlignment:
-                                                CrossAxisAlignment.start,
+                                            CrossAxisAlignment.start,
                                             children: [
                                               Expanded(
                                                   child: DocumentDetailWidget(
-                                                title: "View Detail",
-                                                content: "Klik Disini",
-                                                fileURL: DOC_VIEW_PBJ +
-                                                    data.noPermintaan
-                                                        .toString(),
-                                              )),
+                                                    title: "View Detail",
+                                                    content: "Klik Disini",
+                                                    fileURL: DOC_VIEW_PBJ +
+                                                        data.noPermintaan
+                                                            .toString(),
+                                                  )),
                                               Expanded(
                                                 child: DocumentDetailWidget(
                                                   title: "Download File",
@@ -290,7 +305,7 @@ class _DetailPBJPageState extends State<DetailPBJPage> {
                                             height: 20,
                                           ),
                                           Text(
-                                            "Detail Dokumen",
+                                            "Komentar",
                                             textAlign: TextAlign.start,
                                             style: MyTheme
                                                 .myStylePrimaryTextStyle
@@ -299,11 +314,54 @@ class _DetailPBJPageState extends State<DetailPBJPage> {
                                               fontSize: 18,
                                             ),
                                           ),
+                                          Form(
+                                            key: _formKey,
+                                            child: Column(
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: [
+                                                CustomTextInput(
+                                                  textEditController:
+                                                      _newPasswordController,
+                                                  hintTextString:
+                                                      'Isi Tanggapan',
+                                                  inputType: InputType.Default,
+                                                  enableBorder: true,
+                                                  minLines: 3,
+                                                  themeColor: Theme.of(context)
+                                                      .primaryColor,
+                                                  cornerRadius: 18.0,
+                                                  textValidator: (value) {
+                                                    if (value?.isEmpty ??
+                                                        true) {
+                                                      return 'Isi field ini terlebih dahulu';
+                                                    }
+                                                    return null;
+                                                  },
+                                                  textColor: Colors.black,
+                                                  errorMessage:
+                                                      'Username cant be empty',
+                                                  labelText:
+                                                      'Tanggapan/Komentar/Review',
+                                                ),
+                                                SizedBox(height: 5),
+                                                SizedBox(
+                                                  height: 10,
+                                                ),
+                                                SizedBox(height: 16),
+                                              ],
+                                            ),
+                                          ),
                                           SizedBox(
                                             height: 20,
                                           ),
                                           ElevatedButton(
-                                            onPressed: () {},
+                                            onPressed: () {
+                                              showPinInputDialog(
+                                                  type: ApprovalActionType
+                                                      .APPROVE,
+                                                  description:
+                                                      "Anda Yakin Ingin Mengapprove Approval ini ?");
+                                            },
                                             child: Text(
                                               'Approve',
                                               style: MyTheme
@@ -319,7 +377,13 @@ class _DetailPBJPageState extends State<DetailPBJPage> {
                                             ),
                                           ),
                                           ElevatedButton(
-                                            onPressed: () {},
+                                            onPressed: () {
+                                              showPinInputDialog(
+                                                  type:
+                                                      ApprovalActionType.REJECT,
+                                                  description:
+                                                      "Anda Yakin Ingin Menolak Approval ini ?");
+                                            },
                                             child: Text(
                                               'Reject',
                                               style: MyTheme
@@ -343,7 +407,7 @@ class _DetailPBJPageState extends State<DetailPBJPage> {
                                             ),
                                             style: ElevatedButton.styleFrom(
                                               backgroundColor:
-                                                  Color(0xffC4C4C4),
+                                              Color(0xffC4C4C4),
                                               shape: RoundedRectangleBorder(
                                                 borderRadius: BorderRadius.circular(
                                                     20.0), // Adjust the radius as needed
@@ -371,6 +435,61 @@ class _DetailPBJPageState extends State<DetailPBJPage> {
           ],
         ),
       ),
+    );
+  }
+
+  void showPinInputDialog(
+      {required ApprovalActionType type,
+      String description = 'Masukkan PIN anda'}) {
+    var pin = "";
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return CupertinoAlertDialog(
+          title: Text(
+            'Enter PIN',
+            style: GoogleFonts.lato(),
+          ),
+          content: Column(
+            children: [
+              Text(description), // Added description here
+              Container(
+                margin: EdgeInsets.only(bottom: 20, top: 20),
+                child: CupertinoTextField(
+                  onChanged: (value) {
+                    setState(() {
+                      pin = value;
+                    });
+                  },
+                  textAlign: TextAlign.start,
+                  maxLength: 4,
+                  keyboardType: TextInputType.number,
+                  obscureText: true,
+                  placeholder: 'PIN',
+                ),
+              ),
+            ],
+          ),
+          actions: <Widget>[
+            CupertinoDialogAction(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('Cancel'),
+            ),
+            CupertinoDialogAction(
+              onPressed: () {
+                Navigator.of(context).pop();
+                // Perform any desired operations with the entered PIN
+                // Here, we're just printing it for demonstration purposes
+                print('Entered PIN: $pin with navigator' +
+                    this._newPasswordController.text.toString());
+              },
+              child: Text('OK'),
+            ),
+          ],
+        );
+      },
     );
   }
 }
