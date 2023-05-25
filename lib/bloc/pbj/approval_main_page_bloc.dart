@@ -9,6 +9,21 @@ class ApprovalMainPageBloc
   final ApprovalMainPageRepository _repo;
 
   ApprovalMainPageBloc(this._repo) : super(ApprovalMainPageStateInitial()) {
+    on<RequestPBJDetailEvent>((event, emit) async {
+      try {
+        final request = await _repo.getPBJDetail(event.noPermintaan);
+        if (request.data != null) {
+          emit(ApprovalDetailPBJSuccess(data: request.data!));
+          print("success bloc approval_detail_pbj");
+        } else {
+          emit(ApprovalMainPageStateFailure(error: request.message ?? ""));
+        }
+      } catch (e) {
+        print("error occured on approval pbj detail bloc" + e.toString());
+        emit(ApprovalMainPageStateFailure(error: e.toString() ?? ""));
+      }
+    });
+
     on<RequestDataEvent>((event, emit) async {
       emit(ApprovalMainPageStateLoading());
       print("start bloc request");

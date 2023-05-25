@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:bwa_cozy/bloc/_wrapper/response_wrapper.dart';
+import 'package:bwa_cozy/bloc/pbj/dto/detail_pbj_dto.dart';
 import 'package:bwa_cozy/bloc/pbj/dto/list_all_compare_dto.dart';
 import 'package:bwa_cozy/bloc/pbj/dto/list_all_pbj_dto.dart';
 import 'package:bwa_cozy/bloc/pbj/dto/list_all_pbj_kasbon_dto.dart';
@@ -99,6 +100,39 @@ class ApprovalMainPageRepository {
       return ResponseWrapper(null, ResourceStatus.Error, error.toString());
     }
     return ResponseWrapper(null, ResourceStatus.Success, "Login Berhasil");
+  }
+
+  Future<ResponseWrapper<DetailPBJDTO>> getPBJDetail(
+      String idPermintaan) async {
+    var logTag = "Getting Detail PBJ";
+    try {
+      print("trying to get PBJ detail");
+      // Prepare the request
+      var url = Uri.parse(
+          'https://approval.modernland.co.id/androidiom/get_permohonan.php?nopermintaan=' +
+              idPermintaan);
+      // Send the request
+      var response = await http.post(url);
+      // Get the response body as a string
+      var responseBody = response.body;
+      // print("$logTag : $responseBody");
+      var jsonResponse = jsonDecode(responseBody);
+
+      if (response.statusCode == 200) {
+        print("result Detail PBJ 200");
+        final DetailPBJDTO data = DetailPBJDTO.fromJson(jsonResponse);
+
+        print("result PBJ detail success");
+        return ResponseWrapper(data, ResourceStatus.Success, "Success");
+      } else {
+        print("result PBJ detail encountered an error");
+        return ResponseWrapper(null, ResourceStatus.Error, "An error occurred");
+      }
+    } catch (error) {
+      print("error on ApprovalMainPageRepository (PBJ detail): " +
+          error.toString());
+      return ResponseWrapper(null, ResourceStatus.Error, error.toString());
+    }
   }
 
   Future<ResponseWrapper<List<ListAllKasbonDTO>>> getKasbonWaitingList() async {

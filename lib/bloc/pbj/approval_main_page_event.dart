@@ -7,3 +7,9 @@ class RequestDataEvent extends ApprovalMainPageEvent {
 
   RequestDataEvent(this.payload);
 }
+
+class RequestPBJDetailEvent extends ApprovalMainPageEvent {
+  final String noPermintaan;
+
+  RequestPBJDetailEvent(this.noPermintaan);
+}

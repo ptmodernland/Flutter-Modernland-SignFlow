@@ -4,6 +4,7 @@ import 'package:bwa_cozy/bloc/notif/notif_state.dart';
 import 'package:bwa_cozy/bloc/pbj/approval_main_page_bloc.dart';
 import 'package:bwa_cozy/bloc/pbj/approval_main_page_event.dart';
 import 'package:bwa_cozy/bloc/pbj/approval_main_page_state.dart';
+import 'package:bwa_cozy/pages/approval/pbj/detail_pbj_page.dart';
 import 'package:bwa_cozy/repos/approval_main_page_repository.dart';
 import 'package:bwa_cozy/repos/notif_repository.dart';
 import 'package:bwa_cozy/util/enum/menu_type.dart';
@@ -231,16 +232,27 @@ class _ApprovalPBJMainPageState extends State<ApprovalPBJMainPage> {
                                 itemBuilder: (context, index) {
                                   final pbjItem = pbjList[index];
                                   var isApproved = false;
-                                  if (pbjItem.status != "T") {
+                                  if (pbjItem.status != "Y") {
                                     isApproved = true;
                                   }
                                   return ItemApprovalWidget(
+                                    requiredId: pbjItem.noPermintaan,
                                     isApproved: isApproved,
                                     itemCode: pbjItem.noPermintaan,
                                     date: pbjItem.tglPermintaan,
                                     departmentTitle: pbjItem.department,
-                                    personName: pbjItem.namaUser,
+                                    personName:
+                                        pbjItem.status + pbjItem.namaUser,
                                     personImage: "",
+                                    onPressed: (String requiredId) {
+                                      Fluttertoast.showToast(
+                                          msg: requiredId.toString());
+                                      Navigator.push(context,
+                                          MaterialPageRoute(builder: (context) {
+                                        return DetailPBJPage(
+                                            noPermintaan: requiredId);
+                                      }));
+                                    },
                                   );
                                 },
                               );
