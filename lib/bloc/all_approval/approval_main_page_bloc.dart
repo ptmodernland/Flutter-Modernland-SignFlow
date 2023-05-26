@@ -1,4 +1,3 @@
-import 'package:bwa_cozy/bloc/_wrapper/response_wrapper.dart';
 import 'package:bwa_cozy/bloc/all_approval/approval_main_page_event.dart';
 import 'package:bwa_cozy/bloc/all_approval/approval_main_page_state.dart';
 import 'package:bwa_cozy/repos/approval_main_page_repository.dart';
@@ -10,25 +9,25 @@ class ApprovalMainPageBloc
   final ApprovalMainPageRepository _repo;
 
   ApprovalMainPageBloc(this._repo) : super(ApprovalMainPageStateInitial()) {
-    on<SendQPBJApprove>((event, emit) async {
-      try {
-        final request = await _repo.approvePBJ(
-          noPermintaan: event.noPermintaan,
-          comment: event.comment,
-          pin: event.pin,
-        );
-        if (request.status == ResourceStatus.Success) {
-          emit(ApprovalMainPageStateSuccess(
-              message: request.message.toString()));
-          print("success bloc approve PBJ");
-        } else {
-          emit(ApprovalMainPageStateFailure(error: request.message ?? ""));
-        }
-      } catch (e) {
-        print("error bloc PBJ" + e.toString());
-        emit(ApprovalMainPageStateFailure(error: e.toString() ?? ""));
-      }
-    });
+    // on<SendQPBJApprove>((event, emit) async {
+    //   try {
+    //     final request = await _repo.approvePBJ(
+    //       noPermintaan: event.noPermintaan,
+    //       comment: event.comment,
+    //       pin: event.pin,
+    //     );
+    //     if (request.status == ResourceStatus.Success) {
+    //       emit(ApprovalMainPageStateSuccess(
+    //           message: request.message.toString()));
+    //       print("success bloc approve PBJ");
+    //     } else {
+    //       emit(ApprovalMainPageStateFailure(error: request.message ?? ""));
+    //     }
+    //   } catch (e) {
+    //     print("error bloc PBJ" + e.toString());
+    //     emit(ApprovalMainPageStateFailure(error: e.toString() ?? ""));
+    //   }
+    // });
 
     on<RequestPBJDetailEvent>((event, emit) async {
       try {

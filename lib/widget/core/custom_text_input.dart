@@ -55,7 +55,6 @@ class _CustomTextInputState extends State<CustomTextInput> {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 8.0),
       child: TextFormField(
-
         controller: widget.textEditController,
         validator: widget.textValidator,
         decoration: InputDecoration(
@@ -63,6 +62,10 @@ class _CustomTextInputState extends State<CustomTextInput> {
           errorText: _isValidate ? null : validationMessage,
           counterText: '',
           border: getBorder(),
+          alignLabelWithHint: true,
+          // Align the label text with the top
+          floatingLabelBehavior: FloatingLabelBehavior.always,
+          // Always show the label
           enabledBorder: widget.enableBorder ? getBorder() : InputBorder.none,
           focusedBorder: widget.enableBorder ? getBorder() : InputBorder.none,
           labelText: widget.labelText ?? widget.hintTextString as String,
@@ -72,7 +75,7 @@ class _CustomTextInputState extends State<CustomTextInput> {
         ),
         onChanged: checkValidation,
         minLines: widget.minLines,
-        maxLines: 999,
+        maxLines: getMaxLines(),
         keyboardType: getInputType(),
         obscureText: widget.inputType == InputType.Password && !visibility,
         maxLength: widget.inputType == InputType.PaymentCard
@@ -261,6 +264,14 @@ class _CustomTextInputState extends State<CustomTextInput> {
       );
     } else {
       return const Opacity(opacity: 0, child: Icon(Icons.phone));
+    }
+  }
+
+  int getMaxLines() {
+    if (widget.inputType == InputType.Password) {
+      return 1;
+    } else {
+      return widget.minLines ?? 1;
     }
   }
 }

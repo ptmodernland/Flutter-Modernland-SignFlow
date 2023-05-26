@@ -4,8 +4,12 @@ import 'package:bwa_cozy/bloc/all_approval/approval_main_page_state.dart';
 import 'package:bwa_cozy/bloc/notif/notif_bloc.dart';
 import 'package:bwa_cozy/bloc/notif/notif_event.dart';
 import 'package:bwa_cozy/bloc/notif/notif_state.dart';
+import 'package:bwa_cozy/bloc/pbj/pbj_event.dart';
+import 'package:bwa_cozy/bloc/pbj/pbj_main_bloc.dart';
+import 'package:bwa_cozy/bloc/pbj/pbj_state.dart';
 import 'package:bwa_cozy/repos/approval_main_page_repository.dart';
 import 'package:bwa_cozy/repos/notif_repository.dart';
+import 'package:bwa_cozy/repos/pbj_repository.dart';
 import 'package:bwa_cozy/util/core/url/base_url.dart';
 import 'package:bwa_cozy/util/enum/action_type.dart';
 import 'package:bwa_cozy/util/my_theme.dart';
@@ -16,6 +20,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:quickalert/quickalert.dart';
 
 class DetailPBJPage extends StatefulWidget {
   const DetailPBJPage({Key? key, required this.noPermintaan}) : super(key: key);
@@ -27,12 +32,16 @@ class DetailPBJPage extends StatefulWidget {
 
 class _DetailPBJPageState extends State<DetailPBJPage> {
   final _formKey = GlobalKey<FormState>();
-  final _newPasswordController = TextEditingController();
+  final _formKey2 = GlobalKey<FormState>();
+  final messageController = TextEditingController();
 
   late NotifRepository notifRepository;
   late NotifCoreBloc notifBloc;
   late ApprovalMainPageRepository approvalRepo;
   late ApprovalMainPageBloc approvalBloc;
+
+  late PBJRepository pbjRepo;
+  late PBJBloc pbjBloc;
 
   @override
   void initState() {
@@ -41,6 +50,8 @@ class _DetailPBJPageState extends State<DetailPBJPage> {
     notifBloc = NotifCoreBloc(notifRepository);
     approvalRepo = ApprovalMainPageRepository();
     approvalBloc = ApprovalMainPageBloc(approvalRepo);
+    pbjRepo = PBJRepository();
+    pbjBloc = PBJBloc(pbjRepo);
   }
 
   @override
@@ -322,9 +333,9 @@ class _DetailPBJPageState extends State<DetailPBJPage> {
                                               children: [
                                                 CustomTextInput(
                                                   textEditController:
-                                                  _newPasswordController,
+                                                      messageController,
                                                   hintTextString:
-                                                  'Isi Tanggapan',
+                                                      'Isi Tanggapan',
                                                   inputType: InputType.Default,
                                                   enableBorder: true,
                                                   minLines: 3,
@@ -340,79 +351,11 @@ class _DetailPBJPageState extends State<DetailPBJPage> {
                                                   },
                                                   textColor: Colors.black,
                                                   errorMessage:
-                                                  'Username cant be empty',
+                                                      'Username cant be empty',
                                                   labelText:
-                                                  'Tanggapan/Komentar/Review',
+                                                      'Tanggapan/Komentar/Review',
                                                 ),
-                                                SizedBox(height: 5),
-                                                SizedBox(
-                                                  height: 10,
-                                                ),
-                                                SizedBox(height: 16),
                                               ],
-                                            ),
-                                          ),
-                                          SizedBox(
-                                            height: 20,
-                                          ),
-                                          ElevatedButton(
-                                            onPressed: () {
-                                              showPinInputDialog(
-                                                  type: ApprovalActionType
-                                                      .APPROVE,
-                                                  description:
-                                                  "Anda Yakin Ingin Mengapprove Approval ini ?");
-                                            },
-                                            child: Text(
-                                              'Approve',
-                                              style: MyTheme
-                                                  .myStyleButtonTextStyle,
-                                            ),
-                                            style: ElevatedButton.styleFrom(
-                                              backgroundColor:
-                                              Color(0xff33DC9F),
-                                              shape: RoundedRectangleBorder(
-                                                borderRadius: BorderRadius.circular(
-                                                    20.0), // Adjust the radius as needed
-                                              ),
-                                            ),
-                                          ),
-                                          ElevatedButton(
-                                            onPressed: () {
-                                              showPinInputDialog(
-                                                  type:
-                                                  ApprovalActionType.REJECT,
-                                                  description:
-                                                  "Anda Yakin Ingin Menolak Approval ini ?");
-                                            },
-                                            child: Text(
-                                              'Reject',
-                                              style: MyTheme
-                                                  .myStyleButtonTextStyle,
-                                            ),
-                                            style: ElevatedButton.styleFrom(
-                                              backgroundColor:
-                                              Color(0xffFF5B5B),
-                                              shape: RoundedRectangleBorder(
-                                                borderRadius: BorderRadius.circular(
-                                                    20.0), // Adjust the radius as needed
-                                              ),
-                                            ),
-                                          ),
-                                          ElevatedButton(
-                                            onPressed: () {},
-                                            child: Text(
-                                              'Recommend',
-                                              style: MyTheme
-                                                  .myStyleButtonTextStyle,
-                                            ),
-                                            style: ElevatedButton.styleFrom(
-                                              backgroundColor:
-                                                  Color(0xffC4C4C4),
-                                              shape: RoundedRectangleBorder(
-                                                borderRadius: BorderRadius.circular(
-                                                    20.0), // Adjust the radius as needed
-                                              ),
                                             ),
                                           ),
                                         ],
@@ -428,6 +371,137 @@ class _DetailPBJPageState extends State<DetailPBJPage> {
                           },
                         ),
                       ),
+                      BlocProvider(
+                        create: (BuildContext context) {
+                          return pbjBloc;
+                        },
+                        child: Column(
+                          children: [
+                            BlocListener<PBJBloc, PBJState>(
+                              listener: (context, state) {
+                                // Navigate to next screen
+
+                                if (state is PBJStateSuccess) {
+                                  if (state is PBJStateSuccess) {
+                                    showDialog(
+                                      context: context,
+                                      builder: (BuildContext context) {
+                                        return WillPopScope(
+                                          onWillPop: () async {
+                                            Navigator.pop(context);
+                                            return true;
+                                          },
+                                          child: CupertinoAlertDialog(
+                                            title: Text("Success"),
+                                            content:
+                                                Text(state.message.toString()),
+                                            actions: <Widget>[
+                                              CupertinoDialogAction(
+                                                onPressed: () {
+                                                  Navigator.pop(context);
+                                                },
+                                                child: Text("OK"),
+                                              ),
+                                            ],
+                                          ),
+                                        );
+                                      },
+                                    ).then((_) {
+                                      Navigator.pop(context);
+                                    });
+                                  }
+                                }
+
+                                if (state is PBJStateFailure) {
+                                  QuickAlert.show(
+                                    context: context,
+                                    type: QuickAlertType.error,
+                                    text: state.message.toString(),
+                                  );
+                                }
+                              },
+                              child: Container(),
+                            ),
+                            BlocBuilder<PBJBloc, PBJState>(
+                              builder: (context, state) {
+                                var status = "";
+                                if (state is PBJStateInitial) {}
+                                if (state is PBJStateLoading) {
+                                  bool isCorrectState = (state.type ==
+                                          PBJEStateActionType.APPROVE ||
+                                      state.type == PBJEStateActionType.REJECT);
+                                  if (isCorrectState) {
+                                    return Center(
+                                      child: CupertinoActivityIndicator(),
+                                    );
+                                  }
+                                }
+                                return Container(
+                                  margin: EdgeInsets.only(left: 20, right: 20),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.stretch,
+                                    children: [
+                                      ElevatedButton(
+                                        onPressed: () {
+                                          showPinInputDialog(
+                                              type: ApprovalActionType.APPROVE,
+                                              description:
+                                                  "Anda Yakin Ingin Mengapprove Approval ini ?");
+                                        },
+                                        child: Text(
+                                          'Approve',
+                                          style: MyTheme.myStyleButtonTextStyle,
+                                        ),
+                                        style: ElevatedButton.styleFrom(
+                                          backgroundColor: Color(0xff33DC9F),
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(
+                                                20.0), // Adjust the radius as needed
+                                          ),
+                                        ),
+                                      ),
+                                      ElevatedButton(
+                                        onPressed: () {
+                                          showPinInputDialog(
+                                              type: ApprovalActionType.REJECT,
+                                              description:
+                                                  "Anda Yakin Ingin Menolak Approval ini ?");
+                                        },
+                                        child: Text(
+                                          'Reject',
+                                          style: MyTheme.myStyleButtonTextStyle,
+                                        ),
+                                        style: ElevatedButton.styleFrom(
+                                          backgroundColor: Color(0xffFF5B5B),
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(
+                                                20.0), // Adjust the radius as needed
+                                          ),
+                                        ),
+                                      ),
+                                      // ElevatedButton(
+                                      //   onPressed: () {},
+                                      //   child: Text(
+                                      //     'Recommend',
+                                      //     style: MyTheme.myStyleButtonTextStyle,
+                                      //   ),
+                                      //   style: ElevatedButton.styleFrom(
+                                      //     backgroundColor: Color(0xffC4C4C4),
+                                      //     shape: RoundedRectangleBorder(
+                                      //       borderRadius: BorderRadius.circular(
+                                      //           20.0), // Adjust the radius as needed
+                                      //     ),
+                                      //   ),
+                                      // ),
+                                    ],
+                                  ),
+                                );
+                              },
+                            ),
+                          ],
+                        ),
+                      ),
                     ],
                   ),
                 ),
@@ -439,8 +513,9 @@ class _DetailPBJPageState extends State<DetailPBJPage> {
     );
   }
 
-  void showPinInputDialog({required ApprovalActionType type,
-    String description = 'Masukkan PIN anda'}) {
+  void showPinInputDialog(
+      {required ApprovalActionType type,
+      String description = 'Masukkan PIN anda'}) {
     var pin = "";
     showDialog(
       context: context,
@@ -456,15 +531,9 @@ class _DetailPBJPageState extends State<DetailPBJPage> {
               Container(
                 margin: EdgeInsets.only(bottom: 20, top: 20),
                 child: CupertinoTextField(
+                  key: _formKey2,
                   onChanged: (value) {
                     pin = value;
-                    approvalBloc.add(
-                      SendQPBJApprove(
-                        pin: value,
-                        comment: this._newPasswordController.text,
-                        noPermintaan: widget.noPermintaan,
-                      ),
-                    );
                   },
                   textAlign: TextAlign.start,
                   maxLength: 4,
@@ -484,11 +553,32 @@ class _DetailPBJPageState extends State<DetailPBJPage> {
             ),
             CupertinoDialogAction(
               onPressed: () {
-                Navigator.of(context).pop();
-                // Perform any desired operations with the entered PIN
-                // Here, we're just printing it for demonstration purposes
-                print('Entered PIN: $pin with navigator' +
-                    this._newPasswordController.text.toString());
+                if (_formKey2.currentState?.validate() ?? true) {
+                  Navigator.of(context).pop();
+                  var comment = this.messageController.text;
+                  print("send with comment " + comment);
+
+                  if (type == ApprovalActionType.APPROVE) {
+                    pbjBloc.add(SendQPBJApprove(
+                      pin: pin,
+                      comment: this.messageController.text,
+                      noPermintaan: widget.noPermintaan,
+                    ));
+                  }
+
+                  if (type == ApprovalActionType.REJECT) {
+                    pbjBloc.add(SendQPBJReject(
+                      pin: pin,
+                      comment: this.messageController.text,
+                      noPermintaan: widget.noPermintaan,
+                    ));
+                  }
+
+                  // Perform any desired operations with the entered PIN
+                  // Here, we're just printing it for demonstration purposes
+                  print('Entered PIN: $pin with navigator' +
+                      this.messageController.text.toString());
+                }
               },
               child: Text('OK'),
             ),

@@ -45,9 +45,3 @@ class ApprovalMainPageStateFailure extends ApprovalMainPageState {
 
   ApprovalMainPageStateFailure({required this.error});
 }
-
-class PBJStateFailure extends ApprovalMainPageState {
-  final String error;
-
-  PBJStateFailure({required this.error});
-}
