@@ -5,6 +5,7 @@ import 'package:bwa_cozy/bloc/notif/notif_bloc.dart';
 import 'package:bwa_cozy/bloc/notif/notif_event.dart';
 import 'package:bwa_cozy/bloc/notif/notif_state.dart';
 import 'package:bwa_cozy/pages/approval/pbj/detail_pbj_page.dart';
+import 'package:bwa_cozy/pages/approval/pbj/filter/pbj_filter_temp.dart';
 import 'package:bwa_cozy/pages/approval/pbj/pbj_waiting_approval.dart';
 import 'package:bwa_cozy/repos/approval_main_page_repository.dart';
 import 'package:bwa_cozy/repos/notif_repository.dart';
@@ -152,7 +153,23 @@ class _ApprovalPBJMainPageState extends State<ApprovalPBJMainPage> {
                                                                 .PBJ));
                                                     });
                                                   },
-                                                  onRightTapFunction: () {},
+                                                  onRightTapFunction: () {
+                                                    Navigator.push(
+                                                      context,
+                                                      MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            PBJFilterTempPage(),
+                                                      ),
+                                                    ).then((value) {
+                                                      notifBloc
+                                                        ..add(
+                                                            NotifEventCount());
+                                                      approvalBloc
+                                                        ..add(RequestDataEvent(
+                                                            ApprovalListType
+                                                                .PBJ));
+                                                    });
+                                                  },
                                                 );
                                               }),
                                             ],
