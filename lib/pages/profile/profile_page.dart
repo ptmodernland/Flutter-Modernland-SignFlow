@@ -300,26 +300,32 @@ class _ProfilePageState extends State<ProfilePage> {
                                       snapshot.data != null) {
                                     UserDTO user = snapshot.data!;
                                     username = user.username;
-                                    return Column(
-                                      children: [
-                                        SizedBox(
-                                          height: 20,
-                                        ),
-                                        Text(
-                                          user.nama,
-                                          style: MyTheme.myStylePrimaryTextStyle
-                                              .copyWith(
-                                                  fontSize: 20,
-                                                  fontWeight: FontWeight.w900),
-                                        ),
-                                        Text('(${getUserRole(user.level)})'),
-                                        Text(
-                                          user.email,
-                                          style:
-                                              MyTheme.myStyleSecondaryTextStyle,
-                                        ),
-                                        Text('Username: ${user.username}'),
-                                      ],
+                                    return Container(
+                                      margin:
+                                          EdgeInsets.only(left: 20, right: 20),
+                                      child: Column(
+                                        children: [
+                                          SizedBox(
+                                            height: 20,
+                                          ),
+                                          Text(
+                                            user.nama,
+                                            style: MyTheme
+                                                .myStylePrimaryTextStyle
+                                                .copyWith(
+                                                    fontSize: 20,
+                                                    fontWeight:
+                                                        FontWeight.w900),
+                                          ),
+                                          Text('(${getUserRole(user.level)})'),
+                                          Text(
+                                            user.email,
+                                            style: MyTheme
+                                                .myStyleSecondaryTextStyle,
+                                          ),
+                                          Text('Username: ${user.username}'),
+                                        ],
+                                      ),
                                     );
                                   } else {
                                     return Text('User not found');

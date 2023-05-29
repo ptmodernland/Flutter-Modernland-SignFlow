@@ -9,14 +9,15 @@ class CustomTextInput extends StatefulWidget {
 
   const CustomTextInput({
     this.hintTextString = '',
+    this.minLines = 1,
     this.textValidator = null,
     this.textEditController = null,
     this.inputType = InputType.Default,
     this.enableBorder = true,
     required this.themeColor,
     this.cornerRadius = 12.0,
-    this.maxLength = 12,
-    this.prefixIcon  = null,
+    this.maxLength = 99999999999,
+    this.prefixIcon = null,
     this.textColor = null,
     this.errorMessage = '',
     this.labelText = '',
@@ -29,6 +30,7 @@ class CustomTextInput extends StatefulWidget {
   final InputType inputType;
   final bool enableBorder;
   final Color themeColor;
+  final int? minLines;
   final double cornerRadius;
   final int maxLength;
   final Widget? prefixIcon;
@@ -53,7 +55,6 @@ class _CustomTextInputState extends State<CustomTextInput> {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 8.0),
       child: TextFormField(
-
         controller: widget.textEditController,
         validator: widget.textValidator,
         decoration: InputDecoration(
@@ -61,6 +62,10 @@ class _CustomTextInputState extends State<CustomTextInput> {
           errorText: _isValidate ? null : validationMessage,
           counterText: '',
           border: getBorder(),
+          alignLabelWithHint: true,
+          // Align the label text with the top
+          floatingLabelBehavior: FloatingLabelBehavior.always,
+          // Always show the label
           enabledBorder: widget.enableBorder ? getBorder() : InputBorder.none,
           focusedBorder: widget.enableBorder ? getBorder() : InputBorder.none,
           labelText: widget.labelText ?? widget.hintTextString as String,
@@ -69,9 +74,13 @@ class _CustomTextInputState extends State<CustomTextInput> {
           suffixIcon: getSuffixIcon(),
         ),
         onChanged: checkValidation,
+        minLines: widget.minLines,
+        maxLines: getMaxLines(),
         keyboardType: getInputType(),
         obscureText: widget.inputType == InputType.Password && !visibility,
-        maxLength: widget.inputType == InputType.PaymentCard ? 19 : widget.maxLength ?? getMaxLength(),
+        maxLength: widget.inputType == InputType.PaymentCard
+            ? 19
+            : widget.maxLength ?? getMaxLength(),
         style: TextStyle(
           color: widget.textColor ?? Colors.black,
         ),
@@ -83,8 +92,10 @@ class _CustomTextInputState extends State<CustomTextInput> {
   //get border of textinput filed
   OutlineInputBorder getBorder() {
     return OutlineInputBorder(
-      borderRadius: BorderRadius.all(Radius.circular(widget.cornerRadius ?? 12.0)),
-      borderSide: BorderSide(width: 2, color: widget.themeColor ?? Theme.of(context).primaryColor),
+      borderRadius:
+          BorderRadius.all(Radius.circular(widget.cornerRadius ?? 5.0)),
+      borderSide: BorderSide(
+          width: 1, color: widget.themeColor ?? Theme.of(context).primaryColor),
       gapPadding: 2,
     );
   }
@@ -253,6 +264,14 @@ class _CustomTextInputState extends State<CustomTextInput> {
       );
     } else {
       return const Opacity(opacity: 0, child: Icon(Icons.phone));
+    }
+  }
+
+  int getMaxLines() {
+    if (widget.inputType == InputType.Password) {
+      return 1;
+    } else {
+      return widget.minLines ?? 1;
     }
   }
 }

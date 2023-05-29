@@ -1,4 +1,5 @@
 import 'dart:convert';
+
 import 'package:bwa_cozy/bloc/login/login_response.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -35,13 +36,6 @@ class SessionManager {
     UserDTO? savedUser = await SessionManager.getUser();
     if (savedUser != null) {
       print('Retrieved User:');
-      print(savedUser.idUser);
-      print(savedUser.username);
-      print(savedUser.nama);
-      print(savedUser.level);
-      print(savedUser.email);
-      print(savedUser.jk);
-      print(savedUser.status);
     } else {
       print('User not found in session.');
     }

@@ -33,9 +33,5 @@ class MyTheme {
     color: AppColors.accentColor,
   );
 
-  static TextStyle myStyleButtonTextStyle = GoogleFonts.poppins(
-    fontWeight: bold,
-    fontSize: 16.0,
-    color: AppColors.textIconsColor,
-  );
+  static TextStyle myStyleButtonTextStyle = GoogleFonts.lato();
 }

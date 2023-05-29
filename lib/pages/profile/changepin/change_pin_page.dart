@@ -8,7 +8,6 @@ import 'package:bwa_cozy/widget/core/custom_text_input.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:quickalert/models/quickalert_type.dart';
 import 'package:quickalert/quickalert.dart';
 
 class ChangePinPage extends StatefulWidget {

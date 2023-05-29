@@ -1,12 +1,9 @@
-import 'dart:math';
+import 'dart:convert';
 
 import 'package:bwa_cozy/bloc/_wrapper/response_wrapper.dart';
-import 'package:bwa_cozy/bloc/login/login_payload.dart';
-import 'package:bwa_cozy/bloc/login/login_response.dart';
 import 'package:bwa_cozy/bloc/notif/notif_counter_dto.dart';
 import 'package:bwa_cozy/util/storage/sessionmanager/session_manager.dart';
 import 'package:http/http.dart' as http;
-import 'dart:convert';
 
 class NotifRepository {
   Future<ResponseWrapper<NotifCounterDTO>> countNotif() async {
