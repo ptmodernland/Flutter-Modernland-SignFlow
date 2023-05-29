@@ -5,6 +5,7 @@ import 'package:bwa_cozy/bloc/notif/notif_bloc.dart';
 import 'package:bwa_cozy/bloc/notif/notif_event.dart';
 import 'package:bwa_cozy/bloc/notif/notif_state.dart';
 import 'package:bwa_cozy/pages/approval/compare/compare_waiting_approval_page.dart';
+import 'package:bwa_cozy/pages/approval/compare/detail_compare_page.dart';
 import 'package:bwa_cozy/repos/approval_main_page_repository.dart';
 import 'package:bwa_cozy/repos/notif_repository.dart';
 import 'package:bwa_cozy/util/enum/menu_type.dart';
@@ -244,7 +245,7 @@ class _ApprovalCompareMainPageState extends State<ApprovalCompareMainPage> {
                                 itemBuilder: (context, index) {
                                   final pbjItem = pbjList[index];
                                   var isApproved = false;
-                                  if (pbjItem.status != "T") {
+                                  if (pbjItem.status != "Y") {
                                     isApproved = true;
                                   }
                                   return ItemApprovalWidget(
@@ -253,8 +254,25 @@ class _ApprovalCompareMainPageState extends State<ApprovalCompareMainPage> {
                                         pbjItem.noCompare +
                                         pbjList.length.toString(),
                                     date: pbjItem.tglPermintaan,
+                                    requiredId: pbjItem.idCompare,
                                     personName: pbjItem.namaUser,
                                     departmentTitle: pbjItem.department,
+                                    descriptiveText: pbjItem.descCompare,
+                                    onPressed: (String noCompare) {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              DetailComparePage(
+                                                  idCompare: noCompare),
+                                        ),
+                                      ).then((value) {
+                                        notifBloc..add(NotifEventCount());
+                                        approvalBloc
+                                          ..add(RequestDataEvent(
+                                              ApprovalListType.COMPARE));
+                                      });
+                                    },
                                   );
                                 },
                               );

@@ -264,7 +264,6 @@ class _ApprovalPBJMainPageState extends State<ApprovalPBJMainPage> {
                                     onPressed: (String requiredId) {
                                       Fluttertoast.showToast(
                                           msg: requiredId.toString());
-
                                       Navigator.push(
                                         context,
                                         MaterialPageRoute(

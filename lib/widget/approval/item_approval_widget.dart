@@ -12,21 +12,23 @@ class ItemApprovalWidget extends StatelessWidget {
   final departmentTitle;
   final personName;
   final personImage;
+  final String descriptiveText;
   final ApprovalListType approvalListType;
   final Function(String)? onPressed;
 
-  const ItemApprovalWidget(
-      {Key? key,
-      this.requiredId = "",
-      this.isApproved = false,
-      this.itemCode = "",
-      this.date = "",
-      this.departmentTitle = "",
-      this.personName = "",
-      this.onPressed,
-      this.approvalListType = ApprovalListType.HOME,
-      this.personImage = ""})
-      : super(key: key);
+  const ItemApprovalWidget({
+    Key? key,
+    this.requiredId = "",
+    this.isApproved = false,
+    this.itemCode = "",
+    this.date = "",
+    this.descriptiveText = "",
+    this.departmentTitle = "",
+    this.personName = "",
+    this.onPressed,
+    this.approvalListType = ApprovalListType.HOME,
+    this.personImage = "",
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -139,6 +141,22 @@ class ItemApprovalWidget extends StatelessWidget {
                     style:
                         MyTheme.myStylePrimaryTextStyle.copyWith(fontSize: 12),
                   ),
+                  if (descriptiveText.isNotEmpty)
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        Text(
+                          "Deskripsi : \n" + descriptiveText,
+                          maxLines: 3,
+                          overflow: TextOverflow.ellipsis,
+                          style: MyTheme.myStylePrimaryTextStyle
+                              .copyWith(fontSize: 11),
+                        ),
+                      ],
+                    ),
+                  SizedBox(
+                    height: 10,
+                  ),
                   dateText,
                   Align(
                     alignment: Alignment.centerRight,
@@ -194,9 +212,9 @@ class ItemApprovalWidget extends StatelessWidget {
       }
       return Text(text,
           style:
-          MyTheme.myStylePrimaryTextStyle.copyWith(fontSize: 10).copyWith(
-            color: isMoreThan5Days ? Colors.red : Colors.black,
-          ));
+              MyTheme.myStylePrimaryTextStyle.copyWith(fontSize: 10).copyWith(
+                    color: isMoreThan5Days ? Colors.red : Colors.black,
+                  ));
     } catch (e) {
       return Text(date,
           style: MyTheme.myStylePrimaryTextStyle

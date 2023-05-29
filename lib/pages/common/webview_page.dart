@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
@@ -12,7 +11,6 @@ class CommonWebviewPage extends StatefulWidget {
 }
 
 class _CommonWebviewPageState extends State<CommonWebviewPage> {
-  bool _isLoading = true;
 
   @override
   Widget build(BuildContext context) {
@@ -24,18 +22,9 @@ class _CommonWebviewPageState extends State<CommonWebviewPage> {
           onProgress: (int progress) {
             // Update loading bar.
           },
-          onPageStarted: (String url) {
-            setState(() {
-              _isLoading = true;
-            });
-          },
-          onPageFinished: (String url) {
-            setState(() {
-              _isLoading = false;
-            });
-          },
+          onPageStarted: (String url) {},
+          onPageFinished: (String url) {},
           onWebResourceError: (WebResourceError error) {
-            _isLoading = false;
           },
           onNavigationRequest: (NavigationRequest request) {
             if (request.url.startsWith('https://www.youtube.com/')) {
@@ -51,10 +40,6 @@ class _CommonWebviewPageState extends State<CommonWebviewPage> {
       body: Stack(
         children: [
           WebViewWidget(controller: webViewcontroller),
-          if (_isLoading)
-            Center(
-              child: CupertinoActivityIndicator(),
-            ),
         ],
       ),
     );
