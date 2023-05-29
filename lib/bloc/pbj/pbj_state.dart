@@ -1,4 +1,5 @@
 import 'package:bwa_cozy/bloc/all_approval/dto/list_all_pbj_dto.dart';
+import 'package:bwa_cozy/bloc/pbj/dto/list_komen_pbj.dart';
 
 abstract class PBJState {}
 
@@ -6,6 +7,7 @@ abstract class PBJState {}
 enum PBJEStateActionType {
   LOAD_DETAIL,
   SHOW_HISTORY,
+  SHOW_KOMENTAR,
   APPROVE,
   REJECT,
   RECOMMEND,
@@ -26,6 +28,12 @@ class PBJStateLoadHistorySuccess extends PBJState {
   final List<ListAllPbjDTO> datas;
 
   PBJStateLoadHistorySuccess({this.datas = const []});
+}
+
+class PBJStateLoadKomentarSuccess extends PBJState {
+  final List<ListPBJCommentDTO> datas;
+
+  PBJStateLoadKomentarSuccess({this.datas = const []});
 }
 
 class PBJStateSuccess extends PBJState {

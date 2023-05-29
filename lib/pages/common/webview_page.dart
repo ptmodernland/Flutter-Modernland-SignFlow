@@ -34,7 +34,9 @@ class _CommonWebviewPageState extends State<CommonWebviewPage> {
               _isLoading = false;
             });
           },
-          onWebResourceError: (WebResourceError error) {},
+          onWebResourceError: (WebResourceError error) {
+            _isLoading = false;
+          },
           onNavigationRequest: (NavigationRequest request) {
             if (request.url.startsWith('https://www.youtube.com/')) {
               return NavigationDecision.prevent;

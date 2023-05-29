@@ -16,6 +16,14 @@ class SendQPBJReject extends PBJEvent {
   SendQPBJReject({this.noPermintaan = "", this.pin = "", this.comment = "-"});
 }
 
+class GetKomentarPBJ extends PBJEvent {
+  final String? noPermintaan;
+
+  GetKomentarPBJ({
+    this.noPermintaan = null,
+  });
+}
+
 class GetHistoryPBJ extends PBJEvent {
   final String? startDate;
   final String? endDate;

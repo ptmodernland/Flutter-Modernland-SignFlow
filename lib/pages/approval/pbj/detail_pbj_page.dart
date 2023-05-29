@@ -15,6 +15,7 @@ import 'package:bwa_cozy/util/enum/action_type.dart';
 import 'package:bwa_cozy/util/my_theme.dart';
 import 'package:bwa_cozy/widget/approval/document_detail_widget.dart';
 import 'package:bwa_cozy/widget/approval/item_approval_widget.dart';
+import 'package:bwa_cozy/widget/common/user_comment_widget.dart';
 import 'package:bwa_cozy/widget/core/custom_text_input.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -223,7 +224,6 @@ class _DetailPBJPageState extends State<DetailPBJPage> {
                               if (data.status != "Y") {
                                 isApproved = true;
                               }
-
                               return Container(
                                 child: Column(
                                   children: [
@@ -329,38 +329,37 @@ class _DetailPBJPageState extends State<DetailPBJPage> {
                                               fontSize: 18,
                                             ),
                                           ),
-                                          Form(
-                                            key: _formKey,
-                                            child: Column(
-                                              mainAxisSize: MainAxisSize.min,
-                                              children: [
-                                                CustomTextInput(
-                                                  textEditController:
-                                                      messageController,
-                                                  hintTextString:
-                                                      'Isi Tanggapan',
-                                                  inputType: InputType.Default,
-                                                  enableBorder: true,
-                                                  minLines: 3,
-                                                  themeColor: Theme.of(context)
-                                                      .primaryColor,
-                                                  cornerRadius: 18.0,
-                                                  textValidator: (value) {
-                                                    if (value?.isEmpty ??
-                                                        true) {
-                                                      return 'Isi field ini terlebih dahulu';
-                                                    }
-                                                    return null;
-                                                  },
-                                                  textColor: Colors.black,
-                                                  errorMessage:
-                                                      'Username cant be empty',
-                                                  labelText:
-                                                      'Tanggapan/Komentar/Review',
-                                                ),
-                                              ],
+                                          if (!widget.isFromHistory)
+                                            Form(
+                                              key: _formKey,
+                                              child: Column(
+                                                mainAxisSize: MainAxisSize.min,
+                                                children: [
+                                                  CustomTextInput(
+                                                    textEditController: messageController,
+                                                    hintTextString: 'Isi Tanggapan',
+                                                    inputType: InputType
+                                                        .Default,
+                                                    enableBorder: true,
+                                                    minLines: 3,
+                                                    themeColor: Theme
+                                                        .of(context)
+                                                        .primaryColor,
+                                                    cornerRadius: 18.0,
+                                                    textValidator: (value) {
+                                                      if (value?.isEmpty ??
+                                                          true) {
+                                                        return 'Isi field ini terlebih dahulu';
+                                                      }
+                                                      return null;
+                                                    },
+                                                    textColor: Colors.black,
+                                                    errorMessage: 'Username cant be empty',
+                                                    labelText: 'Tanggapan/Komentar/Review',
+                                                  ),
+                                                ],
+                                              ),
                                             ),
-                                          ),
                                         ],
                                       ),
                                     )
@@ -368,60 +367,101 @@ class _DetailPBJPageState extends State<DetailPBJPage> {
                                 ),
                               );
                             }
-                            return Container(
-                              child: dataList,
-                            );
+                            return Container();
                           },
                         ),
                       ),
                       BlocProvider(
                         create: (BuildContext context) {
-                          return pbjBloc;
+                          return pbjBloc
+                            ..add(GetKomentarPBJ(
+                                noPermintaan: widget.noPermintaan));
                         },
                         child: Column(
                           children: [
                             BlocListener<PBJBloc, PBJState>(
                               listener: (context, state) {
-                                // Navigate to next screen
-
-                                if (state is PBJStateSuccess) {
-                                  showDialog(
-                                    context: context,
-                                    builder: (BuildContext context) {
-                                      return WillPopScope(
-                                        onWillPop: () async {
-                                          Navigator.pop(context);
-                                          return true;
-                                        },
-                                        child: CupertinoAlertDialog(
-                                          title: Text("Success"),
-                                          content:
-                                              Text(state.message.toString()),
-                                          actions: <Widget>[
-                                            CupertinoDialogAction(
-                                              onPressed: () {
-                                                Navigator.pop(context);
-                                              },
-                                              child: Text("OK"),
-                                            ),
-                                          ],
-                                        ),
-                                      );
-                                    },
-                                  ).then((_) {
-                                    Navigator.pop(context);
-                                  });
-                                }
-
                                 if (state is PBJStateFailure) {
-                                  QuickAlert.show(
-                                    context: context,
-                                    type: QuickAlertType.error,
-                                    text: state.message.toString(),
-                                  );
+                                  if (state.type ==
+                                      PBJEStateActionType.SHOW_KOMENTAR) {
+                                    QuickAlert.show(
+                                      context: context,
+                                      type: QuickAlertType.error,
+                                      text: "Errpr Apaan Yak " +
+                                          state.message.toString(),
+                                    );
+                                  }
                                 }
                               },
                               child: Container(),
+                            ),
+                            BlocBuilder<PBJBloc, PBJState>(
+                              builder: (context, state) {
+                                if (state is PBJStateLoadKomentarSuccess) {
+                                  var commentList = state.datas;
+                                  var commentListViewBuilder = ListView.builder(
+                                    itemCount: commentList.length,
+                                    shrinkWrap: true,
+                                    physics:
+                                        const NeverScrollableScrollPhysics(),
+                                    itemBuilder: (context, index) {
+                                      final pbjItem = commentList[index];
+                                      var isApproved = false;
+                                      if (pbjItem.status != "Y") {
+                                        isApproved = true;
+                                      }
+                                      return UserCommentWidget(
+                                        comment: pbjItem.komentar,
+                                        userName: pbjItem.approve,
+                                        postingDate: pbjItem.tglPermintaan,
+                                        bottomText:
+                                            "Status : " + pbjItem.statusApprove,
+                                      );
+                                    },
+                                  );
+                                  var emptyState = Container();
+
+                                  if (state.datas.isEmpty) {
+                                    emptyState = Container(
+                                      alignment: Alignment.center,
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Image.network(
+                                            'http://feylabs.my.id/fm/mdln_asset/mdln_empty_image.png',
+                                            // Adjust the image properties as per your requirement
+                                          ),
+                                          SizedBox(height: 10),
+                                          Text(
+                                            'No data available',
+                                            style: TextStyle(
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    );
+                                  }
+                                  return Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.stretch,
+                                    children: [
+                                      Container(
+                                        height: 1,
+                                        color: Colors.grey[300],
+                                      ),
+                                      SizedBox(
+                                        height: 20,
+                                      ),
+                                      emptyState,
+                                      commentListViewBuilder,
+                                    ],
+                                  );
+                                }
+                                return Container();
+                              },
                             ),
                             BlocBuilder<PBJBloc, PBJState>(
                               builder: (context, state) {
@@ -437,9 +477,8 @@ class _DetailPBJPageState extends State<DetailPBJPage> {
                                     );
                                   }
                                 }
-
                                 //the button only shown if this page opened not from history
-                                if (widget.isFromHistory!) {
+                                if (widget.isFromHistory != true) {
                                   return Container(
                                     margin:
                                         EdgeInsets.only(left: 20, right: 20),
@@ -454,45 +493,47 @@ class _DetailPBJPageState extends State<DetailPBJPage> {
                                                     ApprovalActionType.APPROVE,
                                                 description:
                                                     "Anda Yakin Ingin Mengapprove Approval ini ?");
-                                        },
-                                        child: Text(
-                                          'Approve',
-                                          style: MyTheme.myStyleButtonTextStyle,
-                                        ),
-                                        style: ElevatedButton.styleFrom(
-                                          backgroundColor: Color(0xff33DC9F),
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.circular(
-                                                20.0), // Adjust the radius as needed
+                                          },
+                                          child: Text(
+                                            'Approve',
+                                            style:
+                                                MyTheme.myStyleButtonTextStyle,
+                                          ),
+                                          style: ElevatedButton.styleFrom(
+                                            backgroundColor: Color(0xff33DC9F),
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius: BorderRadius.circular(
+                                                  20.0), // Adjust the radius as needed
+                                            ),
                                           ),
                                         ),
-                                      ),
-                                      ElevatedButton(
-                                        onPressed: () {
-                                          showPinInputDialog(
-                                              type: ApprovalActionType.REJECT,
-                                              description:
-                                                  "Anda Yakin Ingin Menolak Approval ini ?");
-                                        },
-                                        child: Text(
-                                          'Reject',
-                                          style: MyTheme.myStyleButtonTextStyle,
-                                        ),
-                                        style: ElevatedButton.styleFrom(
-                                          backgroundColor: Color(0xffFF5B5B),
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.circular(
-                                                20.0), // Adjust the radius as needed
+                                        ElevatedButton(
+                                          onPressed: () {
+                                            showPinInputDialog(
+                                                type: ApprovalActionType.REJECT,
+                                                description:
+                                                    "Anda Yakin Ingin Menolak Approval ini ?");
+                                          },
+                                          child: Text(
+                                            'Reject',
+                                            style:
+                                                MyTheme.myStyleButtonTextStyle,
+                                          ),
+                                          style: ElevatedButton.styleFrom(
+                                            backgroundColor: Color(0xffFF5B5B),
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius: BorderRadius.circular(
+                                                  20.0), // Adjust the radius as needed
+                                            ),
                                           ),
                                         ),
-                                      ),
-                                      // ElevatedButton(
-                                      //   onPressed: () {},
-                                      //   child: Text(
-                                      //     'Recommend',
-                                      //     style: MyTheme.myStyleButtonTextStyle,
-                                      //   ),
-                                      //   style: ElevatedButton.styleFrom(
+                                        // ElevatedButton(
+                                        //   onPressed: () {},
+                                        //   child: Text(
+                                        //     'Recommend',
+                                        //     style: MyTheme.myStyleButtonTextStyle,
+                                        //   ),
+                                        //   style: ElevatedButton.styleFrom(
                                         //     backgroundColor: Color(0xffC4C4C4),
                                         //     shape: RoundedRectangleBorder(
                                         //       borderRadius: BorderRadius.circular(

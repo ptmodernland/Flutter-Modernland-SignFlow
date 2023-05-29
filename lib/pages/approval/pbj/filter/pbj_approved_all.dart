@@ -204,6 +204,7 @@ class _PBJAllApprovedPageState extends State<PBJAllApprovedPage> {
                                         context,
                                         MaterialPageRoute(
                                           builder: (context) => DetailPBJPage(
+                                              isFromHistory: true,
                                               noPermintaan: requiredId),
                                         ),
                                       ).then((value) {

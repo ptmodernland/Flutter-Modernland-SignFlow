@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:bwa_cozy/bloc/_wrapper/response_wrapper.dart';
 import 'package:bwa_cozy/bloc/all_approval/dto/list_all_pbj_dto.dart';
+import 'package:bwa_cozy/bloc/pbj/dto/list_komen_pbj.dart';
 import 'package:bwa_cozy/util/storage/sessionmanager/session_manager.dart';
 import 'package:http/http.dart' as http;
 
@@ -160,6 +161,43 @@ class PBJRepository {
       }
     } catch (error) {
       print("error on ApprovalMainPageRepository " + error.toString());
+      return ResponseWrapper(null, ResourceStatus.Error, error.toString());
+    }
+    return ResponseWrapper(null, ResourceStatus.Success, "Login Berhasil");
+  }
+
+  Future<ResponseWrapper<List<ListPBJCommentDTO>>> getKomentarPBJ(
+      {String? noPermintaan = null}) async {
+    var logTag = "Getting PBJ Komentar";
+    try {
+      print("trying getting PBJ Komentar");
+      // Prepare the request
+      var url = Uri.parse(
+          'https://approval.modernland.co.id/androidiom/get_komen_pbj.php?no_permintaan=' +
+              noPermintaan.toString());
+      // Set the form data
+      var response = await http.get(url);
+      // Get the response body as a string
+      var responseBody = response.body;
+      // print("$logTag : $responseBody");
+      var jsonResponse = jsonDecode(responseBody);
+      // Extract the code and message fields
+      final result = jsonDecode(response.body);
+      print(result.toString());
+      if (response.statusCode == 200) {
+        print("result 200");
+        final jsonData = json.decode(response.body);
+        final List<Map<String, dynamic>> dataList =
+            List<Map<String, dynamic>>.from(jsonData);
+        final List<ListPBJCommentDTO> datas =
+            dataList.map((data) => ListPBJCommentDTO.fromJson(data)).toList();
+        // Now you have the list of `Bottle` objects
+        return ResponseWrapper(datas, ResourceStatus.Success, "Success");
+      } else {
+        return ResponseWrapper(null, ResourceStatus.Error, "Terjadi Kesalahan");
+      }
+    } catch (error) {
+      print("error on PBJRepository " + error.toString());
       return ResponseWrapper(null, ResourceStatus.Error, error.toString());
     }
     return ResponseWrapper(null, ResourceStatus.Success, "Login Berhasil");
