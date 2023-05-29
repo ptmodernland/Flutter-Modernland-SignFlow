@@ -4,6 +4,8 @@ abstract class PBJState {}
 
 //This will used to consider what success/failure state came from
 enum PBJEStateActionType {
+  LOAD_DETAIL,
+  SHOW_HISTORY,
   APPROVE,
   REJECT,
   RECOMMEND,
@@ -18,6 +20,12 @@ class PBJStateLoading extends PBJState {
 
   PBJStateLoading(
       {this.progress = "", this.type = PBJEStateActionType.DEFAULT});
+}
+
+class PBJStateLoadHistorySuccess extends PBJState {
+  final List<ListAllPbjDTO> datas;
+
+  PBJStateLoadHistorySuccess({this.datas = const []});
 }
 
 class PBJStateSuccess extends PBJState {

@@ -53,5 +53,26 @@ class PBJBloc extends Bloc<PBJEvent, PBJState> {
         emit(PBJStateFailure(message: e.toString()));
       }
     });
+
+    //get PBJ History
+    on<GetHistoryPBJ>((event, emit) async {
+      emit(PBJStateLoading());
+      print("start bloc request");
+      try {
+        final request = await repo.getHistoryPBJ();
+        if (request.data != null) {
+          emit(PBJStateLoadHistorySuccess(datas: request.data!));
+          print("success bloc approval_main_page");
+        } else {
+          emit(PBJStateFailure(
+              type: PBJEStateActionType.SHOW_HISTORY,
+              message: request.message ?? ""));
+        }
+      } catch (e) {
+        print("error occured on approval_main_page_bloc" + e.toString());
+        emit(PBJStateFailure(
+            message: e.toString(), type: PBJEStateActionType.SHOW_HISTORY));
+      }
+    });
   }
 }

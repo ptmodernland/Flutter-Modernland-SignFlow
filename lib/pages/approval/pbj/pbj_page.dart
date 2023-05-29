@@ -5,7 +5,7 @@ import 'package:bwa_cozy/bloc/notif/notif_bloc.dart';
 import 'package:bwa_cozy/bloc/notif/notif_event.dart';
 import 'package:bwa_cozy/bloc/notif/notif_state.dart';
 import 'package:bwa_cozy/pages/approval/pbj/detail_pbj_page.dart';
-import 'package:bwa_cozy/pages/approval/pbj/filter/pbj_filter_temp.dart';
+import 'package:bwa_cozy/pages/approval/pbj/filter/pbj_approved_all.dart';
 import 'package:bwa_cozy/pages/approval/pbj/pbj_waiting_approval.dart';
 import 'package:bwa_cozy/repos/approval_main_page_repository.dart';
 import 'package:bwa_cozy/repos/notif_repository.dart';
@@ -158,7 +158,7 @@ class _ApprovalPBJMainPageState extends State<ApprovalPBJMainPage> {
                                                       context,
                                                       MaterialPageRoute(
                                                         builder: (context) =>
-                                                            PBJFilterTempPage(),
+                                                            PBJAllApprovedPage(),
                                                       ),
                                                     ).then((value) {
                                                       notifBloc
@@ -184,28 +184,6 @@ class _ApprovalPBJMainPageState extends State<ApprovalPBJMainPage> {
                                             CrossAxisAlignment.start,
                                         children: [],
                                       ),
-                                    ),
-                                    MenuItemApprovalWidget(
-                                      titleLeft:
-                                          "Cari History Berdasarkan Tanggal",
-                                      titleRight:
-                                          "Cari History Berdasarkan Nomor",
-                                      colorScheme: 2,
-                                      onLeftTapFunction: () {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) =>
-                                                PBJWaitingApproval(),
-                                          ),
-                                        ).then((value) {
-                                          notifBloc..add(NotifEventCount());
-                                          approvalBloc
-                                            ..add(RequestDataEvent(
-                                                ApprovalListType.PBJ));
-                                        });
-                                      },
-                                      onRightTapFunction: () {},
                                     ),
                                     Container(
                                       margin:

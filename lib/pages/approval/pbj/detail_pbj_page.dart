@@ -23,8 +23,11 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:quickalert/quickalert.dart';
 
 class DetailPBJPage extends StatefulWidget {
-  const DetailPBJPage({Key? key, required this.noPermintaan}) : super(key: key);
+  const DetailPBJPage(
+      {Key? key, required this.noPermintaan, this.isFromHistory = false})
+      : super(key: key);
   final String noPermintaan;
+  final bool isFromHistory;
 
   @override
   State<DetailPBJPage> createState() => _DetailPBJPageState();
@@ -382,34 +385,32 @@ class _DetailPBJPageState extends State<DetailPBJPage> {
                                 // Navigate to next screen
 
                                 if (state is PBJStateSuccess) {
-                                  if (state is PBJStateSuccess) {
-                                    showDialog(
-                                      context: context,
-                                      builder: (BuildContext context) {
-                                        return WillPopScope(
-                                          onWillPop: () async {
-                                            Navigator.pop(context);
-                                            return true;
-                                          },
-                                          child: CupertinoAlertDialog(
-                                            title: Text("Success"),
-                                            content:
-                                                Text(state.message.toString()),
-                                            actions: <Widget>[
-                                              CupertinoDialogAction(
-                                                onPressed: () {
-                                                  Navigator.pop(context);
-                                                },
-                                                child: Text("OK"),
-                                              ),
-                                            ],
-                                          ),
-                                        );
-                                      },
-                                    ).then((_) {
-                                      Navigator.pop(context);
-                                    });
-                                  }
+                                  showDialog(
+                                    context: context,
+                                    builder: (BuildContext context) {
+                                      return WillPopScope(
+                                        onWillPop: () async {
+                                          Navigator.pop(context);
+                                          return true;
+                                        },
+                                        child: CupertinoAlertDialog(
+                                          title: Text("Success"),
+                                          content:
+                                              Text(state.message.toString()),
+                                          actions: <Widget>[
+                                            CupertinoDialogAction(
+                                              onPressed: () {
+                                                Navigator.pop(context);
+                                              },
+                                              child: Text("OK"),
+                                            ),
+                                          ],
+                                        ),
+                                      );
+                                    },
+                                  ).then((_) {
+                                    Navigator.pop(context);
+                                  });
                                 }
 
                                 if (state is PBJStateFailure) {
@@ -436,18 +437,23 @@ class _DetailPBJPageState extends State<DetailPBJPage> {
                                     );
                                   }
                                 }
-                                return Container(
-                                  margin: EdgeInsets.only(left: 20, right: 20),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.stretch,
-                                    children: [
-                                      ElevatedButton(
-                                        onPressed: () {
-                                          showPinInputDialog(
-                                              type: ApprovalActionType.APPROVE,
-                                              description:
-                                                  "Anda Yakin Ingin Mengapprove Approval ini ?");
+
+                                //the button only shown if this page opened not from history
+                                if (widget.isFromHistory!) {
+                                  return Container(
+                                    margin:
+                                        EdgeInsets.only(left: 20, right: 20),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.stretch,
+                                      children: [
+                                        ElevatedButton(
+                                          onPressed: () {
+                                            showPinInputDialog(
+                                                type:
+                                                    ApprovalActionType.APPROVE,
+                                                description:
+                                                    "Anda Yakin Ingin Mengapprove Approval ini ?");
                                         },
                                         child: Text(
                                           'Approve',
@@ -487,16 +493,19 @@ class _DetailPBJPageState extends State<DetailPBJPage> {
                                       //     style: MyTheme.myStyleButtonTextStyle,
                                       //   ),
                                       //   style: ElevatedButton.styleFrom(
-                                      //     backgroundColor: Color(0xffC4C4C4),
-                                      //     shape: RoundedRectangleBorder(
-                                      //       borderRadius: BorderRadius.circular(
-                                      //           20.0), // Adjust the radius as needed
-                                      //     ),
-                                      //   ),
-                                      // ),
-                                    ],
-                                  ),
-                                );
+                                        //     backgroundColor: Color(0xffC4C4C4),
+                                        //     shape: RoundedRectangleBorder(
+                                        //       borderRadius: BorderRadius.circular(
+                                        //           20.0), // Adjust the radius as needed
+                                        //     ),
+                                        //   ),
+                                        // ),
+                                      ],
+                                    ),
+                                  );
+                                }
+
+                                return Container();
                               },
                             ),
                           ],
