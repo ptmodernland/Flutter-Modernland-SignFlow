@@ -182,12 +182,12 @@ class ItemApprovalWidget extends StatelessWidget {
       if (difference.inDays.abs() >= 30) {
         int months = difference.inDays ~/ 30;
         text = 'Dikirim $months bulan yang lalu';
-      } else if (difference.inDays.abs() < 30) {
+      } else if (difference.inDays.abs() < 30 && difference.inDays.abs() > 1) {
         text = 'Dikirim ${difference.inDays} hari yang lalu';
-      } else if (difference.inHours.abs() < 20) {
-        int hours = difference.inHours;
+      } else if (difference.inHours.abs() < 5) {
+        int hours = difference.inHours.abs();
         int minutes = difference.inMinutes.remainder(60);
-        text = 'Dikirim $hours jam $minutes menit yang lalu';
+        text = 'Dikirim Kurang dari 20 Jam Yang Lalu';
       } else {
         int minutes = difference.inDays.abs();
         text = 'Dikirim pada $date';
@@ -198,7 +198,6 @@ class ItemApprovalWidget extends StatelessWidget {
             color: isMoreThan5Days ? Colors.red : Colors.black,
           ));
     } catch (e) {
-      print("error gan tanggal : " + e.toString());
       return Text(date,
           style: MyTheme.myStylePrimaryTextStyle
               .copyWith(fontSize: 10)
