@@ -1,38 +1,28 @@
 import 'package:bwa_cozy/bloc/all_approval/approval_main_page_bloc.dart';
 import 'package:bwa_cozy/bloc/all_approval/approval_main_page_event.dart';
 import 'package:bwa_cozy/bloc/all_approval/approval_main_page_state.dart';
-import 'package:bwa_cozy/bloc/notif/notif_bloc.dart';
-import 'package:bwa_cozy/bloc/notif/notif_event.dart';
-import 'package:bwa_cozy/bloc/notif/notif_state.dart';
-import 'package:bwa_cozy/pages/approval/compare/compare_approved_all_page.dart';
-import 'package:bwa_cozy/pages/approval/compare/compare_waiting_approval_page.dart';
 import 'package:bwa_cozy/pages/approval/compare/detail_compare_page.dart';
 import 'package:bwa_cozy/repos/approval_main_page_repository.dart';
-import 'package:bwa_cozy/repos/notif_repository.dart';
-import 'package:bwa_cozy/util/core/string/html_util.dart';
 import 'package:bwa_cozy/util/enum/menu_type.dart';
 import 'package:bwa_cozy/util/my_theme.dart';
 import 'package:bwa_cozy/widget/approval/item_approval_widget.dart';
-import 'package:bwa_cozy/widget/menus/menu_item_approval_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class ApprovalCompareMainPage extends StatefulWidget {
-  const ApprovalCompareMainPage({Key? key}) : super(key: key);
+class CompareWaitingApprovalPage extends StatefulWidget {
+  const CompareWaitingApprovalPage({Key? key}) : super(key: key);
 
   @override
-  State<ApprovalCompareMainPage> createState() =>
-      _ApprovalCompareMainPageState();
+  State<CompareWaitingApprovalPage> createState() =>
+      _CompareWaitingApprovalPageState();
 }
 
-class _ApprovalCompareMainPageState extends State<ApprovalCompareMainPage> {
+class _CompareWaitingApprovalPageState
+    extends State<CompareWaitingApprovalPage> {
   @override
   Widget build(BuildContext context) {
     double screenHeight = MediaQuery.of(context).size.height;
     double screenWidth = MediaQuery.of(context).size.width;
-
-    NotifRepository notifRepository = NotifRepository();
-    NotifCoreBloc notifBloc = NotifCoreBloc(notifRepository);
 
     ApprovalMainPageRepository approvalRepo = ApprovalMainPageRepository();
     ApprovalMainPageBloc approvalBloc = ApprovalMainPageBloc(approvalRepo);
@@ -70,17 +60,25 @@ class _ApprovalCompareMainPageState extends State<ApprovalCompareMainPage> {
                                     left: 30, right: 30, top: 10),
                                 child: Row(
                                   children: [
-                                    Align(
-                                      alignment: Alignment.center,
+                                    IconButton(
+                                      icon: Icon(Icons.arrow_back),
+                                      color: Colors.white,
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                        // Implement your back button functionality here
+                                      },
+                                    ),
+                                    SizedBox(width: 10),
+                                    Expanded(
                                       child: Text(
-                                        "Comparison",
+                                        "Compare Waiting Approval Page",
                                         style: MyTheme.myStylePrimaryTextStyle
                                             .copyWith(
-                                                color: Colors.white,
-                                                fontWeight: FontWeight.w800),
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.w800,
+                                        ),
                                       ),
                                     ),
-                                    Spacer(),
                                   ],
                                 ),
                               ),
@@ -111,71 +109,6 @@ class _ApprovalCompareMainPageState extends State<ApprovalCompareMainPage> {
                               child: Container(
                                 child: Column(
                                   children: [
-                                    BlocProvider(
-                                        create: (BuildContext context) {
-                                          return notifBloc
-                                            ..add(NotifEventCount());
-                                        },
-                                        child: Container(
-                                          child: Column(
-                                            children: [
-                                              BlocBuilder<NotifCoreBloc,
-                                                      NotifCoreState>(
-                                                  builder: (context, state) {
-                                                var count = "";
-                                                if (state
-                                                    is NotifStateLoading) {}
-                                                if (state
-                                                    is NotifStateFailure) {}
-                                                if (state
-                                                    is NotifStateSuccess) {
-                                                  count = state.totalCompare;
-                                                }
-                                                return MenuItemApprovalWidget(
-                                                  unreadBadgeCount: count,
-                                                  onLeftTapFunction: () {
-                                                    Navigator.push(
-                                                      context,
-                                                      MaterialPageRoute(
-                                                        builder: (context) =>
-                                                            CompareWaitingApprovalPage(),
-                                                      ),
-                                                    ).then((value) {
-                                                      notifBloc
-                                                        ..add(
-                                                            NotifEventCount());
-                                                      approvalBloc
-                                                        ..add(RequestDataEvent(
-                                                            ApprovalListType
-                                                                .COMPARE));
-                                                      print("kocak " +
-                                                          value.toString());
-                                                    });
-                                                  },
-                                                  onRightTapFunction: () {
-                                                    Navigator.push(
-                                                      context,
-                                                      MaterialPageRoute(
-                                                        builder: (context) =>
-                                                            CompareAllApprovedPage(),
-                                                      ),
-                                                    ).then((value) {
-                                                      notifBloc
-                                                        ..add(
-                                                            NotifEventCount());
-                                                      approvalBloc
-                                                        ..add(RequestDataEvent(
-                                                            ApprovalListType
-                                                                .COMPARE));
-                                                      print("kocak " +
-                                                          value.toString());
-                                                    });
-                                                  },
-                                                );
-                                              }),
-                                            ],
-                                          ),
-                                        )),
                                     Container(
                                       margin:
                                           EdgeInsets.only(left: 20, right: 20),
@@ -218,12 +151,9 @@ class _ApprovalCompareMainPageState extends State<ApprovalCompareMainPage> {
                             if (state is ApprovalMainPageStateFailure) {}
                             if (state
                                 is ApprovalMainPageStateSuccessListCompare) {
-                              var pbjList = state.datas;
-
-                              if (pbjList.isEmpty) {
+                              var compareList = state.datas;
+                              if (compareList.isEmpty) {
                                 return Container(
-                                  margin: EdgeInsets.only(
-                                      top: 50, left: 20, right: 20),
                                   alignment: Alignment.center,
                                   child: Column(
                                     mainAxisAlignment: MainAxisAlignment.center,
@@ -234,7 +164,7 @@ class _ApprovalCompareMainPageState extends State<ApprovalCompareMainPage> {
                                       ),
                                       SizedBox(height: 10),
                                       Text(
-                                        'Belum Ada Request Baru',
+                                        'No data available',
                                         style: TextStyle(
                                           fontSize: 16,
                                           fontWeight: FontWeight.bold,
@@ -244,39 +174,36 @@ class _ApprovalCompareMainPageState extends State<ApprovalCompareMainPage> {
                                   ),
                                 );
                               }
-
                               dataList = ListView.builder(
-                                itemCount: pbjList.length,
+                                itemCount: compareList.length,
                                 shrinkWrap: true,
                                 physics: const NeverScrollableScrollPhysics(),
                                 itemBuilder: (context, index) {
-                                  final pbjItem = pbjList[index];
+                                  final approvalItem = compareList[index];
                                   var isApproved = false;
-                                  if (pbjItem.status != "Y") {
+                                  if (approvalItem.status != "Y") {
                                     isApproved = true;
                                   }
                                   return ItemApprovalWidget(
+                                    requiredId: approvalItem.idCompare,
                                     isApproved: isApproved,
-                                    itemCode: (index + 1).toString() +
-                                        pbjItem.noCompare +
-                                        pbjList.length.toString(),
-                                    date: pbjItem.tglPermintaan,
-                                    requiredId: pbjItem.idCompare,
-                                    personName: pbjItem.namaUser,
-                                    departmentTitle: pbjItem.department,
-                                    descriptiveText:
-                                        removeHtmlTags(pbjItem.descCompare),
-                                    onPressed: (String noCompare) {
+                                    itemCode: approvalItem.noCompare,
+                                    date: approvalItem.tglPermintaan,
+                                    departmentTitle: approvalItem.department,
+                                    personName: approvalItem.namaUser,
+                                    personImage: "",
+                                    onPressed: (String requiredId) {
                                       Navigator.push(
                                         context,
                                         MaterialPageRoute(
                                           builder: (context) =>
                                               DetailComparePage(
-                                                  noCompare: pbjItem.noCompare,
-                                                  idCompare: pbjItem.idCompare),
+                                                  noCompare:
+                                                      approvalItem.noCompare,
+                                                  idCompare:
+                                                      approvalItem.idCompare),
                                         ),
                                       ).then((value) {
-                                        notifBloc..add(NotifEventCount());
                                         approvalBloc
                                           ..add(RequestDataEvent(
                                               ApprovalListType.COMPARE));

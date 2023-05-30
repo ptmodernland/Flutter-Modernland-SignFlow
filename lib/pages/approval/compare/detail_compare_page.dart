@@ -1,14 +1,11 @@
-import 'package:bwa_cozy/bloc/all_approval/approval_main_page_bloc.dart';
-import 'package:bwa_cozy/bloc/all_approval/approval_main_page_event.dart';
-import 'package:bwa_cozy/bloc/all_approval/approval_main_page_state.dart';
-import 'package:bwa_cozy/bloc/pbj/pbj_comment_bloc.dart';
-import 'package:bwa_cozy/bloc/pbj/pbj_comment_event.dart';
-import 'package:bwa_cozy/bloc/pbj/pbj_event.dart';
-import 'package:bwa_cozy/bloc/pbj/pbj_main_bloc.dart';
-import 'package:bwa_cozy/bloc/pbj/pbj_state.dart';
-import 'package:bwa_cozy/repos/approval_main_page_repository.dart';
-import 'package:bwa_cozy/repos/notif_repository.dart';
-import 'package:bwa_cozy/repos/pbj_repository.dart';
+import 'package:bwa_cozy/bloc/compare/compare_action_bloc.dart';
+import 'package:bwa_cozy/bloc/compare/compare_action_event.dart';
+import 'package:bwa_cozy/bloc/compare/compare_bloc.dart';
+import 'package:bwa_cozy/bloc/compare/compare_comment_bloc.dart';
+import 'package:bwa_cozy/bloc/compare/compare_comment_event.dart';
+import 'package:bwa_cozy/bloc/compare/compare_event.dart';
+import 'package:bwa_cozy/bloc/compare/compare_state.dart';
+import 'package:bwa_cozy/repos/compare_repository.dart';
 import 'package:bwa_cozy/util/core/url/base_url.dart';
 import 'package:bwa_cozy/util/enum/action_type.dart';
 import 'package:bwa_cozy/util/my_theme.dart';
@@ -22,38 +19,39 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:quickalert/quickalert.dart';
 
-class DetailPBJPage extends StatefulWidget {
-  const DetailPBJPage(
-      {Key? key, required this.noPermintaan, this.isFromHistory = false})
+class DetailComparePage extends StatefulWidget {
+  const DetailComparePage(
+      {Key? key,
+      required this.idCompare,
+      required this.noCompare,
+      this.isFromHistory = false})
       : super(key: key);
-  final String noPermintaan;
+
+  final String idCompare;
+  final String noCompare;
   final bool isFromHistory;
 
   @override
-  State<DetailPBJPage> createState() => _DetailPBJPageState();
+  State<DetailComparePage> createState() => _DetailComparePageState();
 }
 
-class _DetailPBJPageState extends State<DetailPBJPage> {
+class _DetailComparePageState extends State<DetailComparePage> {
   final _formKey = GlobalKey<FormState>();
   final _formKey2 = GlobalKey<FormState>();
   final messageController = TextEditingController();
 
-  late NotifRepository notifRepository;
-  late ApprovalMainPageRepository approvalRepo;
-  late ApprovalMainPageBloc approvalBloc;
-
-  late PBJRepository pbjRepo;
-  late PBJBloc pbjBloc;
-  late PBJCommentBloc pbjCommentBloc;
+  late CompareRepository compareRepo;
+  late CompareBloc compareBloc;
+  late CompareCommentBloc compareCommentBloc;
+  late CompareActionBloc compareActionBloc;
 
   @override
   void initState() {
     super.initState();
-    approvalRepo = ApprovalMainPageRepository();
-    approvalBloc = ApprovalMainPageBloc(approvalRepo);
-    pbjRepo = PBJRepository();
-    pbjBloc = PBJBloc(pbjRepo);
-    pbjCommentBloc = PBJCommentBloc(pbjRepo);
+    compareRepo = CompareRepository();
+    compareBloc = CompareBloc(compareRepo);
+    compareCommentBloc = CompareCommentBloc(compareRepo);
+    compareActionBloc = CompareActionBloc(compareRepo);
   }
 
   @override
@@ -104,8 +102,8 @@ class _DetailPBJPageState extends State<DetailPBJPage> {
                                           ),
                                           Flexible(
                                             child: Text(
-                                              "Detail PBJ " +
-                                                  widget.noPermintaan,
+                                              "Detail Compare " +
+                                                  widget.idCompare,
                                               style: MyTheme
                                                   .myStylePrimaryTextStyle
                                                   .copyWith(
@@ -158,7 +156,7 @@ class _DetailPBJPageState extends State<DetailPBJPage> {
                                         children: [
                                           Text(
                                             "Detail Request #" +
-                                                widget.noPermintaan,
+                                                widget.idCompare,
                                             textAlign: TextAlign.start,
                                             style: MyTheme
                                                 .myStylePrimaryTextStyle
@@ -179,18 +177,23 @@ class _DetailPBJPageState extends State<DetailPBJPage> {
                       ),
                       BlocProvider(
                         create: (BuildContext context) {
-                          return approvalBloc
-                            ..add(RequestPBJDetailEvent(widget.noPermintaan));
+                          return compareBloc
+                            ..add(GetCompareDetailEvent(
+                                idCompare: widget.idCompare.toString()));
                         },
-                        child: BlocBuilder<ApprovalMainPageBloc,
-                            ApprovalMainPageState>(
+                        child: BlocBuilder<CompareBloc, CompareState>(
                           builder: (context, state) {
                             var status = "";
                             Widget dataList = Text("");
-                            if (state is ApprovalMainPageStateLoading) {}
-                            if (state is ApprovalMainPageStateFailure) {}
+                            if (state is CompareStateLoading) {}
+                            if (state is CompareStateFailure) {
+                              if (state.type ==
+                                  CompareEActionType.LOAD_DETAIL) {
+                                return Text("Error " + state.message);
+                              }
+                            }
 
-                            if (state is ApprovalDetailPBJSuccess) {
+                            if (state is CompareDetailSuccess) {
                               var data = state.data;
 
                               var isApproved = false;
@@ -201,14 +204,11 @@ class _DetailPBJPageState extends State<DetailPBJPage> {
                                 child: Column(
                                   children: [
                                     ItemApprovalWidget(
-                                      requiredId: data.noPermintaan,
                                       isApproved: isApproved,
-                                      itemCode: data.noPermintaan,
-                                      date: data.tglPermintaan,
-                                      departmentTitle: data.departemen,
+                                      itemCode: data.noCompare,
+                                      date: data.compare_date,
                                       personName: data.namaUser,
-                                      personImage: "",
-                                      onPressed: (String requiredId) {},
+                                      departmentTitle: data.departemen,
                                     ),
                                     Container(
                                       padding: const EdgeInsets.only(
@@ -237,14 +237,14 @@ class _DetailPBJPageState extends State<DetailPBJPage> {
                                             children: [
                                               Expanded(
                                                 child: DocumentDetailWidget(
-                                                  title: "Nomor Permintaan",
-                                                  content: data.noPermintaan,
+                                                  title: "Nomor Compare",
+                                                  content: data.noCompare,
                                                 ),
                                               ),
                                               Expanded(
                                                 child: DocumentDetailWidget(
                                                   title: "Tanggal",
-                                                  content: data.noPermintaan,
+                                                  content: data.compare_date,
                                                 ),
                                               ),
                                             ],
@@ -271,20 +271,79 @@ class _DetailPBJPageState extends State<DetailPBJPage> {
                                                 CrossAxisAlignment.start,
                                             children: [
                                               Expanded(
+                                                child: DocumentDetailWidget(
+                                                  title: "Advance Payment",
+                                                  content: data.advancePayment
+                                                          .isNotEmpty
+                                                      ? data.advancePayment
+                                                      : "-",
+                                                ),
+                                              ),
+                                              Expanded(
+                                                child: DocumentDetailWidget(
+                                                  title: "Progress Payment",
+                                                  content: data.progressPayment
+                                                          .isNotEmpty
+                                                      ? data.progressPayment
+                                                      : "-",
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          Row(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Expanded(
                                                   child: DocumentDetailWidget(
                                                 title: "View Detail",
                                                 content: "Klik Disini",
-                                                fileURL: DOC_VIEW_PBJ +
-                                                    data.noPermintaan
-                                                        .toString(),
+                                                fileURL: DOC_VIEW_COMPARE +
+                                                    data.idCompare,
                                               )),
                                               Expanded(
                                                 child: DocumentDetailWidget(
                                                   title: "Download File",
                                                   content: data.attchFile,
                                                   isForDownload: true,
-                                                  fileURL: ATTACH_DOWNLOAD_PBJ +
-                                                      data.attchFile.toString(),
+                                                  fileURL:
+                                                      ATTACH_DOWNLOAD_COMPARE +
+                                                          data.attchFile
+                                                              .toString(),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          if (data.noRef != null)
+                                            Row(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Expanded(
+                                                  child: DocumentDetailWidget(
+                                                    title: "Nomor Ref",
+                                                    content: data.noRef ?? "-",
+                                                    isForDownload: false,
+                                                    fileURL:
+                                                        DOC_VIEW_COMPARE_GABUNGAN +
+                                                            data.noRef
+                                                                .toString(),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          Row(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Expanded(
+                                                child: DocumentDetailWidget(
+                                                  title: "Deskripsi : ",
+                                                  content: data.desc_compare
+                                                          .isNotEmpty
+                                                      ? data.desc_compare
+                                                      : "-",
+                                                  isForDownload: false,
                                                 ),
                                               ),
                                             ],
@@ -292,16 +351,17 @@ class _DetailPBJPageState extends State<DetailPBJPage> {
                                           SizedBox(
                                             height: 20,
                                           ),
-                                          Text(
-                                            "Komentar",
-                                            textAlign: TextAlign.start,
-                                            style: MyTheme
-                                                .myStylePrimaryTextStyle
-                                                .copyWith(
-                                              fontWeight: FontWeight.w600,
-                                              fontSize: 18,
+                                          if (widget.isFromHistory == false)
+                                            Text(
+                                              "Komentar",
+                                              textAlign: TextAlign.start,
+                                              style: MyTheme
+                                                  .myStylePrimaryTextStyle
+                                                  .copyWith(
+                                                fontWeight: FontWeight.w600,
+                                                fontSize: 18,
+                                              ),
                                             ),
-                                          ),
                                           if (!widget.isFromHistory)
                                             Form(
                                               key: _formKey,
@@ -309,15 +369,17 @@ class _DetailPBJPageState extends State<DetailPBJPage> {
                                                 mainAxisSize: MainAxisSize.min,
                                                 children: [
                                                   CustomTextInput(
-                                                    textEditController: messageController,
-                                                    hintTextString: 'Isi Tanggapan',
-                                                    inputType: InputType
-                                                        .Default,
+                                                    textEditController:
+                                                        messageController,
+                                                    hintTextString:
+                                                        'Isi Tanggapan',
+                                                    inputType:
+                                                        InputType.Default,
                                                     enableBorder: true,
                                                     minLines: 3,
-                                                    themeColor: Theme
-                                                        .of(context)
-                                                        .primaryColor,
+                                                    themeColor:
+                                                        Theme.of(context)
+                                                            .primaryColor,
                                                     cornerRadius: 18.0,
                                                     textValidator: (value) {
                                                       if (value?.isEmpty ??
@@ -327,8 +389,10 @@ class _DetailPBJPageState extends State<DetailPBJPage> {
                                                       return null;
                                                     },
                                                     textColor: Colors.black,
-                                                    errorMessage: 'Username cant be empty',
-                                                    labelText: 'Tanggapan/Komentar/Review',
+                                                    errorMessage:
+                                                        'Username cant be empty',
+                                                    labelText:
+                                                        'Tanggapan/Komentar/Review',
                                                   ),
                                                 ],
                                               ),
@@ -344,17 +408,33 @@ class _DetailPBJPageState extends State<DetailPBJPage> {
                           },
                         ),
                       ),
+                      //Load Comment Bloc Provider
                       BlocProvider(
                         create: (BuildContext context) {
-                          return pbjCommentBloc
-                            ..add(GetKomentarPBJ(
-                                noPermintaan: widget.noPermintaan));
+                          return compareCommentBloc
+                            ..add(GetKomentarCompare(
+                                noCompare: widget.noCompare));
                         },
                         child: Column(
                           children: [
-                            BlocBuilder<PBJCommentBloc, PBJState>(
+                            BlocListener<CompareCommentBloc, CompareState>(
+                              listener: (context, state) {
+                                if (state is CompareStateFailure) {
+                                  if (state.type ==
+                                      CompareEActionType.SHOW_KOMENTAR) {
+                                    QuickAlert.show(
+                                      context: context,
+                                      type: QuickAlertType.error,
+                                      text: state.message.toString(),
+                                    );
+                                  }
+                                }
+                              },
+                              child: Container(),
+                            ),
+                            BlocBuilder<CompareCommentBloc, CompareState>(
                               builder: (context, state) {
-                                if (state is PBJStateLoadKomentarSuccess) {
+                                if (state is CompareStateLoadCommentSuccess) {
                                   var commentList = state.datas;
                                   var commentListViewBuilder = ListView.builder(
                                     itemCount: commentList.length,
@@ -377,29 +457,6 @@ class _DetailPBJPageState extends State<DetailPBJPage> {
                                     },
                                   );
                                   var emptyState = Container();
-                                  if (state.datas.isEmpty) {
-                                    emptyState = Container(
-                                      alignment: Alignment.center,
-                                      child: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          Image.network(
-                                            'http://feylabs.my.id/fm/mdln_asset/mdln_empty_image.png',
-                                            // Adjust the image properties as per your requirement
-                                          ),
-                                          SizedBox(height: 10),
-                                          Text(
-                                            'Belum Ada Komentar',
-                                            style: TextStyle(
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    );
-                                  }
                                   return Column(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.stretch,
@@ -424,83 +481,18 @@ class _DetailPBJPageState extends State<DetailPBJPage> {
                       ),
                       BlocProvider(
                         create: (BuildContext context) {
-                          return pbjBloc;
+                          return compareBloc;
                         },
                         child: Column(
                           children: [
-                            BlocListener<PBJBloc, PBJState>(
-                              listener: (context, state) {
-                                if (state is PBJStateFailure) {
-                                  if (state.type ==
-                                          PBJEStateActionType.APPROVE ||
-                                      state.type ==
-                                          PBJEStateActionType.REJECT) {
-                                    QuickAlert.show(
-                                      context: context,
-                                      type: QuickAlertType.error,
-                                      text: state.message.toString(),
-                                    );
-                                  }
-                                }
-
-                                if (state is PBJStateSuccess) {
-                                  if (state.type ==
-                                          PBJEStateActionType.APPROVE ||
-                                      state.type ==
-                                          PBJEStateActionType.REJECT) {
-                                    showDialog(
-                                      context: context,
-                                      builder: (BuildContext context) {
-                                        var text = "";
-                                        if (state.type ==
-                                            PBJEStateActionType.APPROVE) {
-                                          text = "Request Berhasil Diapprove";
-                                        }
-                                        if (state.type ==
-                                            PBJEStateActionType.REJECT) {
-                                          text = "Request Berhasil Direject";
-                                        }
-                                        return WillPopScope(
-                                          onWillPop: () async {
-                                            Navigator.of(context)
-                                                .pop(); // Handle back button press
-                                            return false; // Prevent dialog from being dismissed by back button
-                                          },
-                                          child: CupertinoAlertDialog(
-                                            title: Text(
-                                              'Success',
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.bold),
-                                            ),
-                                            content: Text(text),
-                                            actions: <Widget>[
-                                              CupertinoDialogAction(
-                                                onPressed: () {
-                                                  Navigator.of(context)
-                                                      .pop(); // Close the dialog
-                                                  Navigator.of(context)
-                                                      .pop(); // Go back to the previous page
-                                                },
-                                                child: Text('OK'),
-                                              ),
-                                            ],
-                                          ),
-                                        );
-                                      },
-                                    );
-                                  }
-                                }
-                              },
-                              child: Container(),
-                            ),
-                            BlocBuilder<PBJBloc, PBJState>(
+                            BlocBuilder<CompareBloc, CompareState>(
                               builder: (context, state) {
                                 var status = "";
-                                if (state is PBJStateInitial) {}
-                                if (state is PBJStateLoading) {
+                                if (state is CompareStateInitial) {}
+                                if (state is CompareStateLoading) {
                                   bool isCorrectState = (state.type ==
-                                          PBJEStateActionType.APPROVE ||
-                                      state.type == PBJEStateActionType.REJECT);
+                                          CompareEActionType.APPROVE ||
+                                      state.type == CompareEActionType.REJECT);
                                   if (isCorrectState) {
                                     return Center(
                                       child: CupertinoActivityIndicator(),
@@ -582,6 +574,70 @@ class _DetailPBJPageState extends State<DetailPBJPage> {
                           ],
                         ),
                       ),
+                      BlocProvider(
+                        create: (BuildContext context) {
+                          return compareActionBloc;
+                        },
+                        child: Column(
+                          children: [
+                            BlocListener<CompareActionBloc, CompareState>(
+                              listener: (context, state) {
+                                if (state is CompareStateFailure) {
+                                  QuickAlert.show(
+                                    context: context,
+                                    type: QuickAlertType.error,
+                                    text: state.message.toString(),
+                                  );
+                                }
+
+                                if (state is CompareStateSuccess) {
+                                  showDialog(
+                                    context: context,
+                                    builder: (BuildContext context) {
+                                      var text = "";
+                                      if (state.type ==
+                                          CompareEActionType.APPROVE) {
+                                        text = "Request Berhasil Diapprove";
+                                      }
+                                      if (state.type ==
+                                          CompareEActionType.REJECT) {
+                                        text = "Request Berhasil Direject";
+                                      }
+                                      return WillPopScope(
+                                        onWillPop: () async {
+                                          Navigator.of(context)
+                                              .pop(); // Handle back button press
+                                          return false; // Prevent dialog from being dismissed by back button
+                                        },
+                                        child: CupertinoAlertDialog(
+                                          title: Text(
+                                            'Success',
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                          content: Text(text),
+                                          actions: <Widget>[
+                                            CupertinoDialogAction(
+                                              onPressed: () {
+                                                Navigator.of(context)
+                                                    .pop(); // Close the dialog
+                                                Navigator.of(context)
+                                                    .pop(); // Go back to the previous page
+                                              },
+                                              child: Text('OK'),
+                                            ),
+                                          ],
+                                        ),
+                                      );
+                                    },
+                                  );
+                                }
+                              },
+                              child: Container(),
+                            ),
+                          ],
+                        ),
+                      ),
                     ],
                   ),
                 ),
@@ -639,19 +695,22 @@ class _DetailPBJPageState extends State<DetailPBJPage> {
                   print("send with comment " + comment);
 
                   if (type == ApprovalActionType.APPROVE) {
-                    pbjBloc.add(SendQPBJApprove(
+                    compareActionBloc.add(SendQCompareApprove(
                       pin: pin,
                       comment: this.messageController.text,
-                      noPermintaan: widget.noPermintaan,
+                      noPermintaan: widget.noCompare,
                     ));
+                    print("no request approve is : " + widget.noCompare);
                   }
 
                   if (type == ApprovalActionType.REJECT) {
-                    pbjBloc.add(SendQPBJReject(
+                    compareActionBloc.add(SendQCompareReject(
                       pin: pin,
                       comment: this.messageController.text,
-                      noPermintaan: widget.noPermintaan,
+                      nomorCompare: widget.noCompare,
                     ));
+
+                    print("no request reject is : " + widget.noCompare);
                   }
 
                   // Perform any desired operations with the entered PIN

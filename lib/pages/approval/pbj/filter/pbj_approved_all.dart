@@ -67,15 +67,16 @@ class _PBJAllApprovedPageState extends State<PBJAllApprovedPage> {
                                       },
                                     ),
                                     SizedBox(width: 10),
-                                    Text(
-                                      "History Approved PBJ",
-                                      style: MyTheme.myStylePrimaryTextStyle
-                                          .copyWith(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.w800,
+                                    Expanded(
+                                      child: Text(
+                                        "History Approved PBJ ",
+                                        style: MyTheme.myStylePrimaryTextStyle
+                                            .copyWith(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.w800,
+                                        ),
                                       ),
                                     ),
-                                    Spacer(),
                                   ],
                                 ),
                               ),
@@ -112,7 +113,7 @@ class _PBJAllApprovedPageState extends State<PBJAllApprovedPage> {
                                       child: Column(
                                         mainAxisSize: MainAxisSize.max,
                                         crossAxisAlignment:
-                                            CrossAxisAlignment.start,
+                                            CrossAxisAlignment.stretch,
                                         children: [
                                           Text(
                                             "History Approved PBJ",

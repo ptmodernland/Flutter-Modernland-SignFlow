@@ -1,14 +1,15 @@
 import 'dart:convert';
 
 import 'package:bwa_cozy/bloc/_wrapper/response_wrapper.dart';
-import 'package:bwa_cozy/bloc/all_approval/dto/list_all_pbj_dto.dart';
+import 'package:bwa_cozy/bloc/all_approval/dto/list_all_compare_dto.dart';
+import 'package:bwa_cozy/bloc/compare/dto/detail_compare_dto.dart';
 import 'package:bwa_cozy/bloc/pbj/dto/list_komen_pbj.dart';
 import 'package:bwa_cozy/util/storage/sessionmanager/session_manager.dart';
 import 'package:http/http.dart' as http;
 
-class PBJRepository {
+class CompareRepository {
   //use this to approve a PBJ
-  Future<ResponseWrapper<String>> approvePBJ({
+  Future<ResponseWrapper<String>> approveCompare({
     String noPermintaan = "",
     String comment = "",
     String pin = "",
@@ -23,13 +24,13 @@ class PBJRepository {
       }
       // Prepare the request
       var url = Uri.parse(
-          'https://approval.modernland.co.id/androidiom/proses_approve_pbj.jsp?' +
+          'https://approval.modernland.co.id/androidiom/proses_approve_compare.jsp?' +
               userID);
 
       var body = {
-        'no_permintaan': noPermintaan,
+        'nomor': noPermintaan,
         'id_user': userID ?? '',
-        'komenad': comment ?? null,
+        'komen': comment ?? null,
         'passwordUser': pin ?? '',
       };
 
@@ -45,11 +46,11 @@ class PBJRepository {
       if (response.statusCode == 200) {
         print("result $logTag 200");
         if (resStatus) {
-          return ResponseWrapper(
-              "Success", ResourceStatus.Success, "Berhasil Mengapprove PBJ");
+          return ResponseWrapper("Success", ResourceStatus.Success,
+              "Berhasil Mengapprove Comparison");
         } else {
           return ResponseWrapper(resMessage, ResourceStatus.Error,
-              "Gagal Approve PBJ : " + resMessage);
+              "Gagal Approve Comparison : " + resMessage);
         }
       } else {
         print("result $logTag Terjadi Kesalahan");
@@ -61,13 +62,13 @@ class PBJRepository {
     }
   }
 
-  //use this to REJECT a PBJ
-  Future<ResponseWrapper<String>> rejectPBJ({
+  //use this to REJECT
+  Future<ResponseWrapper<String>> rejectCompare({
     String noPermintaan = "",
     String comment = "",
     String pin = "",
   }) async {
-    var logTag = "Reject PBJ";
+    var logTag = "Reject Compare";
     try {
       print("trying $logTag");
       var userID = "";
@@ -77,13 +78,13 @@ class PBJRepository {
       }
       // Prepare the request
       var url = Uri.parse(
-          'https://approval.modernland.co.id/androidiom/proses_cancel_pbj.jsp?' +
+          'https://approval.modernland.co.id/androidiom/proses_cancel_compare.jsp?' +
               userID);
 
       var body = {
-        'no_permintaan': noPermintaan,
+        'nomor': noPermintaan,
         'id_user': userID ?? '',
-        'komenad': comment ?? null,
+        'komen': comment ?? null,
         'passwordUser': pin ?? '',
       };
 
@@ -100,10 +101,10 @@ class PBJRepository {
         print("result $logTag 200");
         if (resStatus) {
           return ResponseWrapper(
-              "Success", ResourceStatus.Success, "PBJ Berhasil Direject");
+              "Success", ResourceStatus.Success, "Compare Berhasil Direject");
         } else {
           return ResponseWrapper(resMessage, ResourceStatus.Error,
-              "Gagal Reject PBJ : " + resMessage);
+              "Gagal Reject Compare : " + resMessage);
         }
       } else {
         print("result $logTag Terjadi Kesalahan");
@@ -115,15 +116,15 @@ class PBJRepository {
     }
   }
 
-  Future<ResponseWrapper<List<ListAllPbjDTO>>> getHistoryPBJ(
+  Future<ResponseWrapper<List<ListAllCompareDTO>>> getHistoryCompare(
       {String? startDate = null,
       String? endDate = null,
       String? year = null,
       String? noPermintaan = null,
       bool isAll = true}) async {
-    var logTag = "Getting PBJ";
+    var logTag = "Getting Compare";
     try {
-      print("trying getting PBJ");
+      print("trying getting Compare");
       var username = "";
       var usersession = await SessionManager.getUserFromSession();
 
@@ -132,12 +133,10 @@ class PBJRepository {
       }
       // Prepare the request
       var url = Uri.parse(
-          'https://approval.modernland.co.id/androidiom/list_pbj_new.php?username=' +
+          'https://approval.modernland.co.id/androidiom/list_compare_new.php?username=' +
               username);
       // Set the form data
       print("URL History PBJ");
-
-      print("$logTag" + "SS");
       // Send the request
       var response = await http.post(url);
       // Get the response body as a string
@@ -152,29 +151,29 @@ class PBJRepository {
         final jsonData = json.decode(response.body);
         final List<Map<String, dynamic>> dataList =
             List<Map<String, dynamic>>.from(jsonData);
-        final List<ListAllPbjDTO> datas =
-            dataList.map((data) => ListAllPbjDTO.fromJson(data)).toList();
+        final List<ListAllCompareDTO> datas =
+            dataList.map((data) => ListAllCompareDTO.fromJson(data)).toList();
         // Now you have the list of `Bottle` objects
         return ResponseWrapper(datas, ResourceStatus.Success, "Success");
       } else {
         return ResponseWrapper(null, ResourceStatus.Error, "Terjadi Kesalahan");
       }
     } catch (error) {
-      print("error on ApprovalMainPageRepository " + error.toString());
+      print("error on CompareRepository " + error.toString());
       return ResponseWrapper(null, ResourceStatus.Error, error.toString());
     }
     return ResponseWrapper(null, ResourceStatus.Success, "Login Berhasil");
   }
 
-  Future<ResponseWrapper<List<ListPBJCommentDTO>>> getKomentarPBJ(
-      {String? noPermintaan = null}) async {
-    var logTag = "Getting PBJ Komentar";
+  Future<ResponseWrapper<List<ListPBJCommentDTO>>> getCommentCompare(
+      {String? noCompare = null}) async {
+    var logTag = "Getting Compare Comment";
     try {
-      print("trying getting PBJ Komentar $noPermintaan");
+      print("trying getting $logTag");
       // Prepare the request
       var url = Uri.parse(
-          'https://approval.modernland.co.id/androidiom/get_komen_pbj.php?no_permintaan=' +
-              noPermintaan.toString());
+          'https://approval.modernland.co.id/androidiom/get_komen_compare.php?no_compare=' +
+              noCompare.toString());
       // Set the form data
       var response = await http.get(url);
       // Get the response body as a string
@@ -185,22 +184,53 @@ class PBJRepository {
       final result = jsonDecode(response.body);
       print(result.toString());
       if (response.statusCode == 200) {
-        print("result komentar 200");
+        print("result 200");
         final jsonData = json.decode(response.body);
         final List<Map<String, dynamic>> dataList =
             List<Map<String, dynamic>>.from(jsonData);
         final List<ListPBJCommentDTO> datas =
             dataList.map((data) => ListPBJCommentDTO.fromJson(data)).toList();
         // Now you have the list of `Bottle` objects
-        print("komentar success $jsonData");
         return ResponseWrapper(datas, ResourceStatus.Success, "Success");
       } else {
         return ResponseWrapper(null, ResourceStatus.Error, "Terjadi Kesalahan");
       }
     } catch (error) {
-      print("error on PBJRepository " + error.toString());
+      print("error on $logTag " + error.toString());
       return ResponseWrapper(null, ResourceStatus.Error, error.toString());
     }
-    return ResponseWrapper(null, ResourceStatus.Success, "Login Berhasil");
+  }
+
+  //use this to see PBJ Detail
+  Future<ResponseWrapper<DetailCompareDTO>> getCompareDetail(
+      String idPermintaan) async {
+    var logTag = "Getting Detail Compare";
+    try {
+      print("trying to get Compare detail");
+      // Prepare the request
+      var url = Uri.parse(
+          'https://approval.modernland.co.id/androidiom/get_compare.php?idcompare=' +
+              idPermintaan);
+      // Send the request
+      var response = await http.post(url);
+      // Get the response body as a string
+      var responseBody = response.body;
+      print("$logTag : $responseBody");
+      var jsonResponse = jsonDecode(responseBody);
+
+      if (response.statusCode == 200) {
+        print("result $logTag 200");
+        final DetailCompareDTO data = DetailCompareDTO.fromJson(jsonResponse);
+
+        print("result $logTag success");
+        return ResponseWrapper(data, ResourceStatus.Success, "Success");
+      } else {
+        print("result $logTag encountered an error");
+        return ResponseWrapper(null, ResourceStatus.Error, "An error occurred");
+      }
+    } catch (error) {
+      print("error on $logTag: $error");
+      return ResponseWrapper(null, ResourceStatus.Error, error.toString());
+    }
   }
 }

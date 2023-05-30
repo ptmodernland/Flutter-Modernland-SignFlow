@@ -5,6 +5,7 @@ class ListAllCompareDTO {
   final String descCompare;
   final String approve;
   final String tglPermintaan;
+  final String department;
   final String status;
   final String statusEmail;
 
@@ -14,6 +15,7 @@ class ListAllCompareDTO {
       required this.namaUser,
       required this.descCompare,
       required this.approve,
+      required this.department,
       required this.tglPermintaan,
       required this.status,
       required this.statusEmail});
@@ -24,6 +26,7 @@ class ListAllCompareDTO {
       noCompare: json['no_compare'],
       namaUser: json['namaUser'],
       descCompare: json['desc_compare'],
+      department: json['departemen'],
       approve: json['approve'],
       tglPermintaan: json['tgl_permintaan'],
       status: json['status'],

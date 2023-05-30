@@ -68,7 +68,7 @@ class ApprovalMainPageRepository {
       if (usersession != null) {
         username = usersession.username;
       }
-      // Prepare the request
+      // Prepare the request/Volumes/D/SharedFolder/iom/androidiom/counter_all.php
       var url = Uri.parse(
           'https://approval.modernland.co.id/androidiom/list_approve_compare.php?username=' +
               username);
