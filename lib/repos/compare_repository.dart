@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:bwa_cozy/bloc/_wrapper/response_wrapper.dart';
-import 'package:bwa_cozy/bloc/all_approval/dto/list_all_pbj_dto.dart';
+import 'package:bwa_cozy/bloc/all_approval/dto/list_all_compare_dto.dart';
 import 'package:bwa_cozy/bloc/compare/dto/detail_compare_dto.dart';
 import 'package:bwa_cozy/bloc/pbj/dto/list_komen_pbj.dart';
 import 'package:bwa_cozy/util/storage/sessionmanager/session_manager.dart';
@@ -24,7 +24,7 @@ class CompareRepository {
       }
       // Prepare the request
       var url = Uri.parse(
-          'https://approval.modernland.co.id/androidiom/proses_approve_pbj.jsp?' +
+          'https://approval.modernland.co.id/androidiom/proses_approve_compare.jsp?' +
               userID);
 
       var body = {
@@ -46,11 +46,11 @@ class CompareRepository {
       if (response.statusCode == 200) {
         print("result $logTag 200");
         if (resStatus) {
-          return ResponseWrapper(
-              "Success", ResourceStatus.Success, "Berhasil Mengapprove PBJ");
+          return ResponseWrapper("Success", ResourceStatus.Success,
+              "Berhasil Mengapprove Comparison");
         } else {
           return ResponseWrapper(resMessage, ResourceStatus.Error,
-              "Gagal Approve PBJ : " + resMessage);
+              "Gagal Approve Comparison : " + resMessage);
         }
       } else {
         print("result $logTag Terjadi Kesalahan");
@@ -62,13 +62,13 @@ class CompareRepository {
     }
   }
 
-  //use this to REJECT a PBJ
+  //use this to REJECT
   Future<ResponseWrapper<String>> rejectCompare({
     String noPermintaan = "",
     String comment = "",
     String pin = "",
   }) async {
-    var logTag = "Reject PBJ";
+    var logTag = "Reject Compare";
     try {
       print("trying $logTag");
       var userID = "";
@@ -78,7 +78,7 @@ class CompareRepository {
       }
       // Prepare the request
       var url = Uri.parse(
-          'https://approval.modernland.co.id/androidiom/proses_cancel_pbj.jsp?' +
+          'https://approval.modernland.co.id/androidiom/proses_cancel_compare.jsp?' +
               userID);
 
       var body = {
@@ -101,10 +101,10 @@ class CompareRepository {
         print("result $logTag 200");
         if (resStatus) {
           return ResponseWrapper(
-              "Success", ResourceStatus.Success, "PBJ Berhasil Direject");
+              "Success", ResourceStatus.Success, "Compare Berhasil Direject");
         } else {
           return ResponseWrapper(resMessage, ResourceStatus.Error,
-              "Gagal Reject PBJ : " + resMessage);
+              "Gagal Reject Compare : " + resMessage);
         }
       } else {
         print("result $logTag Terjadi Kesalahan");
@@ -116,15 +116,15 @@ class CompareRepository {
     }
   }
 
-  Future<ResponseWrapper<List<ListAllPbjDTO>>> getHistoryCompare(
+  Future<ResponseWrapper<List<ListAllCompareDTO>>> getHistoryCompare(
       {String? startDate = null,
       String? endDate = null,
       String? year = null,
       String? noPermintaan = null,
       bool isAll = true}) async {
-    var logTag = "Getting PBJ";
+    var logTag = "Getting Compare";
     try {
-      print("trying getting PBJ");
+      print("trying getting Compare");
       var username = "";
       var usersession = await SessionManager.getUserFromSession();
 
@@ -133,12 +133,10 @@ class CompareRepository {
       }
       // Prepare the request
       var url = Uri.parse(
-          'https://approval.modernland.co.id/androidiom/list_pbj_new.php?username=' +
+          'https://approval.modernland.co.id/androidiom/list_compare_new.php?username=' +
               username);
       // Set the form data
       print("URL History PBJ");
-
-      print("$logTag" + "SS");
       // Send the request
       var response = await http.post(url);
       // Get the response body as a string
@@ -153,15 +151,15 @@ class CompareRepository {
         final jsonData = json.decode(response.body);
         final List<Map<String, dynamic>> dataList =
             List<Map<String, dynamic>>.from(jsonData);
-        final List<ListAllPbjDTO> datas =
-            dataList.map((data) => ListAllPbjDTO.fromJson(data)).toList();
+        final List<ListAllCompareDTO> datas =
+            dataList.map((data) => ListAllCompareDTO.fromJson(data)).toList();
         // Now you have the list of `Bottle` objects
         return ResponseWrapper(datas, ResourceStatus.Success, "Success");
       } else {
         return ResponseWrapper(null, ResourceStatus.Error, "Terjadi Kesalahan");
       }
     } catch (error) {
-      print("error on ApprovalMainPageRepository " + error.toString());
+      print("error on CompareRepository " + error.toString());
       return ResponseWrapper(null, ResourceStatus.Error, error.toString());
     }
     return ResponseWrapper(null, ResourceStatus.Success, "Login Berhasil");
@@ -169,9 +167,9 @@ class CompareRepository {
 
   Future<ResponseWrapper<List<ListPBJCommentDTO>>> getCommentCompare(
       {String? noPermintaan = null}) async {
-    var logTag = "Getting PBJ Komentar";
+    var logTag = "Getting Compare Komentar";
     try {
-      print("trying getting PBJ Komentar");
+      print("trying getting Compare Komentar");
       // Prepare the request
       var url = Uri.parse(
           'https://approval.modernland.co.id/androidiom/get_komen_pbj.php?no_permintaan=' +

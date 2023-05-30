@@ -1,3 +1,4 @@
+import 'package:bwa_cozy/bloc/all_approval/dto/list_all_compare_dto.dart';
 import 'package:bwa_cozy/bloc/all_approval/dto/list_all_pbj_dto.dart';
 import 'package:bwa_cozy/bloc/compare/dto/detail_compare_dto.dart';
 import 'package:bwa_cozy/bloc/pbj/dto/list_komen_pbj.dart';
@@ -21,12 +22,11 @@ class CompareStateLoading extends CompareState {
   final String progress;
   final CompareEActionType type;
 
-  CompareStateLoading(
-      {this.progress = "", this.type = CompareEActionType.DEFAULT});
+  CompareStateLoading({this.progress = "", this.type = CompareEActionType.DEFAULT});
 }
 
 class CompareStateLoadHistorySuccess extends CompareState {
-  final List<ListAllPbjDTO> datas;
+  final List<ListAllCompareDTO> datas;
 
   CompareStateLoadHistorySuccess({this.datas = const []});
 }
@@ -47,9 +47,8 @@ class CompareStateSuccess extends CompareState {
   final String message;
   final CompareEActionType type;
 
-  CompareStateSuccess(
-      {this.message = "Selamat menggunakan aplikasi Modernland Approval",
-      this.type = CompareEActionType.APPROVE});
+  CompareStateSuccess({this.message = "Selamat menggunakan aplikasi Modernland Approval",
+    this.type = CompareEActionType.APPROVE});
 }
 
 class CompareStateFailure extends CompareState {

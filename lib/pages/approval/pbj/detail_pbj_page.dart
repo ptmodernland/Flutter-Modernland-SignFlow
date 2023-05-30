@@ -1,9 +1,8 @@
 import 'package:bwa_cozy/bloc/all_approval/approval_main_page_bloc.dart';
 import 'package:bwa_cozy/bloc/all_approval/approval_main_page_event.dart';
 import 'package:bwa_cozy/bloc/all_approval/approval_main_page_state.dart';
-import 'package:bwa_cozy/bloc/notif/notif_bloc.dart';
-import 'package:bwa_cozy/bloc/notif/notif_event.dart';
-import 'package:bwa_cozy/bloc/notif/notif_state.dart';
+import 'package:bwa_cozy/bloc/pbj/pbj_comment_bloc.dart';
+import 'package:bwa_cozy/bloc/pbj/pbj_comment_event.dart';
 import 'package:bwa_cozy/bloc/pbj/pbj_event.dart';
 import 'package:bwa_cozy/bloc/pbj/pbj_main_bloc.dart';
 import 'package:bwa_cozy/bloc/pbj/pbj_state.dart';
@@ -40,22 +39,21 @@ class _DetailPBJPageState extends State<DetailPBJPage> {
   final messageController = TextEditingController();
 
   late NotifRepository notifRepository;
-  late NotifCoreBloc notifBloc;
   late ApprovalMainPageRepository approvalRepo;
   late ApprovalMainPageBloc approvalBloc;
 
   late PBJRepository pbjRepo;
   late PBJBloc pbjBloc;
+  late PBJCommentBloc pbjCommentBloc;
 
   @override
   void initState() {
     super.initState();
-    notifRepository = NotifRepository();
-    notifBloc = NotifCoreBloc(notifRepository);
     approvalRepo = ApprovalMainPageRepository();
     approvalBloc = ApprovalMainPageBloc(approvalRepo);
     pbjRepo = PBJRepository();
     pbjBloc = PBJBloc(pbjRepo);
+    pbjCommentBloc = PBJCommentBloc(pbjRepo);
   }
 
   @override
@@ -150,31 +148,6 @@ class _DetailPBJPageState extends State<DetailPBJPage> {
                               child: Container(
                                 child: Column(
                                   children: [
-                                    BlocProvider(
-                                        create: (BuildContext context) {
-                                          return notifBloc
-                                            ..add(NotifEventCount());
-                                        },
-                                        child: Container(
-                                          child: Column(
-                                            children: [
-                                              BlocBuilder<NotifCoreBloc,
-                                                      NotifCoreState>(
-                                                  builder: (context, state) {
-                                                var count = "";
-                                                if (state
-                                                    is NotifStateLoading) {}
-                                                if (state
-                                                    is NotifStateFailure) {}
-                                                if (state
-                                                    is NotifStateSuccess) {
-                                                  count = state.totalPermohonan;
-                                                }
-                                                return Container();
-                                              }),
-                                            ],
-                                          ),
-                                        )),
                                     Container(
                                       margin:
                                           EdgeInsets.only(left: 20, right: 20),
@@ -373,29 +346,13 @@ class _DetailPBJPageState extends State<DetailPBJPage> {
                       ),
                       BlocProvider(
                         create: (BuildContext context) {
-                          return pbjBloc
+                          return pbjCommentBloc
                             ..add(GetKomentarPBJ(
                                 noPermintaan: widget.noPermintaan));
                         },
                         child: Column(
                           children: [
-                            BlocListener<PBJBloc, PBJState>(
-                              listener: (context, state) {
-                                if (state is PBJStateFailure) {
-                                  if (state.type ==
-                                      PBJEStateActionType.SHOW_KOMENTAR) {
-                                    QuickAlert.show(
-                                      context: context,
-                                      type: QuickAlertType.error,
-                                      text: "Errpr Apaan Yak " +
-                                          state.message.toString(),
-                                    );
-                                  }
-                                }
-                              },
-                              child: Container(),
-                            ),
-                            BlocBuilder<PBJBloc, PBJState>(
+                            BlocBuilder<PBJCommentBloc, PBJState>(
                               builder: (context, state) {
                                 if (state is PBJStateLoadKomentarSuccess) {
                                   var commentList = state.datas;
@@ -420,7 +377,6 @@ class _DetailPBJPageState extends State<DetailPBJPage> {
                                     },
                                   );
                                   var emptyState = Container();
-
                                   if (state.datas.isEmpty) {
                                     emptyState = Container(
                                       alignment: Alignment.center,
@@ -434,7 +390,7 @@ class _DetailPBJPageState extends State<DetailPBJPage> {
                                           ),
                                           SizedBox(height: 10),
                                           Text(
-                                            'No data available',
+                                            'Belum Ada Komentar',
                                             style: TextStyle(
                                               fontSize: 16,
                                               fontWeight: FontWeight.bold,
@@ -462,6 +418,81 @@ class _DetailPBJPageState extends State<DetailPBJPage> {
                                 }
                                 return Container();
                               },
+                            ),
+                          ],
+                        ),
+                      ),
+                      BlocProvider(
+                        create: (BuildContext context) {
+                          return pbjBloc;
+                        },
+                        child: Column(
+                          children: [
+                            BlocListener<PBJBloc, PBJState>(
+                              listener: (context, state) {
+                                if (state is PBJStateFailure) {
+                                  if (state.type ==
+                                          PBJEStateActionType.APPROVE ||
+                                      state.type ==
+                                          PBJEStateActionType.REJECT) {
+                                    QuickAlert.show(
+                                      context: context,
+                                      type: QuickAlertType.error,
+                                      text: state.message.toString(),
+                                    );
+                                  }
+                                }
+
+                                if (state is PBJStateSuccess) {
+                                  if (state.type ==
+                                          PBJEStateActionType.APPROVE ||
+                                      state.type ==
+                                          PBJEStateActionType.REJECT) {
+                                    showDialog(
+                                      context: context,
+                                      builder: (BuildContext context) {
+                                        var text = "";
+                                        if (state.type ==
+                                            PBJEStateActionType.APPROVE) {
+                                          text = "Request Berhasil Diapprove";
+                                        }
+                                        if (state.type ==
+                                            PBJEStateActionType.REJECT) {
+                                          text = "Request Berhasil Direject";
+                                        }
+                                        return WillPopScope(
+                                          onWillPop: () async {
+                                            Navigator.of(context)
+                                                .pop(); // Handle back button press
+                                            return false; // Prevent dialog from being dismissed by back button
+                                          },
+                                          child: CupertinoAlertDialog(
+                                            title: Text(
+                                              'Success',
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                            content: Text(
+                                                'Your action has been completed successfully.'),
+                                            actions: <Widget>[
+                                              CupertinoDialogAction(
+                                                onPressed: () {
+                                                  Navigator.of(context)
+                                                      .pop(); // Close the dialog
+                                                  Navigator.of(context)
+                                                      .pop(); // Go back to the previous page
+                                                },
+                                                child: Text('OK'),
+                                              ),
+                                            ],
+                                          ),
+                                        );
+                                      },
+                                    );
+                                  }
+                                }
+                              },
+                              child: Container(),
                             ),
                             BlocBuilder<PBJBloc, PBJState>(
                               builder: (context, state) {

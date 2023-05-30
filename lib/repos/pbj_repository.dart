@@ -170,7 +170,7 @@ class PBJRepository {
       {String? noPermintaan = null}) async {
     var logTag = "Getting PBJ Komentar";
     try {
-      print("trying getting PBJ Komentar");
+      print("trying getting PBJ Komentar $noPermintaan");
       // Prepare the request
       var url = Uri.parse(
           'https://approval.modernland.co.id/androidiom/get_komen_pbj.php?no_permintaan=' +
@@ -185,13 +185,14 @@ class PBJRepository {
       final result = jsonDecode(response.body);
       print(result.toString());
       if (response.statusCode == 200) {
-        print("result 200");
+        print("result komentar 200");
         final jsonData = json.decode(response.body);
         final List<Map<String, dynamic>> dataList =
             List<Map<String, dynamic>>.from(jsonData);
         final List<ListPBJCommentDTO> datas =
             dataList.map((data) => ListPBJCommentDTO.fromJson(data)).toList();
         // Now you have the list of `Bottle` objects
+        print("komentar success $jsonData");
         return ResponseWrapper(datas, ResourceStatus.Success, "Success");
       } else {
         return ResponseWrapper(null, ResourceStatus.Error, "Terjadi Kesalahan");

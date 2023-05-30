@@ -1,3 +1,5 @@
+import 'package:bwa_cozy/bloc/compare/compare_action_bloc.dart';
+import 'package:bwa_cozy/bloc/compare/compare_action_event.dart';
 import 'package:bwa_cozy/bloc/compare/compare_bloc.dart';
 import 'package:bwa_cozy/bloc/compare/compare_event.dart';
 import 'package:bwa_cozy/bloc/compare/compare_state.dart';
@@ -16,8 +18,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:quickalert/quickalert.dart';
 
 class DetailComparePage extends StatefulWidget {
-  const DetailComparePage(
-      {Key? key, required this.idCompare, this.isFromHistory = false})
+  const DetailComparePage({Key? key, required this.idCompare, this.isFromHistory = false})
       : super(key: key);
   final String idCompare;
   final bool isFromHistory;
@@ -33,12 +34,14 @@ class _DetailComparePageState extends State<DetailComparePage> {
 
   late CompareRepository compareRepo;
   late CompareBloc compareBloc;
+  late CompareActionBloc compareActionBloc;
 
   @override
   void initState() {
     super.initState();
     compareRepo = CompareRepository();
     compareBloc = CompareBloc(compareRepo);
+    compareActionBloc = CompareActionBloc(compareRepo);
   }
 
   @override
@@ -124,7 +127,7 @@ class _DetailComparePageState extends State<DetailComparePage> {
                           children: [
                             Container(
                               margin:
-                                  EdgeInsets.only(top: 20, left: 0, right: 0),
+                              EdgeInsets.only(top: 20, left: 0, right: 0),
                               width: double.infinity,
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.vertical(
@@ -135,11 +138,11 @@ class _DetailComparePageState extends State<DetailComparePage> {
                                   children: [
                                     Container(
                                       margin:
-                                          EdgeInsets.only(left: 20, right: 20),
+                                      EdgeInsets.only(left: 20, right: 20),
                                       child: Row(
                                         mainAxisSize: MainAxisSize.max,
                                         crossAxisAlignment:
-                                            CrossAxisAlignment.start,
+                                        CrossAxisAlignment.start,
                                         children: [
                                           Text(
                                             "Detail Request #" +
@@ -203,7 +206,7 @@ class _DetailComparePageState extends State<DetailComparePage> {
                                       width: MediaQuery.sizeOf(context).width,
                                       child: Column(
                                         crossAxisAlignment:
-                                            CrossAxisAlignment.stretch,
+                                        CrossAxisAlignment.stretch,
                                         children: [
                                           Text(
                                             "Detail Dokumen",
@@ -220,7 +223,7 @@ class _DetailComparePageState extends State<DetailComparePage> {
                                           ),
                                           Row(
                                             crossAxisAlignment:
-                                                CrossAxisAlignment.start,
+                                            CrossAxisAlignment.start,
                                             children: [
                                               Expanded(
                                                 child: DocumentDetailWidget(
@@ -238,13 +241,13 @@ class _DetailComparePageState extends State<DetailComparePage> {
                                           ),
                                           Row(
                                             crossAxisAlignment:
-                                                CrossAxisAlignment.start,
+                                            CrossAxisAlignment.start,
                                             children: [
                                               Expanded(
                                                   child: DocumentDetailWidget(
-                                                title: "Nama Karyawan",
-                                                content: data.namaUser,
-                                              )),
+                                                    title: "Nama Karyawan",
+                                                    content: data.namaUser,
+                                                  )),
                                               Expanded(
                                                 child: DocumentDetailWidget(
                                                   title: "Department",
@@ -255,13 +258,13 @@ class _DetailComparePageState extends State<DetailComparePage> {
                                           ),
                                           Row(
                                             crossAxisAlignment:
-                                                CrossAxisAlignment.start,
+                                            CrossAxisAlignment.start,
                                             children: [
                                               Expanded(
                                                 child: DocumentDetailWidget(
                                                   title: "Advance Payment",
                                                   content: data.advancePayment
-                                                          .isNotEmpty
+                                                      .isNotEmpty
                                                       ? data.advancePayment
                                                       : "-",
                                                 ),
@@ -270,7 +273,7 @@ class _DetailComparePageState extends State<DetailComparePage> {
                                                 child: DocumentDetailWidget(
                                                   title: "Progress Payment",
                                                   content: data.progressPayment
-                                                          .isNotEmpty
+                                                      .isNotEmpty
                                                       ? data.progressPayment
                                                       : "-",
                                                 ),
@@ -279,24 +282,24 @@ class _DetailComparePageState extends State<DetailComparePage> {
                                           ),
                                           Row(
                                             crossAxisAlignment:
-                                                CrossAxisAlignment.start,
+                                            CrossAxisAlignment.start,
                                             children: [
                                               Expanded(
                                                   child: DocumentDetailWidget(
-                                                title: "View Detail",
-                                                content: "Klik Disini",
-                                                fileURL: DOC_VIEW_COMPARE +
-                                                    data.idCompare,
-                                              )),
+                                                    title: "View Detail",
+                                                    content: "Klik Disini",
+                                                    fileURL: DOC_VIEW_COMPARE +
+                                                        data.idCompare,
+                                                  )),
                                               Expanded(
                                                 child: DocumentDetailWidget(
                                                   title: "Download File",
                                                   content: data.attchFile,
                                                   isForDownload: true,
                                                   fileURL:
-                                                      ATTACH_DOWNLOAD_COMPARE +
-                                                          data.attchFile
-                                                              .toString(),
+                                                  ATTACH_DOWNLOAD_COMPARE +
+                                                      data.attchFile
+                                                          .toString(),
                                                 ),
                                               ),
                                             ],
@@ -304,7 +307,7 @@ class _DetailComparePageState extends State<DetailComparePage> {
                                           if (data.noRef != null)
                                             Row(
                                               crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
+                                              CrossAxisAlignment.start,
                                               children: [
                                                 Expanded(
                                                   child: DocumentDetailWidget(
@@ -312,22 +315,22 @@ class _DetailComparePageState extends State<DetailComparePage> {
                                                     content: data.noRef ?? "-",
                                                     isForDownload: false,
                                                     fileURL:
-                                                        DOC_VIEW_COMPARE_GABUNGAN +
-                                                            data.noRef
-                                                                .toString(),
+                                                    DOC_VIEW_COMPARE_GABUNGAN +
+                                                        data.noRef
+                                                            .toString(),
                                                   ),
                                                 ),
                                               ],
                                             ),
                                           Row(
                                             crossAxisAlignment:
-                                                CrossAxisAlignment.start,
+                                            CrossAxisAlignment.start,
                                             children: [
                                               Expanded(
                                                 child: DocumentDetailWidget(
                                                   title: "Deskripsi : ",
                                                   content: data.desc_compare
-                                                          .isNotEmpty
+                                                      .isNotEmpty
                                                       ? data.desc_compare
                                                       : "-",
                                                   isForDownload: false,
@@ -338,16 +341,17 @@ class _DetailComparePageState extends State<DetailComparePage> {
                                           SizedBox(
                                             height: 20,
                                           ),
-                                          Text(
-                                            "Komentar",
-                                            textAlign: TextAlign.start,
-                                            style: MyTheme
-                                                .myStylePrimaryTextStyle
-                                                .copyWith(
-                                              fontWeight: FontWeight.w600,
-                                              fontSize: 18,
+                                          if (widget.isFromHistory == false)
+                                            Text(
+                                              "Komentar",
+                                              textAlign: TextAlign.start,
+                                              style: MyTheme
+                                                  .myStylePrimaryTextStyle
+                                                  .copyWith(
+                                                fontWeight: FontWeight.w600,
+                                                fontSize: 18,
+                                              ),
                                             ),
-                                          ),
                                           if (!widget.isFromHistory)
                                             Form(
                                               key: _formKey,
@@ -360,12 +364,12 @@ class _DetailComparePageState extends State<DetailComparePage> {
                                                     hintTextString:
                                                         'Isi Tanggapan',
                                                     inputType:
-                                                        InputType.Default,
+                                                    InputType.Default,
                                                     enableBorder: true,
                                                     minLines: 3,
                                                     themeColor:
-                                                        Theme.of(context)
-                                                            .primaryColor,
+                                                    Theme.of(context)
+                                                        .primaryColor,
                                                     cornerRadius: 18.0,
                                                     textValidator: (value) {
                                                       if (value?.isEmpty ??
@@ -376,9 +380,9 @@ class _DetailComparePageState extends State<DetailComparePage> {
                                                     },
                                                     textColor: Colors.black,
                                                     errorMessage:
-                                                        'Username cant be empty',
+                                                    'Username cant be empty',
                                                     labelText:
-                                                        'Tanggapan/Komentar/Review',
+                                                    'Tanggapan/Komentar/Review',
                                                   ),
                                                 ],
                                               ),
@@ -426,7 +430,7 @@ class _DetailComparePageState extends State<DetailComparePage> {
                                     itemCount: commentList.length,
                                     shrinkWrap: true,
                                     physics:
-                                        const NeverScrollableScrollPhysics(),
+                                    const NeverScrollableScrollPhysics(),
                                     itemBuilder: (context, index) {
                                       final pbjItem = commentList[index];
                                       var isApproved = false;
@@ -438,7 +442,7 @@ class _DetailComparePageState extends State<DetailComparePage> {
                                         userName: pbjItem.approve,
                                         postingDate: pbjItem.tglPermintaan,
                                         bottomText:
-                                            "Status : " + pbjItem.statusApprove,
+                                        "Status : " + pbjItem.statusApprove,
                                       );
                                     },
                                   );
@@ -449,7 +453,7 @@ class _DetailComparePageState extends State<DetailComparePage> {
                                       alignment: Alignment.center,
                                       child: Column(
                                         mainAxisAlignment:
-                                            MainAxisAlignment.center,
+                                        MainAxisAlignment.center,
                                         children: [
                                           Image.network(
                                             'http://feylabs.my.id/fm/mdln_asset/mdln_empty_image.png',
@@ -469,7 +473,7 @@ class _DetailComparePageState extends State<DetailComparePage> {
                                   }
                                   return Column(
                                     crossAxisAlignment:
-                                        CrossAxisAlignment.stretch,
+                                    CrossAxisAlignment.stretch,
                                     children: [
                                       Container(
                                         height: 1,
@@ -492,7 +496,7 @@ class _DetailComparePageState extends State<DetailComparePage> {
                                 if (state is CompareStateInitial) {}
                                 if (state is CompareStateLoading) {
                                   bool isCorrectState = (state.type ==
-                                          CompareEActionType.APPROVE ||
+                                      CompareEActionType.APPROVE ||
                                       state.type == CompareEActionType.REJECT);
                                   if (isCorrectState) {
                                     return Center(
@@ -504,23 +508,23 @@ class _DetailComparePageState extends State<DetailComparePage> {
                                 if (widget.isFromHistory != true) {
                                   return Container(
                                     margin:
-                                        EdgeInsets.only(left: 20, right: 20),
+                                    EdgeInsets.only(left: 20, right: 20),
                                     child: Column(
                                       crossAxisAlignment:
-                                          CrossAxisAlignment.stretch,
+                                      CrossAxisAlignment.stretch,
                                       children: [
                                         ElevatedButton(
                                           onPressed: () {
                                             showPinInputDialog(
                                                 type:
-                                                    ApprovalActionType.APPROVE,
+                                                ApprovalActionType.APPROVE,
                                                 description:
-                                                    "Anda Yakin Ingin Mengapprove Approval ini ?");
+                                                "Anda Yakin Ingin Mengapprove Approval ini ?");
                                           },
                                           child: Text(
                                             'Approve',
                                             style:
-                                                MyTheme.myStyleButtonTextStyle,
+                                            MyTheme.myStyleButtonTextStyle,
                                           ),
                                           style: ElevatedButton.styleFrom(
                                             backgroundColor: Color(0xff33DC9F),
@@ -535,12 +539,12 @@ class _DetailComparePageState extends State<DetailComparePage> {
                                             showPinInputDialog(
                                                 type: ApprovalActionType.REJECT,
                                                 description:
-                                                    "Anda Yakin Ingin Menolak Approval ini ?");
+                                                "Anda Yakin Ingin Menolak Approval ini ?");
                                           },
                                           child: Text(
                                             'Reject',
                                             style:
-                                                MyTheme.myStyleButtonTextStyle,
+                                            MyTheme.myStyleButtonTextStyle,
                                           ),
                                           style: ElevatedButton.styleFrom(
                                             backgroundColor: Color(0xffFF5B5B),
@@ -575,6 +579,27 @@ class _DetailComparePageState extends State<DetailComparePage> {
                           ],
                         ),
                       ),
+                      BlocProvider(
+                        create: (BuildContext context) {
+                          return compareActionBloc;
+                        },
+                        child: Column(
+                          children: [
+                            BlocListener<CompareActionBloc, CompareState>(
+                              listener: (context, state) {
+                                if (state is CompareStateFailure) {
+                                  QuickAlert.show(
+                                    context: context,
+                                    type: QuickAlertType.error,
+                                    text: state.message.toString(),
+                                  );
+                                }
+                              },
+                              child: Container(),
+                            ),
+                          ],
+                        ),
+                      ),
                     ],
                   ),
                 ),
@@ -586,9 +611,8 @@ class _DetailComparePageState extends State<DetailComparePage> {
     );
   }
 
-  void showPinInputDialog(
-      {required ApprovalActionType type,
-      String description = 'Masukkan PIN anda'}) {
+  void showPinInputDialog({required ApprovalActionType type,
+    String description = 'Masukkan PIN anda'}) {
     var pin = "";
     showDialog(
       context: context,
@@ -632,7 +656,7 @@ class _DetailComparePageState extends State<DetailComparePage> {
                   print("send with comment " + comment);
 
                   if (type == ApprovalActionType.APPROVE) {
-                    compareBloc.add(SendQCompareApprove(
+                    compareActionBloc.add(SendQCompareApprove(
                       pin: pin,
                       comment: this.messageController.text,
                       noPermintaan: widget.idCompare,
@@ -640,10 +664,10 @@ class _DetailComparePageState extends State<DetailComparePage> {
                   }
 
                   if (type == ApprovalActionType.REJECT) {
-                    compareBloc.add(SendQCompareApprove(
+                    compareActionBloc.add(SendQCompareReject(
                       pin: pin,
                       comment: this.messageController.text,
-                      noPermintaan: widget.idCompare,
+                      nomorCompare: widget.idCompare,
                     ));
                   }
 

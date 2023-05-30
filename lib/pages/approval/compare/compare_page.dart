@@ -4,10 +4,12 @@ import 'package:bwa_cozy/bloc/all_approval/approval_main_page_state.dart';
 import 'package:bwa_cozy/bloc/notif/notif_bloc.dart';
 import 'package:bwa_cozy/bloc/notif/notif_event.dart';
 import 'package:bwa_cozy/bloc/notif/notif_state.dart';
+import 'package:bwa_cozy/pages/approval/compare/compare_approved_all_page.dart';
 import 'package:bwa_cozy/pages/approval/compare/compare_waiting_approval_page.dart';
 import 'package:bwa_cozy/pages/approval/compare/detail_compare_page.dart';
 import 'package:bwa_cozy/repos/approval_main_page_repository.dart';
 import 'package:bwa_cozy/repos/notif_repository.dart';
+import 'package:bwa_cozy/util/core/string/html_util.dart';
 import 'package:bwa_cozy/util/enum/menu_type.dart';
 import 'package:bwa_cozy/util/my_theme.dart';
 import 'package:bwa_cozy/widget/approval/item_approval_widget.dart';
@@ -152,17 +154,23 @@ class _ApprovalCompareMainPageState extends State<ApprovalCompareMainPage> {
                                                     });
                                                   },
                                                   onRightTapFunction: () {
-                                                    Fluttertoast.showToast(
-                                                        msg: "Right",
-                                                        toastLength:
-                                                            Toast.LENGTH_SHORT,
-                                                        gravity:
-                                                            ToastGravity.CENTER,
-                                                        timeInSecForIosWeb: 1,
-                                                        backgroundColor:
-                                                            Colors.red,
-                                                        textColor: Colors.white,
-                                                        fontSize: 16.0);
+                                                    Navigator.push(
+                                                      context,
+                                                      MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            CompareAllApprovedPage(),
+                                                      ),
+                                                    ).then((value) {
+                                                      notifBloc
+                                                        ..add(
+                                                            NotifEventCount());
+                                                      approvalBloc
+                                                        ..add(RequestDataEvent(
+                                                            ApprovalListType
+                                                                .COMPARE));
+                                                      print("kocak " +
+                                                          value.toString());
+                                                    });
                                                   },
                                                 );
                                               }),
@@ -257,7 +265,8 @@ class _ApprovalCompareMainPageState extends State<ApprovalCompareMainPage> {
                                     requiredId: pbjItem.idCompare,
                                     personName: pbjItem.namaUser,
                                     departmentTitle: pbjItem.department,
-                                    descriptiveText: pbjItem.descCompare,
+                                    descriptiveText:
+                                        removeHtmlTags(pbjItem.descCompare),
                                     onPressed: (String noCompare) {
                                       Navigator.push(
                                         context,

@@ -1,23 +1,5 @@
 abstract class CompareEvent {}
 
-class SendQCompareApprove extends CompareEvent {
-  final String noPermintaan;
-  final String pin;
-  final String comment;
-
-  SendQCompareApprove(
-      {this.noPermintaan = "", this.pin = "", this.comment = "-"});
-}
-
-class SendQCompareReject extends CompareEvent {
-  final String nomorCompare;
-  final String pin;
-  final String comment;
-
-  SendQCompareReject(
-      {this.nomorCompare = "", this.pin = "", this.comment = "-"});
-}
-
 class GetKomentarCompare extends CompareEvent {
   final String? noPermintaan;
 
@@ -34,14 +16,14 @@ class GetCompareDetailEvent extends CompareEvent {
   });
 }
 
-class GetHistoryPBJ extends CompareEvent {
+class GetHistoryCompare extends CompareEvent {
   final String? startDate;
   final String? endDate;
   final String? year;
   final String? noPermintaan;
   final bool isAll;
 
-  GetHistoryPBJ(
+  GetHistoryCompare(
       {this.startDate = null,
       this.endDate = null,
       this.year = null,

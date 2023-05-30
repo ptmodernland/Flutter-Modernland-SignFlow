@@ -3,30 +3,10 @@ import 'package:bwa_cozy/bloc/compare/compare_state.dart';
 import 'package:bwa_cozy/repos/compare_repository.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class CompareBloc extends Bloc<CompareEvent, CompareState> {
+class CompareDetailBloc extends Bloc<CompareEvent, CompareState> {
   final CompareRepository repo;
 
-  CompareBloc(this.repo) : super(CompareStateInitial()) {
-    on<GetHistoryCompare>((event, emit) async {
-      emit(CompareStateLoading());
-      print("start bloc request");
-      try {
-        final request = await repo.getHistoryCompare();
-        if (request.data != null) {
-          emit(CompareStateLoadHistorySuccess(datas: request.data!));
-          print("success bloc approval_main_page");
-        } else {
-          emit(CompareStateFailure(
-              type: CompareEActionType.SHOW_HISTORY,
-              message: request.message ?? ""));
-        }
-      } catch (e) {
-        print("error occured on approval_main_page_bloc" + e.toString());
-        emit(CompareStateFailure(
-            message: e.toString(), type: CompareEActionType.SHOW_HISTORY));
-      }
-    });
-
+  CompareDetailBloc(this.repo) : super(CompareStateInitial()) {
     on<GetCompareDetailEvent>((event, emit) async {
       try {
         final request = await repo.getCompareDetail(event.idCompare);

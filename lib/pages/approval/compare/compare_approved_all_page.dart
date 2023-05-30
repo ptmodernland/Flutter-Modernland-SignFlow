@@ -1,33 +1,30 @@
-import 'package:bwa_cozy/bloc/all_approval/approval_main_page_bloc.dart';
-import 'package:bwa_cozy/bloc/all_approval/approval_main_page_event.dart';
-import 'package:bwa_cozy/bloc/all_approval/approval_main_page_state.dart';
+import 'package:bwa_cozy/bloc/compare/compare_bloc.dart';
+import 'package:bwa_cozy/bloc/compare/compare_event.dart';
+import 'package:bwa_cozy/bloc/compare/compare_state.dart';
 import 'package:bwa_cozy/pages/approval/compare/detail_compare_page.dart';
-import 'package:bwa_cozy/pages/approval/pbj/detail_pbj_page.dart';
-import 'package:bwa_cozy/repos/approval_main_page_repository.dart';
-import 'package:bwa_cozy/util/enum/menu_type.dart';
+import 'package:bwa_cozy/repos/compare_repository.dart';
+import 'package:bwa_cozy/util/core/string/html_util.dart';
 import 'package:bwa_cozy/util/my_theme.dart';
 import 'package:bwa_cozy/widget/approval/item_approval_widget.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 
-class CompareWaitingApprovalPage extends StatefulWidget {
-  const CompareWaitingApprovalPage({Key? key}) : super(key: key);
+class CompareAllApprovedPage extends StatefulWidget {
+  const CompareAllApprovedPage({Key? key}) : super(key: key);
 
   @override
-  State<CompareWaitingApprovalPage> createState() =>
-      _CompareWaitingApprovalPageState();
+  State<CompareAllApprovedPage> createState() => _CompareAllApprovedPageState();
 }
 
-class _CompareWaitingApprovalPageState
-    extends State<CompareWaitingApprovalPage> {
+class _CompareAllApprovedPageState extends State<CompareAllApprovedPage> {
   @override
   Widget build(BuildContext context) {
     double screenHeight = MediaQuery.of(context).size.height;
     double screenWidth = MediaQuery.of(context).size.width;
 
-    ApprovalMainPageRepository approvalRepo = ApprovalMainPageRepository();
-    ApprovalMainPageBloc approvalBloc = ApprovalMainPageBloc(approvalRepo);
+    CompareRepository compareRepository = CompareRepository();
+    CompareBloc compareBloc = CompareBloc(compareRepository);
 
     return SafeArea(
       bottom: false,
@@ -73,7 +70,7 @@ class _CompareWaitingApprovalPageState
                                     SizedBox(width: 10),
                                     Expanded(
                                       child: Text(
-                                        "Compare Waiting Approval Page",
+                                        "History Approved Comparison ",
                                         style: MyTheme.myStylePrimaryTextStyle
                                             .copyWith(
                                           color: Colors.white,
@@ -114,19 +111,29 @@ class _CompareWaitingApprovalPageState
                                     Container(
                                       margin:
                                           EdgeInsets.only(left: 20, right: 20),
-                                      child: Row(
+                                      child: Column(
                                         mainAxisSize: MainAxisSize.max,
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
                                         children: [
                                           Text(
-                                            "Request Terbaru",
+                                            "History Approved Compare",
                                             textAlign: TextAlign.start,
                                             style: MyTheme
                                                 .myStylePrimaryTextStyle
                                                 .copyWith(
                                               fontWeight: FontWeight.w600,
                                               fontSize: 18,
+                                            ),
+                                          ),
+                                          Text(
+                                            "Halaman ini menampilkan list Compare yang telah diapprove",
+                                            textAlign: TextAlign.start,
+                                            style: MyTheme
+                                                .myStylePrimaryTextStyle
+                                                .copyWith(
+                                              fontWeight: FontWeight.w300,
+                                              fontSize: 11,
                                             ),
                                           ),
                                         ],
@@ -141,20 +148,21 @@ class _CompareWaitingApprovalPageState
                       ),
                       BlocProvider(
                         create: (BuildContext context) {
-                          return approvalBloc
-                            ..add(RequestDataEvent(ApprovalListType.COMPARE));
+                          return compareBloc..add(GetHistoryCompare());
                         },
-                        child: BlocBuilder<ApprovalMainPageBloc,
-                            ApprovalMainPageState>(
+                        child: BlocBuilder<CompareBloc, CompareState>(
                           builder: (context, state) {
                             var status = "";
                             Widget dataList = Text("");
-                            if (state is ApprovalMainPageStateLoading) {}
-                            if (state is ApprovalMainPageStateFailure) {}
-                            if (state
-                                is ApprovalMainPageStateSuccessListCompare) {
-                              var compareList = state.datas;
-                              if (compareList.isEmpty) {
+                            if (state is CompareStateFailure) {}
+                            if (state is CompareStateLoading) {
+                              return Center(
+                                child: CupertinoActivityIndicator(),
+                              );
+                            }
+                            if (state is CompareStateLoadHistorySuccess) {
+                              var approvalList = state.datas;
+                              if (approvalList.isEmpty) {
                                 return Container(
                                   alignment: Alignment.center,
                                   child: Column(
@@ -177,22 +185,24 @@ class _CompareWaitingApprovalPageState
                                 );
                               }
                               dataList = ListView.builder(
-                                itemCount: compareList.length,
+                                itemCount: approvalList.length,
                                 shrinkWrap: true,
                                 physics: const NeverScrollableScrollPhysics(),
                                 itemBuilder: (context, index) {
-                                  final approvalItem = compareList[index];
+                                  final pbjItem = approvalList[index];
                                   var isApproved = false;
-                                  if (approvalItem.status != "Y") {
+                                  if (pbjItem.status != "Y") {
                                     isApproved = true;
                                   }
                                   return ItemApprovalWidget(
-                                    requiredId: approvalItem.idCompare,
+                                    requiredId: pbjItem.idCompare,
                                     isApproved: isApproved,
-                                    itemCode: approvalItem.noCompare,
-                                    date: approvalItem.tglPermintaan,
-                                    departmentTitle: approvalItem.department,
-                                    personName: approvalItem.namaUser,
+                                    itemCode: pbjItem.noCompare,
+                                    date: pbjItem.tglPermintaan,
+                                    departmentTitle: pbjItem.department,
+                                    personName: pbjItem.namaUser,
+                                    descriptiveText:
+                                        removeHtmlTags(pbjItem.descCompare),
                                     personImage: "",
                                     onPressed: (String requiredId) {
                                       Navigator.push(
@@ -200,13 +210,10 @@ class _CompareWaitingApprovalPageState
                                         MaterialPageRoute(
                                           builder: (context) =>
                                               DetailComparePage(
+                                                  isFromHistory: true,
                                                   idCompare: requiredId),
                                         ),
-                                      ).then((value) {
-                                        approvalBloc
-                                          ..add(RequestDataEvent(
-                                              ApprovalListType.COMPARE));
-                                      });
+                                      );
                                     },
                                   );
                                 },
