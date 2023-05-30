@@ -1,13 +1,5 @@
 abstract class CompareEvent {}
 
-class GetKomentarCompare extends CompareEvent {
-  final String? noPermintaan;
-
-  GetKomentarCompare({
-    this.noPermintaan = null,
-  });
-}
-
 class GetCompareDetailEvent extends CompareEvent {
   final String idCompare;
 

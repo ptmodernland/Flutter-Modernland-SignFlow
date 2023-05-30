@@ -45,6 +45,5 @@ class CompareBloc extends Bloc<CompareEvent, CompareState> {
       }
     });
 
-    on<GetKomentarCompare>((event, emit) async {});
   }
 }

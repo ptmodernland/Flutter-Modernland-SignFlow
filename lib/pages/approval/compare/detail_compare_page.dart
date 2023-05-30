@@ -1,6 +1,8 @@
 import 'package:bwa_cozy/bloc/compare/compare_action_bloc.dart';
 import 'package:bwa_cozy/bloc/compare/compare_action_event.dart';
 import 'package:bwa_cozy/bloc/compare/compare_bloc.dart';
+import 'package:bwa_cozy/bloc/compare/compare_comment_bloc.dart';
+import 'package:bwa_cozy/bloc/compare/compare_comment_event.dart';
 import 'package:bwa_cozy/bloc/compare/compare_event.dart';
 import 'package:bwa_cozy/bloc/compare/compare_state.dart';
 import 'package:bwa_cozy/repos/compare_repository.dart';
@@ -40,6 +42,7 @@ class _DetailComparePageState extends State<DetailComparePage> {
 
   late CompareRepository compareRepo;
   late CompareBloc compareBloc;
+  late CompareCommentBloc compareCommentBloc;
   late CompareActionBloc compareActionBloc;
 
   @override
@@ -47,6 +50,7 @@ class _DetailComparePageState extends State<DetailComparePage> {
     super.initState();
     compareRepo = CompareRepository();
     compareBloc = CompareBloc(compareRepo);
+    compareCommentBloc = CompareCommentBloc(compareRepo);
     compareActionBloc = CompareActionBloc(compareRepo);
   }
 
@@ -404,15 +408,16 @@ class _DetailComparePageState extends State<DetailComparePage> {
                           },
                         ),
                       ),
+                      //Load Comment Bloc Provider
                       BlocProvider(
                         create: (BuildContext context) {
-                          return compareBloc
+                          return compareCommentBloc
                             ..add(GetKomentarCompare(
-                                noPermintaan: widget.idCompare));
+                                noCompare: widget.noCompare));
                         },
                         child: Column(
                           children: [
-                            BlocListener<CompareBloc, CompareState>(
+                            BlocListener<CompareCommentBloc, CompareState>(
                               listener: (context, state) {
                                 if (state is CompareStateFailure) {
                                   if (state.type ==
@@ -420,15 +425,14 @@ class _DetailComparePageState extends State<DetailComparePage> {
                                     QuickAlert.show(
                                       context: context,
                                       type: QuickAlertType.error,
-                                      text: "Errpr Apaan Yak " +
-                                          state.message.toString(),
+                                      text: state.message.toString(),
                                     );
                                   }
                                 }
                               },
                               child: Container(),
                             ),
-                            BlocBuilder<CompareBloc, CompareState>(
+                            BlocBuilder<CompareCommentBloc, CompareState>(
                               builder: (context, state) {
                                 if (state is CompareStateLoadCommentSuccess) {
                                   var commentList = state.datas;
@@ -453,30 +457,6 @@ class _DetailComparePageState extends State<DetailComparePage> {
                                     },
                                   );
                                   var emptyState = Container();
-
-                                  if (state.datas.isEmpty) {
-                                    emptyState = Container(
-                                      alignment: Alignment.center,
-                                      child: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          Image.network(
-                                            'http://feylabs.my.id/fm/mdln_asset/mdln_empty_image.png',
-                                            // Adjust the image properties as per your requirement
-                                          ),
-                                          SizedBox(height: 10),
-                                          Text(
-                                            'No data available',
-                                            style: TextStyle(
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    );
-                                  }
                                   return Column(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.stretch,
@@ -496,6 +476,15 @@ class _DetailComparePageState extends State<DetailComparePage> {
                                 return Container();
                               },
                             ),
+                          ],
+                        ),
+                      ),
+                      BlocProvider(
+                        create: (BuildContext context) {
+                          return compareBloc;
+                        },
+                        child: Column(
+                          children: [
                             BlocBuilder<CompareBloc, CompareState>(
                               builder: (context, state) {
                                 var status = "";

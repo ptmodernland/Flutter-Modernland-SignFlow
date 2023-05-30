@@ -166,14 +166,14 @@ class CompareRepository {
   }
 
   Future<ResponseWrapper<List<ListPBJCommentDTO>>> getCommentCompare(
-      {String? noPermintaan = null}) async {
-    var logTag = "Getting Compare Komentar";
+      {String? noCompare = null}) async {
+    var logTag = "Getting Compare Comment";
     try {
-      print("trying getting Compare Komentar");
+      print("trying getting $logTag");
       // Prepare the request
       var url = Uri.parse(
-          'https://approval.modernland.co.id/androidiom/get_komen_pbj.php?no_permintaan=' +
-              noPermintaan.toString());
+          'https://approval.modernland.co.id/androidiom/get_komen_compare.php?no_compare=' +
+              noCompare.toString());
       // Set the form data
       var response = await http.get(url);
       // Get the response body as a string
@@ -196,10 +196,9 @@ class CompareRepository {
         return ResponseWrapper(null, ResourceStatus.Error, "Terjadi Kesalahan");
       }
     } catch (error) {
-      print("error on PBJRepository " + error.toString());
+      print("error on $logTag " + error.toString());
       return ResponseWrapper(null, ResourceStatus.Error, error.toString());
     }
-    return ResponseWrapper(null, ResourceStatus.Success, "Login Berhasil");
   }
 
   //use this to see PBJ Detail
