@@ -113,7 +113,7 @@ class _PBJAllApprovedPageState extends State<PBJAllApprovedPage> {
                                       child: Column(
                                         mainAxisSize: MainAxisSize.max,
                                         crossAxisAlignment:
-                                            CrossAxisAlignment.start,
+                                            CrossAxisAlignment.stretch,
                                         children: [
                                           Text(
                                             "History Approved PBJ",

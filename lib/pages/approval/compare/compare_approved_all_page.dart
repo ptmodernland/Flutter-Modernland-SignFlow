@@ -114,7 +114,7 @@ class _CompareAllApprovedPageState extends State<CompareAllApprovedPage> {
                                       child: Column(
                                         mainAxisSize: MainAxisSize.max,
                                         crossAxisAlignment:
-                                            CrossAxisAlignment.start,
+                                            CrossAxisAlignment.stretch,
                                         children: [
                                           Text(
                                             "History Approved Compare",
@@ -210,8 +210,9 @@ class _CompareAllApprovedPageState extends State<CompareAllApprovedPage> {
                                         MaterialPageRoute(
                                           builder: (context) =>
                                               DetailComparePage(
+                                                  noCompare: pbjItem.noCompare,
                                                   isFromHistory: true,
-                                                  idCompare: requiredId),
+                                                  idCompare: pbjItem.idCompare),
                                         ),
                                       );
                                     },

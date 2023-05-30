@@ -16,7 +16,6 @@ import 'package:bwa_cozy/widget/approval/item_approval_widget.dart';
 import 'package:bwa_cozy/widget/menus/menu_item_approval_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 
 class ApprovalCompareMainPage extends StatefulWidget {
   const ApprovalCompareMainPage({Key? key}) : super(key: key);
@@ -273,7 +272,8 @@ class _ApprovalCompareMainPageState extends State<ApprovalCompareMainPage> {
                                         MaterialPageRoute(
                                           builder: (context) =>
                                               DetailComparePage(
-                                                  idCompare: noCompare),
+                                                  noCompare: pbjItem.noCompare,
+                                                  idCompare: pbjItem.idCompare),
                                         ),
                                       ).then((value) {
                                         notifBloc..add(NotifEventCount());

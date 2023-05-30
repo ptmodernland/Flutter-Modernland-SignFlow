@@ -2,14 +2,12 @@ import 'package:bwa_cozy/bloc/all_approval/approval_main_page_bloc.dart';
 import 'package:bwa_cozy/bloc/all_approval/approval_main_page_event.dart';
 import 'package:bwa_cozy/bloc/all_approval/approval_main_page_state.dart';
 import 'package:bwa_cozy/pages/approval/compare/detail_compare_page.dart';
-import 'package:bwa_cozy/pages/approval/pbj/detail_pbj_page.dart';
 import 'package:bwa_cozy/repos/approval_main_page_repository.dart';
 import 'package:bwa_cozy/util/enum/menu_type.dart';
 import 'package:bwa_cozy/util/my_theme.dart';
 import 'package:bwa_cozy/widget/approval/item_approval_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 
 class CompareWaitingApprovalPage extends StatefulWidget {
   const CompareWaitingApprovalPage({Key? key}) : super(key: key);
@@ -200,7 +198,10 @@ class _CompareWaitingApprovalPageState
                                         MaterialPageRoute(
                                           builder: (context) =>
                                               DetailComparePage(
-                                                  idCompare: requiredId),
+                                                  noCompare:
+                                                      approvalItem.noCompare,
+                                                  idCompare:
+                                                      approvalItem.idCompare),
                                         ),
                                       ).then((value) {
                                         approvalBloc

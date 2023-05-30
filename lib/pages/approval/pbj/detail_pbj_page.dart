@@ -472,8 +472,7 @@ class _DetailPBJPageState extends State<DetailPBJPage> {
                                               style: TextStyle(
                                                   fontWeight: FontWeight.bold),
                                             ),
-                                            content: Text(
-                                                'Your action has been completed successfully.'),
+                                            content: Text(text),
                                             actions: <Widget>[
                                               CupertinoDialogAction(
                                                 onPressed: () {

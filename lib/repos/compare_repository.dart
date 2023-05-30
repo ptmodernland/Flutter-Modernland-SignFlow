@@ -28,9 +28,9 @@ class CompareRepository {
               userID);
 
       var body = {
-        'no_permintaan': noPermintaan,
+        'nomor': noPermintaan,
         'id_user': userID ?? '',
-        'komenad': comment ?? null,
+        'komen': comment ?? null,
         'passwordUser': pin ?? '',
       };
 
@@ -82,9 +82,9 @@ class CompareRepository {
               userID);
 
       var body = {
-        'no_permintaan': noPermintaan,
+        'nomor': noPermintaan,
         'id_user': userID ?? '',
-        'komenad': comment ?? null,
+        'komen': comment ?? null,
         'passwordUser': pin ?? '',
       };
 
