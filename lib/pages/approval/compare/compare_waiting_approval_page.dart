@@ -199,9 +199,11 @@ class _CompareWaitingApprovalPageState
                                           builder: (context) =>
                                               DetailComparePage(
                                                   noCompare:
-                                                      approvalItem.noCompare,
+                                                      approvalItem.noCompare ??
+                                                          "",
                                                   idCompare:
-                                                      approvalItem.idCompare),
+                                                      approvalItem.idCompare ??
+                                                          ""),
                                         ),
                                       ).then((value) {
                                         approvalBloc

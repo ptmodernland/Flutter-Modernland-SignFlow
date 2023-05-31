@@ -4,15 +4,16 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class ItemApprovalWidget extends StatelessWidget {
-  final bool
-      isApproved; // Add a boolean property to determine the approval status
-  final requiredId;
-  final itemCode;
-  final date;
-  final departmentTitle;
-  final personName;
-  final personImage;
-  final String descriptiveText;
+  final bool? isApproved;
+  final String?
+      requiredId; // Add a question mark (?) after the type declaration to make it nullable
+  final String?
+      itemCode; // Add a question mark (?) after the type declaration to make it nullable
+  final String? date;
+  final String? departmentTitle;
+  final String? personName;
+  final String? personImage;
+  final String? descriptiveText;
   final ApprovalListType approvalListType;
   final Function(String)? onPressed;
 
@@ -48,7 +49,7 @@ class ItemApprovalWidget extends StatelessWidget {
 
     if (personName != "") {
       uiPersonName = Text(
-        personName,
+        personName ?? "-",
         style: MyTheme.myStylePrimaryTextStyle.copyWith(
           fontSize: 12,
         ),
@@ -73,13 +74,15 @@ class ItemApprovalWidget extends StatelessWidget {
       );
     }
 
-    Color statusColor = isApproved
+    Color statusColor = isApproved ?? false
         ? Colors.green
         : Color(0xFFFF7A7B); // Define color based on approval status
 
     return GestureDetector(
       onTap: () {
-        onPressed?.call(requiredId);
+        if (requiredId != null) {
+          onPressed?.call(requiredId ?? "");
+        }
       },
       child: Container(
         margin: EdgeInsets.only(left: 20, right: 20, bottom: 10),
@@ -132,21 +135,21 @@ class ItemApprovalWidget extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    departmentTitle,
+                    departmentTitle ?? "-",
                     style: MyTheme.myStylePrimaryTextStyle
                         .copyWith(fontWeight: FontWeight.w700, fontSize: 15),
                   ),
                   Text(
-                    itemCode,
+                    itemCode ?? "",
                     style:
                         MyTheme.myStylePrimaryTextStyle.copyWith(fontSize: 12),
                   ),
-                  if (descriptiveText.isNotEmpty)
+                  if (descriptiveText != null)
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
                         Text(
-                          "Deskripsi : \n" + descriptiveText,
+                          "Deskripsi : \n${descriptiveText ?? ""}",
                           maxLines: 3,
                           overflow: TextOverflow.ellipsis,
                           style: MyTheme.myStylePrimaryTextStyle
@@ -168,7 +171,9 @@ class ItemApprovalWidget extends StatelessWidget {
                         color: statusColor, // Use the defined color
                       ),
                       child: Text(
-                        isApproved ? "Approved" : "Waiting for Approval",
+                        (isApproved ?? false)
+                            ? "Approved"
+                            : "Waiting for Approval",
                         // Update text based on approval status
                         style: MyTheme.myStyleSecondaryTextStyle
                             .copyWith(color: Colors.white, fontSize: 10),

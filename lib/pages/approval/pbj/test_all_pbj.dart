@@ -214,11 +214,8 @@ class _TestAllPBJPageState extends State<TestAllPBJPage> {
                                   }
                                   return ItemApprovalWidget(
                                     isApproved: isApproved,
-                                    itemCode: (index + 1).toString() +
-                                        " " +
-                                        pbjItem.noPermintaan +
-                                        "(" +
-                                        pbjList.length.toString(),
+                                    itemCode:
+                                        "${index + 1} ${pbjItem.noPermintaan}(${pbjList.length})",
                                     date: pbjItem.tglPermintaan,
                                     departmentTitle: pbjItem.jenis,
                                   );

@@ -201,8 +201,8 @@ class _CompareAllApprovedPageState extends State<CompareAllApprovedPage> {
                                     date: pbjItem.tglPermintaan,
                                     departmentTitle: pbjItem.department,
                                     personName: pbjItem.namaUser,
-                                    descriptiveText:
-                                        removeHtmlTags(pbjItem.descCompare),
+                                    descriptiveText: removeHtmlTags(
+                                        pbjItem.descCompare ?? ""),
                                     personImage: "",
                                     onPressed: (String requiredId) {
                                       Navigator.push(
@@ -210,9 +210,11 @@ class _CompareAllApprovedPageState extends State<CompareAllApprovedPage> {
                                         MaterialPageRoute(
                                           builder: (context) =>
                                               DetailComparePage(
-                                                  noCompare: pbjItem.noCompare,
+                                                  noCompare:
+                                                      pbjItem.noCompare ?? "",
                                                   isFromHistory: true,
-                                                  idCompare: pbjItem.idCompare),
+                                                  idCompare:
+                                                      pbjItem.idCompare ?? ""),
                                         ),
                                       );
                                     },

@@ -1,6 +1,6 @@
 import 'package:bwa_cozy/bloc/all_approval/dto/list_all_compare_dto.dart';
-import 'package:bwa_cozy/bloc/all_approval/dto/list_all_pbj_dto.dart';
 import 'package:bwa_cozy/bloc/compare/dto/detail_compare_dto.dart';
+import 'package:bwa_cozy/bloc/pbj/dto/ListPBJDTO.dart';
 import 'package:bwa_cozy/bloc/pbj/dto/list_komen_pbj.dart';
 
 abstract class CompareState {}
@@ -62,7 +62,7 @@ class CompareStateFailure extends CompareState {
 }
 
 class PBJStateSuccessListPBJ extends CompareState {
-  final List<ListAllPbjDTO> datas;
+  final List<ListPbjdto> datas;
 
   PBJStateSuccessListPBJ({this.datas = const []});
 }

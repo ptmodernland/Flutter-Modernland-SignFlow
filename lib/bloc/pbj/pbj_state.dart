@@ -1,4 +1,4 @@
-import 'package:bwa_cozy/bloc/all_approval/dto/list_all_pbj_dto.dart';
+import 'package:bwa_cozy/bloc/pbj/dto/ListPBJDTO.dart';
 import 'package:bwa_cozy/bloc/pbj/dto/list_komen_pbj.dart';
 
 abstract class PBJState {}
@@ -25,7 +25,7 @@ class PBJStateLoading extends PBJState {
 }
 
 class PBJStateLoadHistorySuccess extends PBJState {
-  final List<ListAllPbjDTO> datas;
+  final List<ListPbjdto> datas;
 
   PBJStateLoadHistorySuccess({this.datas = const []});
 }
@@ -56,7 +56,7 @@ class PBJStateFailure extends PBJState {
 }
 
 class PBJStateSuccessListPBJ extends PBJState {
-  final List<ListAllPbjDTO> datas;
+  final List<ListPbjdto> datas;
 
   PBJStateSuccessListPBJ({this.datas = const []});
 }

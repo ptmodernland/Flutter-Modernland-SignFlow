@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:bwa_cozy/bloc/_wrapper/response_wrapper.dart';
-import 'package:bwa_cozy/bloc/all_approval/dto/list_all_pbj_dto.dart';
+import 'package:bwa_cozy/bloc/pbj/dto/ListPBJDTO.dart';
 import 'package:bwa_cozy/bloc/pbj/dto/list_komen_pbj.dart';
 import 'package:bwa_cozy/util/storage/sessionmanager/session_manager.dart';
 import 'package:http/http.dart' as http;
@@ -115,7 +115,7 @@ class PBJRepository {
     }
   }
 
-  Future<ResponseWrapper<List<ListAllPbjDTO>>> getHistoryPBJ(
+  Future<ResponseWrapper<List<ListPbjdto>>> getHistoryPBJ(
       {String? startDate = null,
       String? endDate = null,
       String? year = null,
@@ -148,13 +148,12 @@ class PBJRepository {
       final result = jsonDecode(response.body);
       print(result.toString());
       if (response.statusCode == 200) {
-        print("result 200");
+        print("168 result 200");
         final jsonData = json.decode(response.body);
-        final List<Map<String, dynamic>> dataList =
-            List<Map<String, dynamic>>.from(jsonData);
-        final List<ListAllPbjDTO> datas =
-            dataList.map((data) => ListAllPbjDTO.fromJson(data)).toList();
-        // Now you have the list of `Bottle` objects
+        final dataList = List<Map<String, dynamic>>.from(jsonData);
+        final datas =
+            dataList.map((data) => ListPbjdto.fromJson(data)).toList();
+        print("168 success siii");
         return ResponseWrapper(datas, ResourceStatus.Success, "Success");
       } else {
         return ResponseWrapper(null, ResourceStatus.Error, "Terjadi Kesalahan");

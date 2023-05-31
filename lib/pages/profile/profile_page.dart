@@ -3,7 +3,6 @@ import 'package:bwa_cozy/bloc/login/login_event.dart';
 import 'package:bwa_cozy/bloc/login/login_response.dart';
 import 'package:bwa_cozy/bloc/login/login_state.dart';
 import 'package:bwa_cozy/bloc/notif/notif_bloc.dart';
-import 'package:bwa_cozy/bloc/notif/notif_event.dart';
 import 'package:bwa_cozy/pages/profile/changepin/change_password_page.dart';
 import 'package:bwa_cozy/pages/profile/changepin/change_pin_page.dart';
 import 'package:bwa_cozy/pages/splash/splash_screen.dart';
@@ -14,7 +13,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:quickalert/models/quickalert_type.dart';
 import 'package:quickalert/quickalert.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -152,14 +150,13 @@ class _ProfilePageState extends State<ProfilePage> {
                         child: Container(
                           child: Column(
                             children: [
-                              Text(
-                                "General",
-                                style:
-                                    MyTheme.myStylePrimaryTextStyle.copyWith(),
+                              SizedBox(
+                                height: 20,
                               ),
                               ProfileMenuItemWidget(
                                 onClick: () {
-                                  Navigator.push(context, MaterialPageRoute(builder: (context){
+                                  Navigator.push(context,
+                                      MaterialPageRoute(builder: (context) {
                                     return ChangePasswordPage();
                                   }));
                                 },
@@ -304,12 +301,15 @@ class _ProfilePageState extends State<ProfilePage> {
                                       margin:
                                           EdgeInsets.only(left: 20, right: 20),
                                       child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.stretch,
                                         children: [
                                           SizedBox(
                                             height: 20,
                                           ),
                                           Text(
                                             user.nama,
+                                            textAlign: TextAlign.center,
                                             style: MyTheme
                                                 .myStylePrimaryTextStyle
                                                 .copyWith(
@@ -317,13 +317,23 @@ class _ProfilePageState extends State<ProfilePage> {
                                                     fontWeight:
                                                         FontWeight.w900),
                                           ),
-                                          Text('(${getUserRole(user.level)})'),
+                                          Text(
+                                            '(${getUserRole(user.level)})',
+                                            textAlign: TextAlign.center,
+                                          ),
                                           Text(
                                             user.email,
+                                            textAlign: TextAlign.center,
                                             style: MyTheme
                                                 .myStyleSecondaryTextStyle,
                                           ),
-                                          Text('Username: ${user.username}'),
+                                          Text(
+                                            'Username: ${user.username}',
+                                            textAlign: TextAlign.center,
+                                          ),
+                                          SizedBox(
+                                            height: 35,
+                                          )
                                         ],
                                       ),
                                     );

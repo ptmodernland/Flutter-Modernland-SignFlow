@@ -186,9 +186,9 @@ class _PBJWaitingApprovalState extends State<PBJWaitingApproval> {
                                     isApproved: isApproved,
                                     itemCode: pbjItem.noPermintaan,
                                     date: pbjItem.tglPermintaan,
-                                    departmentTitle: pbjItem.department,
-                                    personName:
-                                        pbjItem.status + pbjItem.namaUser,
+                                    departmentTitle: pbjItem.departemen ?? "",
+                                    personName: (pbjItem.status ?? "") +
+                                        (pbjItem.namaUser ?? ""),
                                     personImage: "",
                                     onPressed: (String requiredId) {
                                       Fluttertoast.showToast(

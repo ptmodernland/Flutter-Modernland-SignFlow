@@ -6,6 +6,7 @@ import 'package:bwa_cozy/bloc/compare/compare_comment_event.dart';
 import 'package:bwa_cozy/bloc/compare/compare_event.dart';
 import 'package:bwa_cozy/bloc/compare/compare_state.dart';
 import 'package:bwa_cozy/repos/compare_repository.dart';
+import 'package:bwa_cozy/util/core/string/html_util.dart';
 import 'package:bwa_cozy/util/core/url/base_url.dart';
 import 'package:bwa_cozy/util/enum/action_type.dart';
 import 'package:bwa_cozy/util/my_theme.dart';
@@ -208,6 +209,8 @@ class _DetailComparePageState extends State<DetailComparePage> {
                                       itemCode: data.noCompare,
                                       date: data.compare_date,
                                       personName: data.namaUser,
+                                      descriptiveText: removeHtmlTags(
+                                          data.desc_compare ?? ""),
                                       departmentTitle: data.departemen,
                                     ),
                                     Container(
@@ -238,13 +241,14 @@ class _DetailComparePageState extends State<DetailComparePage> {
                                               Expanded(
                                                 child: DocumentDetailWidget(
                                                   title: "Nomor Compare",
-                                                  content: data.noCompare,
+                                                  content: data.noCompare ?? "",
                                                 ),
                                               ),
                                               Expanded(
                                                 child: DocumentDetailWidget(
                                                   title: "Tanggal",
-                                                  content: data.compare_date,
+                                                  content:
+                                                      data.compare_date ?? "-",
                                                 ),
                                               ),
                                             ],
@@ -255,13 +259,15 @@ class _DetailComparePageState extends State<DetailComparePage> {
                                             children: [
                                               Expanded(
                                                   child: DocumentDetailWidget(
-                                                title: "Nama Karyawan",
-                                                content: data.namaUser,
+                                                    title: "Nama Karyawan",
+                                                content: data.namaUser ??
+                                                    "MDLN Staff",
                                               )),
                                               Expanded(
                                                 child: DocumentDetailWidget(
                                                   title: "Department",
-                                                  content: data.departemen,
+                                                  content: data.departemen ??
+                                                      "Modernland",
                                                 ),
                                               ),
                                             ],
@@ -273,18 +279,22 @@ class _DetailComparePageState extends State<DetailComparePage> {
                                               Expanded(
                                                 child: DocumentDetailWidget(
                                                   title: "Advance Payment",
-                                                  content: data.advancePayment
-                                                          .isNotEmpty
-                                                      ? data.advancePayment
+                                                  content: data.advancePayment !=
+                                                              null &&
+                                                          data.advancePayment!
+                                                              .isNotEmpty
+                                                      ? data.advancePayment!
                                                       : "-",
                                                 ),
                                               ),
                                               Expanded(
                                                 child: DocumentDetailWidget(
                                                   title: "Progress Payment",
-                                                  content: data.progressPayment
-                                                          .isNotEmpty
-                                                      ? data.progressPayment
+                                                  content: data.progressPayment !=
+                                                              null &&
+                                                          data.progressPayment!
+                                                              .isNotEmpty
+                                                      ? data.progressPayment!
                                                       : "-",
                                                 ),
                                               ),
@@ -296,15 +306,15 @@ class _DetailComparePageState extends State<DetailComparePage> {
                                             children: [
                                               Expanded(
                                                   child: DocumentDetailWidget(
-                                                title: "View Detail",
+                                                    title: "View Detail",
                                                 content: "Klik Disini",
                                                 fileURL: DOC_VIEW_COMPARE +
-                                                    data.idCompare,
+                                                    (data.idCompare ?? ""),
                                               )),
                                               Expanded(
                                                 child: DocumentDetailWidget(
                                                   title: "Download File",
-                                                  content: data.attchFile,
+                                                  content: data.attchFile ?? "",
                                                   isForDownload: true,
                                                   fileURL:
                                                       ATTACH_DOWNLOAD_COMPARE +
@@ -339,10 +349,10 @@ class _DetailComparePageState extends State<DetailComparePage> {
                                               Expanded(
                                                 child: DocumentDetailWidget(
                                                   title: "Deskripsi : ",
-                                                  content: data.desc_compare
-                                                          .isNotEmpty
-                                                      ? data.desc_compare
-                                                      : "-",
+                                                  content: removeHtmlTags(
+                                                          data.desc_compare ??
+                                                              "") ??
+                                                      "",
                                                   isForDownload: false,
                                                 ),
                                               ),
