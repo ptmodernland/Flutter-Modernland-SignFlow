@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:bwa_cozy/bloc/_wrapper/response_wrapper.dart';
 import 'package:bwa_cozy/bloc/all_approval/dto/detail_pbj_dto.dart';
 import 'package:bwa_cozy/bloc/all_approval/dto/list_all_compare_dto.dart';
-import 'package:bwa_cozy/bloc/all_approval/dto/list_all_pbj_kasbon_dto.dart';
+import 'package:bwa_cozy/bloc/kasbon/dto/ListAllKasbonDTO.dart';
 import 'package:bwa_cozy/bloc/pbj/dto/ListPBJDTO.dart';
 import 'package:bwa_cozy/util/storage/sessionmanager/session_manager.dart';
 import 'package:http/http.dart' as http;
@@ -139,7 +139,7 @@ class ApprovalMainPageRepository {
   }
 
   //use this to get all Kasbon
-  Future<ResponseWrapper<List<ListAllKasbonDTO>>> getKasbonWaitingList() async {
+  Future<ResponseWrapper<List<ListAllKasbonDto>>> getKasbonWaitingList() async {
     var logTag = "Getting Kasbon";
     try {
       print("trying getting Kasbon");
@@ -171,8 +171,8 @@ class ApprovalMainPageRepository {
         final jsonData = json.decode(response.body);
         final List<Map<String, dynamic>> dataList =
             List<Map<String, dynamic>>.from(jsonData);
-        final List<ListAllKasbonDTO> datas =
-            dataList.map((data) => ListAllKasbonDTO.fromJson(data)).toList();
+        final List<ListAllKasbonDto> datas =
+            dataList.map((data) => ListAllKasbonDto.fromJson(data)).toList();
         // Now you have the list of `Bottle` objects
         print("result Kasbon Success");
         return ResponseWrapper(datas, ResourceStatus.Success, "Success");

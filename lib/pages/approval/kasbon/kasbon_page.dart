@@ -239,8 +239,8 @@ class _ApprovalKasbonMainPageState extends State<ApprovalKasbonMainPage> {
                                   }
                                   return ItemApprovalWidget(
                                     isApproved: isApproved,
-                                    itemCode: pbjItem.no_kasbon,
-                                    date: pbjItem.tglPermintaan,
+                                    itemCode: pbjItem.noKasbon,
+                                    date: pbjItem.tglBuat,
                                     departmentTitle: pbjItem.jenis,
                                     personName: pbjItem.namaUser,
                                     personImage: "",
