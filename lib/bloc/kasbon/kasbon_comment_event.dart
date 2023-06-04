@@ -1,9 +1,9 @@
-abstract class CompareCommentEvent {}
+abstract class KasbonCommentEvent {}
 
-class GetKomentarKasbon extends CompareCommentEvent {
-  final String noCompare;
+class GetKomentarKasbon extends KasbonCommentEvent {
+  final String noKasbon;
 
   GetKomentarKasbon({
-    required this.noCompare,
+    required this.noKasbon,
   });
 }

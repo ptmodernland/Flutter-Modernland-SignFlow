@@ -1,30 +1,30 @@
-import 'package:bwa_cozy/bloc/compare/compare_comment_event.dart';
-import 'package:bwa_cozy/bloc/compare/compare_state.dart';
-import 'package:bwa_cozy/repos/compare_repository.dart';
+import 'package:bwa_cozy/bloc/kasbon/kasbon_comment_event.dart';
+import 'package:bwa_cozy/bloc/kasbon/kasbon_state.dart';
+import 'package:bwa_cozy/repos/kasbon_repository.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class KasbonCommentBloc extends Bloc<CompareCommentEvent, CompareState> {
-  final CompareRepository repo;
+class KasbonCommentBloc extends Bloc<KasbonCommentEvent, KasbonState> {
+  final KasbonRepository repo;
 
-  KasbonCommentBloc(this.repo) : super(CompareStateInitial()) {
-    on<GetKomentarCompare>((event, emit) async {
-      emit(CompareStateLoading());
+  KasbonCommentBloc(this.repo) : super(KasbonStateInitial()) {
+    on<GetKomentarKasbon>((event, emit) async {
+      emit(KasbonStateLoading());
       print("start bloc request");
       try {
         final request =
-            await repo.getCommentCompare(noCompare: event.noCompare);
+            await repo.getKomentarKasbon(noPermintaan: event.noKasbon);
         if (request.data != null) {
-          emit(CompareStateLoadCommentSuccess(datas: request.data!));
+          emit(KasbonStateLoadCommentSuccess(datas: request.data!));
           print("success bloc approval_main_page");
         } else {
-          emit(CompareStateFailure(
-              type: CompareEActionType.SHOW_KOMENTAR,
+          emit(KasbonStateFailure(
+              type: KasbonEActionType.SHOW_KOMENTAR,
               message: request.message ?? ""));
         }
       } catch (e) {
         print("error occured on approval_main_page_bloc" + e.toString());
-        emit(CompareStateFailure(
-            message: e.toString(), type: CompareEActionType.SHOW_KOMENTAR));
+        emit(KasbonStateFailure(
+            message: e.toString(), type: KasbonEActionType.SHOW_KOMENTAR));
       }
     });
   }

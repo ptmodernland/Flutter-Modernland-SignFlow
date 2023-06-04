@@ -1,7 +1,7 @@
-import 'package:bwa_cozy/bloc/all_approval/dto/list_all_compare_dto.dart';
-import 'package:bwa_cozy/bloc/compare/dto/detail_compare_dto.dart';
+import 'package:bwa_cozy/bloc/kasbon/dto/KasbonCommentDTO.dart';
+import 'package:bwa_cozy/bloc/kasbon/dto/KasbonDetailDTO.dart';
+import 'package:bwa_cozy/bloc/kasbon/dto/ListAllKasbonDTO.dart';
 import 'package:bwa_cozy/bloc/pbj/dto/ListPBJDTO.dart';
-import 'package:bwa_cozy/bloc/pbj/dto/list_komen_pbj.dart';
 
 abstract class KasbonState {}
 
@@ -26,19 +26,19 @@ class KasbonStateLoading extends KasbonState {
 }
 
 class KasbonStateLoadHistorySuccess extends KasbonState {
-  final List<ListAllCompareDTO> datas;
+  final List<ListAllKasbonDto> datas;
 
   KasbonStateLoadHistorySuccess({this.datas = const []});
 }
 
 class KasbonStateLoadCommentSuccess extends KasbonState {
-  final List<ListPBJCommentDTO> datas;
+  final List<KasbonCommentDto> datas;
 
   KasbonStateLoadCommentSuccess({this.datas = const []});
 }
 
 class KasbonDetailSuccess extends KasbonState {
-  final DetailCompareDTO data;
+  final KasbonDetailDto data;
 
   KasbonDetailSuccess({required this.data});
 }

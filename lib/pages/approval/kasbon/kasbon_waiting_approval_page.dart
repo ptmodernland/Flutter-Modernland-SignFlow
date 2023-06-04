@@ -1,40 +1,27 @@
 import 'package:bwa_cozy/bloc/all_approval/approval_main_page_bloc.dart';
 import 'package:bwa_cozy/bloc/all_approval/approval_main_page_event.dart';
 import 'package:bwa_cozy/bloc/all_approval/approval_main_page_state.dart';
-import 'package:bwa_cozy/bloc/notif/notif_bloc.dart';
-import 'package:bwa_cozy/bloc/notif/notif_event.dart';
-import 'package:bwa_cozy/bloc/notif/notif_state.dart';
-import 'package:bwa_cozy/pages/approval/compare/compare_approved_all_page.dart';
-import 'package:bwa_cozy/pages/approval/compare/compare_waiting_approval_page.dart';
 import 'package:bwa_cozy/pages/approval/compare/detail_compare_page.dart';
-import 'package:bwa_cozy/pages/approval/kasbon/kasbon_approved_all_page.dart';
-import 'package:bwa_cozy/pages/approval/kasbon/kasbon_detail_page.dart';
-import 'package:bwa_cozy/pages/approval/kasbon/kasbon_waiting_approval_page.dart';
 import 'package:bwa_cozy/repos/approval_main_page_repository.dart';
-import 'package:bwa_cozy/repos/notif_repository.dart';
-import 'package:bwa_cozy/util/core/string/html_util.dart';
 import 'package:bwa_cozy/util/enum/menu_type.dart';
 import 'package:bwa_cozy/util/my_theme.dart';
 import 'package:bwa_cozy/widget/approval/item_approval_widget.dart';
-import 'package:bwa_cozy/widget/menus/menu_item_approval_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class ApprovalKasbonMainPage extends StatefulWidget {
-  const ApprovalKasbonMainPage({Key? key}) : super(key: key);
+class KasbonWaitingApprovalPage extends StatefulWidget {
+  const KasbonWaitingApprovalPage({Key? key}) : super(key: key);
 
   @override
-  State<ApprovalKasbonMainPage> createState() => _ApprovalKasbonMainPageState();
+  State<KasbonWaitingApprovalPage> createState() =>
+      _KasbonWaitingApprovalPageState();
 }
 
-class _ApprovalKasbonMainPageState extends State<ApprovalKasbonMainPage> {
+class _KasbonWaitingApprovalPageState extends State<KasbonWaitingApprovalPage> {
   @override
   Widget build(BuildContext context) {
     double screenHeight = MediaQuery.of(context).size.height;
     double screenWidth = MediaQuery.of(context).size.width;
-
-    NotifRepository notifRepository = NotifRepository();
-    NotifCoreBloc notifBloc = NotifCoreBloc(notifRepository);
 
     ApprovalMainPageRepository approvalRepo = ApprovalMainPageRepository();
     ApprovalMainPageBloc approvalBloc = ApprovalMainPageBloc(approvalRepo);
@@ -72,17 +59,25 @@ class _ApprovalKasbonMainPageState extends State<ApprovalKasbonMainPage> {
                                     left: 30, right: 30, top: 10),
                                 child: Row(
                                   children: [
-                                    Align(
-                                      alignment: Alignment.center,
+                                    IconButton(
+                                      icon: Icon(Icons.arrow_back),
+                                      color: Colors.white,
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                        // Implement your back button functionality here
+                                      },
+                                    ),
+                                    SizedBox(width: 10),
+                                    Expanded(
                                       child: Text(
-                                        "Kasbon",
+                                        "Kasbon Waiting Approval",
                                         style: MyTheme.myStylePrimaryTextStyle
                                             .copyWith(
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.w800),
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.w800,
+                                        ),
                                       ),
                                     ),
-                                    Spacer(),
                                   ],
                                 ),
                               ),
@@ -104,7 +99,7 @@ class _ApprovalKasbonMainPageState extends State<ApprovalKasbonMainPage> {
                           children: [
                             Container(
                               margin:
-                              EdgeInsets.only(top: 20, left: 0, right: 0),
+                                  EdgeInsets.only(top: 20, left: 0, right: 0),
                               width: double.infinity,
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.vertical(
@@ -113,78 +108,13 @@ class _ApprovalKasbonMainPageState extends State<ApprovalKasbonMainPage> {
                               child: Container(
                                 child: Column(
                                   children: [
-                                    BlocProvider(
-                                        create: (BuildContext context) {
-                                          return notifBloc
-                                            ..add(NotifEventCount());
-                                        },
-                                        child: Container(
-                                          child: Column(
-                                            children: [
-                                              BlocBuilder<NotifCoreBloc,
-                                                  NotifCoreState>(
-                                                  builder: (context, state) {
-                                                    var count = "";
-                                                    if (state
-                                                    is NotifStateLoading) {}
-                                                    if (state
-                                                    is NotifStateFailure) {}
-                                                    if (state
-                                                    is NotifStateSuccess) {
-                                                      count = state.totalKasbon;
-                                                    }
-                                                    return MenuItemApprovalWidget(
-                                                      unreadBadgeCount: count,
-                                                      onLeftTapFunction: () {
-                                                    Navigator.push(
-                                                      context,
-                                                      MaterialPageRoute(
-                                                        builder: (context) =>
-                                                            KasbonWaitingApprovalPage(),
-                                                      ),
-                                                    ).then((value) {
-                                                      notifBloc
-                                                        ..add(
-                                                            NotifEventCount());
-                                                      approvalBloc
-                                                        ..add(RequestDataEvent(
-                                                            ApprovalListType
-                                                                .KASBON));
-                                                      print("kocak " +
-                                                          value.toString());
-                                                    });
-                                                  },
-                                                      onRightTapFunction: () {
-                                                    Navigator.push(
-                                                      context,
-                                                      MaterialPageRoute(
-                                                        builder: (context) =>
-                                                            KasbonAllApprovedPage(),
-                                                      ),
-                                                    ).then((value) {
-                                                      notifBloc
-                                                        ..add(
-                                                            NotifEventCount());
-                                                      approvalBloc
-                                                        ..add(RequestDataEvent(
-                                                            ApprovalListType
-                                                                .KASBON));
-                                                      print("kocak " +
-                                                          value.toString());
-                                                    });
-                                                  },
-                                                    );
-                                                  }),
-                                            ],
-                                          ),
-                                        )),
                                     Container(
                                       margin:
-                                      EdgeInsets.only(left: 20, right: 20),
+                                          EdgeInsets.only(left: 20, right: 20),
                                       child: Row(
                                         mainAxisSize: MainAxisSize.max,
                                         crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                                            CrossAxisAlignment.start,
                                         children: [
                                           Text(
                                             "Request Terbaru",
@@ -219,13 +149,10 @@ class _ApprovalKasbonMainPageState extends State<ApprovalKasbonMainPage> {
                             if (state is ApprovalMainPageStateLoading) {}
                             if (state is ApprovalMainPageStateFailure) {}
                             if (state
-                            is ApprovalMainPageStateSuccessListKasbon) {
-                              var pbjList = state.datas;
-
-                              if (pbjList.isEmpty) {
+                                is ApprovalMainPageStateSuccessListKasbon) {
+                              var kasbonList = state.datas;
+                              if (kasbonList.isEmpty) {
                                 return Container(
-                                  margin: EdgeInsets.only(
-                                      top: 50, left: 20, right: 20),
                                   alignment: Alignment.center,
                                   child: Column(
                                     mainAxisAlignment: MainAxisAlignment.center,
@@ -236,7 +163,7 @@ class _ApprovalKasbonMainPageState extends State<ApprovalKasbonMainPage> {
                                       ),
                                       SizedBox(height: 10),
                                       Text(
-                                        'Belum Ada Request Baru',
+                                        'No data available',
                                         style: TextStyle(
                                           fontSize: 16,
                                           fontWeight: FontWeight.bold,
@@ -246,43 +173,41 @@ class _ApprovalKasbonMainPageState extends State<ApprovalKasbonMainPage> {
                                   ),
                                 );
                               }
-
                               dataList = ListView.builder(
-                                itemCount: pbjList.length,
+                                itemCount: kasbonList.length,
                                 shrinkWrap: true,
                                 physics: const NeverScrollableScrollPhysics(),
                                 itemBuilder: (context, index) {
-                                  final pbjItem = pbjList[index];
+                                  final kasbonItem = kasbonList[index];
                                   var isApproved = false;
-                                  if (pbjItem.status != "Y") {
+                                  if (kasbonItem.status != "Y") {
                                     isApproved = true;
                                   }
                                   return ItemApprovalWidget(
+                                    requiredId: kasbonItem.idKasbon,
                                     isApproved: isApproved,
-                                    itemCode: (index + 1).toString() +
-                                        pbjItem.noKasbon.toString() +
-                                        pbjList.length.toString(),
-                                    date: pbjItem.tglBuat,
-                                    requiredId: pbjItem.idKasbon,
-                                    personName: pbjItem.namaUser,
-                                    departmentTitle: pbjItem.departemen,
-                                    descriptiveText:
-                                        removeHtmlTags(pbjItem.keperluan ?? ""),
-                                    onPressed: (String noCompare) {
+                                    itemCode: kasbonItem.noKasbon,
+                                    date: kasbonItem.tglBuat,
+                                    departmentTitle: kasbonItem.departemen,
+                                    personName: kasbonItem.namaUser,
+                                    personImage: "",
+                                    descriptiveText: kasbonItem.keperluan,
+                                    onPressed: (String requiredId) {
                                       Navigator.push(
                                         context,
                                         MaterialPageRoute(
                                           builder: (context) =>
-                                              KasbonDetailPage(
-                                            idKasbon: pbjItem.idKasbon ?? "",
-                                            noKasbon: pbjItem.noKasbon ?? "",
-                                          ),
+                                              DetailComparePage(
+                                                  noCompare:
+                                                      kasbonItem.noKasbon ?? "",
+                                                  idCompare:
+                                                      kasbonItem.idKasbon ??
+                                                          ""),
                                         ),
                                       ).then((value) {
-                                        notifBloc..add(NotifEventCount());
                                         approvalBloc
                                           ..add(RequestDataEvent(
-                                              ApprovalListType.KASBON));
+                                              ApprovalListType.COMPARE));
                                       });
                                     },
                                   );

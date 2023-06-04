@@ -1,19 +1,17 @@
-abstract class CompareActionEvent {}
+abstract class KasbonActionEvent {}
 
-class SendQCompareApprove extends CompareActionEvent {
-  final String noPermintaan;
+class SendApprove extends KasbonActionEvent {
+  final String noKasbon;
   final String pin;
   final String comment;
 
-  SendQCompareApprove(
-      {this.noPermintaan = "", this.pin = "", this.comment = "-"});
+  SendApprove({this.noKasbon = "", this.pin = "", this.comment = "-"});
 }
 
-class SendQCompareReject extends CompareActionEvent {
-  final String nomorCompare;
+class SendReject extends KasbonActionEvent {
+  final String noKasbon;
   final String pin;
   final String comment;
 
-  SendQCompareReject(
-      {this.nomorCompare = "", this.pin = "", this.comment = "-"});
+  SendReject({this.noKasbon = "", this.pin = "", this.comment = "-"});
 }

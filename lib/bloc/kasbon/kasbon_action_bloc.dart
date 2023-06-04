@@ -1,56 +1,56 @@
 import 'package:bwa_cozy/bloc/_wrapper/response_wrapper.dart';
-import 'package:bwa_cozy/bloc/compare/compare_action_event.dart';
-import 'package:bwa_cozy/bloc/compare/compare_state.dart';
-import 'package:bwa_cozy/repos/compare_repository.dart';
+import 'package:bwa_cozy/bloc/kasbon/kasbon_action_event.dart';
+import 'package:bwa_cozy/bloc/kasbon/kasbon_state.dart';
+import 'package:bwa_cozy/repos/kasbon_repository.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class CompareActionBloc extends Bloc<CompareActionEvent, CompareState> {
-  final CompareRepository repo;
+class KasbonActionBloc extends Bloc<KasbonActionEvent, KasbonState> {
+  final KasbonRepository repo;
 
-  CompareActionBloc(this.repo) : super(CompareStateInitial()) {
-    on<SendQCompareApprove>((event, emit) async {
+  KasbonActionBloc(this.repo) : super(KasbonStateInitial()) {
+    on<SendApprove>((event, emit) async {
       print("on bloc sendQRCompareApprove");
       try {
-        final request = await repo.approveCompare(
-          noPermintaan: event.noPermintaan,
+        final request = await repo.approveKasbon(
+          noPermintaan: event.noKasbon,
           comment: event.comment,
           pin: event.pin,
         );
         if (request.status == ResourceStatus.Success) {
-          emit(CompareStateSuccess(
+          emit(KasbonStateSuccess(
               message: request.message.toString(),
-              type: CompareEActionType.APPROVE));
+              type: KasbonEActionType.APPROVE));
         } else {
-          emit(CompareStateFailure(
+          emit(KasbonStateFailure(
               message: request.message.toString(),
-              type: CompareEActionType.APPROVE));
+              type: KasbonEActionType.APPROVE));
         }
       } catch (e) {
-        emit(CompareStateFailure(message: e.toString()));
+        emit(KasbonStateFailure(message: e.toString()));
       }
     });
     //reject PBJ
-    on<SendQCompareReject>((event, emit) async {
+    on<SendReject>((event, emit) async {
       print("on bloc sendQRCompareReject");
       try {
-        final request = await repo.rejectCompare(
-          noPermintaan: event.nomorCompare,
+        final request = await repo.rejectKasbon(
+          noPermintaan: event.noKasbon,
           comment: event.comment,
           pin: event.pin,
         );
         if (request.status == ResourceStatus.Success) {
-          emit(CompareStateSuccess(
+          emit(KasbonStateSuccess(
               message: request.message.toString(),
-              type: CompareEActionType.REJECT));
+              type: KasbonEActionType.REJECT));
         } else {
-          emit(CompareStateFailure(
+          emit(KasbonStateFailure(
               message: request.message.toString(),
-              type: CompareEActionType.REJECT));
+              type: KasbonEActionType.REJECT));
         }
       } catch (e) {
         emit(
-          CompareStateFailure(
-              message: e.toString(), type: CompareEActionType.REJECT),
+          KasbonStateFailure(
+              message: e.toString(), type: KasbonEActionType.REJECT),
         );
       }
     });
