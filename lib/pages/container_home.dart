@@ -2,6 +2,7 @@ import 'package:bwa_cozy/bloc/notif/notif_bloc.dart';
 import 'package:bwa_cozy/bloc/notif/notif_event.dart';
 import 'package:bwa_cozy/bloc/notif/notif_state.dart';
 import 'package:bwa_cozy/pages/approval/compare/compare_page.dart';
+import 'package:bwa_cozy/pages/approval/iom/iom_page.dart';
 import 'package:bwa_cozy/pages/approval/kasbon/kasbon_page.dart';
 import 'package:bwa_cozy/pages/approval/pbj/filter/pbj_filter_page.dart';
 import 'package:bwa_cozy/pages/approval/pbj/pbj_page.dart';
@@ -62,7 +63,7 @@ class _ContainerHomePageState extends State<ContainerHomePage>
         child: HomePage(notifBloc),
       ),
       Center(
-        child: PBJFilterPage(),
+        child: ApprovalIomMainPage(),
       ),
       Center(
         child: ApprovalPBJMainPage(),

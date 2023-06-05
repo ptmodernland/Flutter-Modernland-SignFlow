@@ -4,27 +4,29 @@ import 'package:bwa_cozy/bloc/all_approval/approval_main_page_state.dart';
 import 'package:bwa_cozy/bloc/notif/notif_bloc.dart';
 import 'package:bwa_cozy/bloc/notif/notif_event.dart';
 import 'package:bwa_cozy/bloc/notif/notif_state.dart';
-import 'package:bwa_cozy/pages/approval/pbj/detail_pbj_page.dart';
-import 'package:bwa_cozy/pages/approval/pbj/filter/pbj_approved_all.dart';
-import 'package:bwa_cozy/pages/approval/pbj/pbj_waiting_approval.dart';
+import 'package:bwa_cozy/pages/approval/compare/compare_approved_all_page.dart';
+import 'package:bwa_cozy/pages/approval/compare/compare_waiting_approval_page.dart';
+import 'package:bwa_cozy/pages/approval/compare/detail_compare_page.dart';
 import 'package:bwa_cozy/repos/approval_main_page_repository.dart';
 import 'package:bwa_cozy/repos/notif_repository.dart';
+import 'package:bwa_cozy/util/core/string/html_util.dart';
 import 'package:bwa_cozy/util/enum/menu_type.dart';
 import 'package:bwa_cozy/util/my_theme.dart';
+import 'package:bwa_cozy/widget/approval/iom_menu_icon_widget.dart';
 import 'package:bwa_cozy/widget/approval/item_approval_widget.dart';
 import 'package:bwa_cozy/widget/menus/menu_item_approval_widget.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 
-class ApprovalPBJMainPage extends StatefulWidget {
-  const ApprovalPBJMainPage({Key? key}) : super(key: key);
+class ApprovalIomMainPage extends StatefulWidget {
+  const ApprovalIomMainPage({Key? key}) : super(key: key);
 
   @override
-  State<ApprovalPBJMainPage> createState() => _ApprovalPBJMainPageState();
+  State<ApprovalIomMainPage> createState() => _ApprovalIomMainPageState();
 }
 
-class _ApprovalPBJMainPageState extends State<ApprovalPBJMainPage> {
+class _ApprovalIomMainPageState extends State<ApprovalIomMainPage> {
   @override
   Widget build(BuildContext context) {
     double screenHeight = MediaQuery.of(context).size.height;
@@ -47,13 +49,13 @@ class _ApprovalPBJMainPageState extends State<ApprovalPBJMainPage> {
                   child: Column(
                     children: [
                       Container(
-                        height: 150,
+                        height: 120,
                         width: double.infinity,
                         child: Stack(
                           children: [
                             Container(
                               decoration: BoxDecoration(
-                                color: Colors.black,
+                                color: Colors.redAccent,
                                 image: DecorationImage(
                                   image: AssetImage(
                                       'asset/img/background/bg_pattern_fp.png'),
@@ -72,7 +74,7 @@ class _ApprovalPBJMainPageState extends State<ApprovalPBJMainPage> {
                                     Align(
                                       alignment: Alignment.center,
                                       child: Text(
-                                        "Permohonan Barang dan Jasa",
+                                        "Inter Office Memo",
                                         style: MyTheme.myStylePrimaryTextStyle
                                             .copyWith(
                                                 color: Colors.white,
@@ -128,20 +130,16 @@ class _ApprovalPBJMainPageState extends State<ApprovalPBJMainPage> {
                                                     is NotifStateFailure) {}
                                                 if (state
                                                     is NotifStateSuccess) {
-                                                  count = state.totalPermohonan;
+                                                  count = state.totalCompare;
                                                 }
                                                 return MenuItemApprovalWidget(
                                                   unreadBadgeCount: count,
-                                                  titleLeft:
-                                                      "Menunggu Approval",
-                                                  titleRight:
-                                                      "History Approval",
                                                   onLeftTapFunction: () {
                                                     Navigator.push(
                                                       context,
                                                       MaterialPageRoute(
                                                         builder: (context) =>
-                                                            PBJWaitingApproval(),
+                                                            CompareWaitingApprovalPage(),
                                                       ),
                                                     ).then((value) {
                                                       notifBloc
@@ -150,7 +148,9 @@ class _ApprovalPBJMainPageState extends State<ApprovalPBJMainPage> {
                                                       approvalBloc
                                                         ..add(RequestDataEvent(
                                                             ApprovalListType
-                                                                .PBJ));
+                                                                .COMPARE));
+                                                      print("kocak " +
+                                                          value.toString());
                                                     });
                                                   },
                                                   onRightTapFunction: () {
@@ -158,7 +158,7 @@ class _ApprovalPBJMainPageState extends State<ApprovalPBJMainPage> {
                                                       context,
                                                       MaterialPageRoute(
                                                         builder: (context) =>
-                                                            PBJAllApprovedPage(),
+                                                            CompareAllApprovedPage(),
                                                       ),
                                                     ).then((value) {
                                                       notifBloc
@@ -167,7 +167,9 @@ class _ApprovalPBJMainPageState extends State<ApprovalPBJMainPage> {
                                                       approvalBloc
                                                         ..add(RequestDataEvent(
                                                             ApprovalListType
-                                                                .PBJ));
+                                                                .COMPARE));
+                                                      print("kocak " +
+                                                          value.toString());
                                                     });
                                                   },
                                                 );
@@ -175,14 +177,105 @@ class _ApprovalPBJMainPageState extends State<ApprovalPBJMainPage> {
                                             ],
                                           ),
                                         )),
-                                    Container(
-                                      margin:
-                                          EdgeInsets.only(left: 20, right: 20),
-                                      child: Row(
-                                        mainAxisSize: MainAxisSize.max,
+                                    SingleChildScrollView(
+                                      child: Column(
                                         crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [],
+                                            CrossAxisAlignment.stretch,
+                                        children: [
+                                          Container(
+                                            width: MediaQuery.sizeOf(context)
+                                                .width,
+                                            margin: EdgeInsets.only(
+                                                left: 25, right: 25, top: 50),
+                                            child: Wrap(
+                                              alignment:
+                                                  WrapAlignment.spaceAround,
+                                              spacing: 38,
+                                              runSpacing: 23,
+                                              children: [
+                                                IomMenuIconWidget(
+                                                  iconData: CupertinoIcons
+                                                      .money_dollar_circle,
+                                                  label: "Billionaire Club",
+                                                  badgeCount: 0,
+                                                ),
+                                                IomMenuIconWidget(
+                                                  iconData:
+                                                      CupertinoIcons.doc_chart,
+                                                  label: "Finance Accounting",
+                                                  badgeCount: 3,
+                                                ),
+                                                IomMenuIconWidget(
+                                                  iconData: CupertinoIcons
+                                                      .square_stack_3d_up_fill,
+                                                  label: "Quantity Surveyor",
+                                                  badgeCount: 0,
+                                                ),
+                                                IomMenuIconWidget(
+                                                  iconData: CupertinoIcons
+                                                      .building_2_fill,
+                                                  label: "Town Management",
+                                                  badgeCount: 0,
+                                                ),
+                                                IomMenuIconWidget(
+                                                  iconData:
+                                                      CupertinoIcons.hammer,
+                                                  label: "Technical",
+                                                  badgeCount: 0,
+                                                ),
+                                                IomMenuIconWidget(
+                                                  iconData: CupertinoIcons
+                                                      .person_3_fill,
+                                                  label: "Human Resource",
+                                                  badgeCount: 0,
+                                                ),
+                                                IomMenuIconWidget(
+                                                  iconData:
+                                                      CupertinoIcons.folder,
+                                                  label: "Legal Operation",
+                                                  badgeCount: 0,
+                                                ),
+                                                IomMenuIconWidget(
+                                                  iconData: CupertinoIcons
+                                                      .shopping_cart,
+                                                  label: "Purchasing",
+                                                  badgeCount: 0,
+                                                ),
+                                                IomMenuIconWidget(
+                                                  iconData: CupertinoIcons
+                                                      .chart_bar_alt_fill,
+                                                  label: "Business Development",
+                                                  badgeCount: 0,
+                                                ),
+                                                IomMenuIconWidget(
+                                                  iconData: CupertinoIcons.home,
+                                                  label: "Landed Project",
+                                                  badgeCount: 0,
+                                                ),
+                                                IomMenuIconWidget(
+                                                  iconData:
+                                                      CupertinoIcons.chart_bar,
+                                                  label: "Marketing",
+                                                  badgeCount: 0,
+                                                ),
+                                                IomMenuIconWidget(
+                                                  iconData: CupertinoIcons
+                                                      .check_mark_circled,
+                                                  label: "Permit Certification",
+                                                  badgeCount: 0,
+                                                ),
+                                                IomMenuIconWidget(
+                                                  iconData: CupertinoIcons.gift,
+                                                  label: "Promosi",
+                                                  badgeCount: 0,
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                          SizedBox(
+                                            height: 50,
+                                          ),
+                                        ],
                                       ),
                                     ),
                                   ],
@@ -192,10 +285,22 @@ class _ApprovalPBJMainPageState extends State<ApprovalPBJMainPage> {
                           ],
                         ),
                       ),
+                      Container(
+                        margin: EdgeInsets.only(left: 20, right: 20),
+                        width: double.infinity,
+                        child: Text(
+                          "Request Terbaru",
+                          textAlign: TextAlign.start,
+                          style: MyTheme.myStylePrimaryTextStyle.copyWith(
+                            fontWeight: FontWeight.w600,
+                            fontSize: 18,
+                          ),
+                        ),
+                      ),
                       BlocProvider(
                         create: (BuildContext context) {
                           return approvalBloc
-                            ..add(RequestDataEvent(ApprovalListType.PBJ));
+                            ..add(RequestDataEvent(ApprovalListType.COMPARE));
                         },
                         child: BlocBuilder<ApprovalMainPageBloc,
                             ApprovalMainPageState>(
@@ -204,10 +309,14 @@ class _ApprovalPBJMainPageState extends State<ApprovalPBJMainPage> {
                             Widget dataList = Text("");
                             if (state is ApprovalMainPageStateLoading) {}
                             if (state is ApprovalMainPageStateFailure) {}
-                            if (state is ApprovalMainPageStateSuccessListPBJ) {
+                            if (state
+                                is ApprovalMainPageStateSuccessListCompare) {
                               var pbjList = state.datas;
+
                               if (pbjList.isEmpty) {
                                 return Container(
+                                  margin: EdgeInsets.only(
+                                      top: 50, left: 20, right: 20),
                                   alignment: Alignment.center,
                                   child: Column(
                                     mainAxisAlignment: MainAxisAlignment.center,
@@ -218,7 +327,7 @@ class _ApprovalPBJMainPageState extends State<ApprovalPBJMainPage> {
                                       ),
                                       SizedBox(height: 10),
                                       Text(
-                                        'No data available',
+                                        'Belum Ada Request Baru',
                                         style: TextStyle(
                                           fontSize: 16,
                                           fontWeight: FontWeight.bold,
@@ -228,6 +337,7 @@ class _ApprovalPBJMainPageState extends State<ApprovalPBJMainPage> {
                                   ),
                                 );
                               }
+
                               dataList = ListView.builder(
                                 itemCount: pbjList.length,
                                 shrinkWrap: true,
@@ -239,29 +349,32 @@ class _ApprovalPBJMainPageState extends State<ApprovalPBJMainPage> {
                                     isApproved = true;
                                   }
                                   return ItemApprovalWidget(
-                                    requiredId: pbjItem.noPermintaan,
                                     isApproved: isApproved,
-                                    itemCode: pbjItem.noPermintaan,
+                                    itemCode: (index + 1).toString() +
+                                        pbjItem.noCompare.toString() +
+                                        pbjList.length.toString(),
                                     date: pbjItem.tglPermintaan,
-                                    departmentTitle: pbjItem.departemen ?? "",
-                                    personName: (pbjItem.status ?? "") +
-                                        (pbjItem.namaUser ?? ""),
-                                    personImage: "",
-                                    onPressed: (String requiredId) {
-                                      Fluttertoast.showToast(
-                                          msg: requiredId.toString());
+                                    requiredId: pbjItem.idCompare,
+                                    personName: pbjItem.namaUser,
+                                    departmentTitle: pbjItem.department,
+                                    descriptiveText: removeHtmlTags(
+                                        pbjItem.descCompare ?? ""),
+                                    onPressed: (String noCompare) {
                                       Navigator.push(
                                         context,
                                         MaterialPageRoute(
-                                          builder: (context) => DetailPBJPage(
-                                              noPermintaan: requiredId),
+                                          builder: (context) =>
+                                              DetailComparePage(
+                                                  noCompare:
+                                                      pbjItem.noCompare ?? "",
+                                                  idCompare:
+                                                      pbjItem.idCompare ?? ""),
                                         ),
                                       ).then((value) {
                                         notifBloc..add(NotifEventCount());
                                         approvalBloc
                                           ..add(RequestDataEvent(
-                                              ApprovalListType.PBJ));
-                                        print("kocak " + value.toString());
+                                              ApprovalListType.COMPARE));
                                       });
                                     },
                                   );
@@ -274,6 +387,9 @@ class _ApprovalPBJMainPageState extends State<ApprovalPBJMainPage> {
                           },
                         ),
                       ),
+                      SizedBox(
+                        height: 30,
+                      )
                     ],
                   ),
                 ),
