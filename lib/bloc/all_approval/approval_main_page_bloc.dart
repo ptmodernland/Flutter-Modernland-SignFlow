@@ -71,6 +71,22 @@ class ApprovalMainPageBloc
           emit(ApprovalMainPageStateFailure(error: e.toString() ?? ""));
         }
       }
+
+      if (event.payload == ApprovalListType.REALISASI) {
+        try {
+          final request = await _repo.getReailisasiWaitingList();
+          if (request.data != null) {
+            emit(ApprovalMainPageStateSuccessListRealisasi(
+                datas: request.data!));
+            print("success bloc approval_main_page");
+          } else {
+            emit(ApprovalMainPageStateFailure(error: request.message ?? ""));
+          }
+        } catch (e) {
+          print("error occured on approval_main_page_bloc" + e.toString());
+          emit(ApprovalMainPageStateFailure(error: e.toString() ?? ""));
+        }
+      }
     });
   }
 }
