@@ -5,7 +5,8 @@ final String DOC_VIEW_PBJ =
 final String DOC_VIEW_COMPARE =
     "https://approval.modernland.co.id/compare/views_mobile/";
 
-final String DOC_VIEW_KASBON = "https://approval.modernland.co.id/kasbon/view/";
+final String DOC_VIEW_KASBON =
+    "https://approval.modernland.co.id/kasbon/view_mobile/";
 
 final String DOC_VIEW_COMPARE_GABUNGAN =
     "https://approval.modernland.co.id/compare/views_mobile_pr/";
