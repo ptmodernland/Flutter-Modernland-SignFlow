@@ -5,6 +5,7 @@ import 'package:bwa_cozy/bloc/all_approval/dto/detail_pbj_dto.dart';
 import 'package:bwa_cozy/bloc/all_approval/dto/list_all_compare_dto.dart';
 import 'package:bwa_cozy/bloc/kasbon/dto/ListAllKasbonDTO.dart';
 import 'package:bwa_cozy/bloc/pbj/dto/ListPBJDTO.dart';
+import 'package:bwa_cozy/bloc/realisasi/dto/RealisasiListDTO.dart';
 import 'package:bwa_cozy/util/storage/sessionmanager/session_manager.dart';
 import 'package:http/http.dart' as http;
 
@@ -186,5 +187,49 @@ class ApprovalMainPageRepository {
     }
   }
 
+  //use this to get all Realisasi
+  Future<ResponseWrapper<List<RealisasiListDto>>>
+      getReailisasiWaitingList() async {
+    var logTag = "Getting Realisasi";
+    try {
+      print("trying $logTag");
+      var username = "";
+      var usersession = await SessionManager.getUserFromSession();
 
+      if (usersession != null) {
+        username = usersession.username;
+      }
+      // Prepare the request
+      var url = Uri.parse(
+          'https://approval.modernland.co.id/androidiom/list_approve_realisasi.php?username=' +
+              username);
+      print("$logTag" + "SS");
+      // Send the request
+      var response = await http.post(url);
+      // Get the response body as a string
+      var responseBody = response.body;
+      // print("$logTag : $responseBody");
+      var jsonResponse = jsonDecode(responseBody);
+      // Extract the code and message fields
+      final result = jsonDecode(response.body);
+      print(result.toString());
+      if (response.statusCode == 200) {
+        print("result Kasbon 200");
+        final jsonData = json.decode(response.body);
+        final List<Map<String, dynamic>> dataList =
+            List<Map<String, dynamic>>.from(jsonData);
+        final datas =
+            dataList.map((data) => RealisasiListDto.fromJson(data)).toList();
+        // Now you have the list of `Bottle` objects
+        print("result Kasbon Success");
+        return ResponseWrapper(datas, ResourceStatus.Success, "Success");
+      } else {
+        print("result Kasbon Terjadi Kesalahan");
+        return ResponseWrapper(null, ResourceStatus.Error, "Terjadi Kesalahan");
+      }
+    } catch (error) {
+      print("error on ApprovalMainPageRepository (Kasbon) " + error.toString());
+      return ResponseWrapper(null, ResourceStatus.Error, error.toString());
+    }
+  }
 }

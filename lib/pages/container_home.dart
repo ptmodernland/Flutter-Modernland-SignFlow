@@ -5,6 +5,7 @@ import 'package:bwa_cozy/pages/approval/compare/compare_page.dart';
 import 'package:bwa_cozy/pages/approval/kasbon/kasbon_page.dart';
 import 'package:bwa_cozy/pages/approval/pbj/filter/pbj_filter_page.dart';
 import 'package:bwa_cozy/pages/approval/pbj/pbj_page.dart';
+import 'package:bwa_cozy/pages/approval/realisasi/realisasi_page.dart';
 import 'package:bwa_cozy/pages/home/home_page.dart';
 import 'package:bwa_cozy/pages/profile/profile_page.dart';
 import 'package:bwa_cozy/repos/notif_repository.dart';
@@ -73,7 +74,7 @@ class _ContainerHomePageState extends State<ContainerHomePage>
         child: ApprovalKasbonMainPage(),
       ),
       Center(
-        child: Text("Realisasi"),
+        child: ApprovalRealisasiMainPage(),
       ),
       Center(
         child: ProfilePage(notifBloc: notifBloc,),
