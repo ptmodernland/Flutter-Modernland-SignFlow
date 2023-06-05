@@ -14,7 +14,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ContainerHomePage extends StatefulWidget {
-  const ContainerHomePage({Key? key}) : super(key: key);
+  const ContainerHomePage({Key? key, this.isFromLogin = false})
+      : super(key: key);
+
+  final bool isFromLogin;
 
   @override
   _ContainerHomePageState createState() => _ContainerHomePageState();
@@ -23,6 +26,7 @@ class ContainerHomePage extends StatefulWidget {
 class _ContainerHomePageState extends State<ContainerHomePage>
     with WidgetsBindingObserver {
   int _selectedTab = 0;
+  var isDialogShown = false;
 
   late NotifRepository notifRepository;
   late NotifCoreBloc notifBloc;
@@ -51,6 +55,7 @@ class _ContainerHomePageState extends State<ContainerHomePage>
     WidgetsBinding.instance?.addObserver(this);
     notifRepository = NotifRepository();
     notifBloc = NotifCoreBloc(notifRepository);
+
     _pages = [
       Center(
         child: HomePage(notifBloc),

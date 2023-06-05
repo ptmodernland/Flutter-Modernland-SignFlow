@@ -1,22 +1,21 @@
+import 'dart:io';
+
+import 'package:bwa_cozy/bloc/login/login_bloc.dart';
 import 'package:bwa_cozy/bloc/login/login_event.dart';
 import 'package:bwa_cozy/bloc/login/login_payload.dart';
+import 'package:bwa_cozy/bloc/login/login_state.dart';
 import 'package:bwa_cozy/pages/container_home.dart';
-import 'package:bwa_cozy/pages/home/home_page.dart';
+import 'package:bwa_cozy/repos/login_repository.dart';
+import 'package:bwa_cozy/util/model/device_information_model.dart';
 import 'package:bwa_cozy/util/my_theme.dart';
 import 'package:bwa_cozy/widget/core/custom_text_input.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import 'package:dart_ipify/dart_ipify.dart';
 import 'package:device_info_plus/device_info_plus.dart';
-import 'package:flutter/services.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:quickalert/quickalert.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'dart:io';
-import 'package:bwa_cozy/util/model/device_information_model.dart';
-import 'package:bwa_cozy/repos/login_repository.dart';
-import 'package:bwa_cozy/bloc/login/login_bloc.dart';
-import 'package:bwa_cozy/bloc/login/login_state.dart';
 
 Future<dynamic> showLoginFormDialog({
   required BuildContext context,
@@ -59,18 +58,16 @@ Future<dynamic> showLoginFormDialog({
                           );
                         }
                         if (state is AuthStateLoginSuccess) {
-                          QuickAlert.show(
-                            context: context,
-                            type: QuickAlertType.success,
-                            text: state.message.toString(),
-                          );
-
-
                           Navigator.pushAndRemoveUntil(
                             context,
                             PageRouteBuilder(
-                              pageBuilder: (context, animation, secondaryAnimation) => ContainerHomePage(),
-                              transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                              pageBuilder:
+                                  (context, animation, secondaryAnimation) =>
+                                      ContainerHomePage(
+                                isFromLogin: true,
+                              ),
+                              transitionsBuilder: (context, animation,
+                                  secondaryAnimation, child) {
                                 return FadeTransition(
                                   opacity: animation,
                                   child: child,
@@ -96,7 +93,7 @@ Future<dynamic> showLoginFormDialog({
                       children: [
                         Expanded(
                           flex:
-                              MediaQuery.of(context).size.width > 600 ? 3 : 10,
+                          MediaQuery.of(context).size.width > 600 ? 3 : 10,
                           child: LayoutBuilder(
                             builder: (context, constraints) {
                               return Image.asset(
@@ -117,7 +114,7 @@ Future<dynamic> showLoginFormDialog({
                       style: MyTheme.myStyleSecondaryTextStyle.copyWith(
                         color: Colors.black,
                         fontSize:
-                            setSubHeaderTextSize(screenWidth, screenHeight),
+                        setSubHeaderTextSize(screenWidth, screenHeight),
                       ),
                       textAlign: TextAlign.start,
                     ),
@@ -271,8 +268,7 @@ Future<dynamic> showLoginFormDialog({
       });
 }
 
-Widget showLoginButton(
-    BuildContext context,
+Widget showLoginButton(BuildContext context,
     double screenWidth,
     double screenHeight,
     GlobalKey<FormState> _formKey,
@@ -439,8 +435,7 @@ EdgeInsets setButtonLoginRegisterPadding(BuildContext context) {
       horizontal: MediaQuery.of(context).size.width > 500 ? 50.0 : 25.0);
 }
 
-Alignment setLoginRegisterButtonAlignment(
-    double screenWidth, double screenHeight) {
+Alignment setLoginRegisterButtonAlignment(double screenWidth, double screenHeight) {
   return screenWidth >= 500 && screenHeight >= 700
       ? Alignment.centerLeft
       : Alignment.centerLeft;

@@ -1,34 +1,27 @@
 import 'package:bwa_cozy/bloc/all_approval/approval_main_page_bloc.dart';
 import 'package:bwa_cozy/bloc/all_approval/approval_main_page_event.dart';
 import 'package:bwa_cozy/bloc/all_approval/approval_main_page_state.dart';
-import 'package:bwa_cozy/bloc/notif/notif_bloc.dart';
-import 'package:bwa_cozy/bloc/notif/notif_event.dart';
-import 'package:bwa_cozy/bloc/notif/notif_state.dart';
+import 'package:bwa_cozy/pages/approval/compare/detail_compare_page.dart';
 import 'package:bwa_cozy/repos/approval_main_page_repository.dart';
-import 'package:bwa_cozy/repos/notif_repository.dart';
 import 'package:bwa_cozy/util/enum/menu_type.dart';
 import 'package:bwa_cozy/util/my_theme.dart';
 import 'package:bwa_cozy/widget/approval/item_approval_widget.dart';
-import 'package:bwa_cozy/widget/menus/menu_item_approval_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 
-class TestAllPBJPage extends StatefulWidget {
-  const TestAllPBJPage({Key? key}) : super(key: key);
+class KasbonWaitingApprovalPage extends StatefulWidget {
+  const KasbonWaitingApprovalPage({Key? key}) : super(key: key);
 
   @override
-  State<TestAllPBJPage> createState() => _TestAllPBJPageState();
+  State<KasbonWaitingApprovalPage> createState() =>
+      _KasbonWaitingApprovalPageState();
 }
 
-class _TestAllPBJPageState extends State<TestAllPBJPage> {
+class _KasbonWaitingApprovalPageState extends State<KasbonWaitingApprovalPage> {
   @override
   Widget build(BuildContext context) {
     double screenHeight = MediaQuery.of(context).size.height;
     double screenWidth = MediaQuery.of(context).size.width;
-
-    NotifRepository notifRepository = NotifRepository();
-    NotifCoreBloc notifBloc = NotifCoreBloc(notifRepository);
 
     ApprovalMainPageRepository approvalRepo = ApprovalMainPageRepository();
     ApprovalMainPageBloc approvalBloc = ApprovalMainPageBloc(approvalRepo);
@@ -66,17 +59,25 @@ class _TestAllPBJPageState extends State<TestAllPBJPage> {
                                     left: 30, right: 30, top: 10),
                                 child: Row(
                                   children: [
-                                    Align(
-                                      alignment: Alignment.center,
+                                    IconButton(
+                                      icon: Icon(Icons.arrow_back),
+                                      color: Colors.white,
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                        // Implement your back button functionality here
+                                      },
+                                    ),
+                                    SizedBox(width: 10),
+                                    Expanded(
                                       child: Text(
-                                        "Permohonan Barang dan Jasa",
+                                        "Kasbon Waiting Approval",
                                         style: MyTheme.myStylePrimaryTextStyle
                                             .copyWith(
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.w800),
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.w800,
+                                        ),
                                       ),
                                     ),
-                                    Spacer(),
                                   ],
                                 ),
                               ),
@@ -98,7 +99,7 @@ class _TestAllPBJPageState extends State<TestAllPBJPage> {
                           children: [
                             Container(
                               margin:
-                              EdgeInsets.only(top: 20, left: 0, right: 0),
+                                  EdgeInsets.only(top: 20, left: 0, right: 0),
                               width: double.infinity,
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.vertical(
@@ -107,66 +108,13 @@ class _TestAllPBJPageState extends State<TestAllPBJPage> {
                               child: Container(
                                 child: Column(
                                   children: [
-                                    BlocProvider(
-                                        create: (BuildContext context) {
-                                          return notifBloc
-                                            ..add(NotifEventCount());
-                                        },
-                                        child: Container(
-                                          child: Column(
-                                            children: [
-                                              BlocBuilder<NotifCoreBloc,
-                                                  NotifCoreState>(
-                                                  builder: (context, state) {
-                                                    var count = "";
-                                                    if (state
-                                                    is NotifStateLoading) {}
-                                                    if (state
-                                                    is NotifStateFailure) {}
-                                                    if (state
-                                                    is NotifStateSuccess) {
-                                                      count = state.totalPermohonan;
-                                                    }
-                                                    return MenuItemApprovalWidget(
-                                                      unreadBadgeCount: count,
-                                                      onLeftTapFunction: () {
-                                                        Fluttertoast.showToast(
-                                                            msg: "Left",
-                                                            toastLength:
-                                                            Toast.LENGTH_SHORT,
-                                                            gravity:
-                                                            ToastGravity.CENTER,
-                                                            timeInSecForIosWeb: 1,
-                                                            backgroundColor:
-                                                            Colors.red,
-                                                            textColor: Colors.white,
-                                                            fontSize: 16.0);
-                                                      },
-                                                      onRightTapFunction: () {
-                                                        Fluttertoast.showToast(
-                                                            msg: "Right",
-                                                            toastLength:
-                                                            Toast.LENGTH_SHORT,
-                                                            gravity:
-                                                            ToastGravity.CENTER,
-                                                            timeInSecForIosWeb: 1,
-                                                            backgroundColor:
-                                                            Colors.red,
-                                                            textColor: Colors.white,
-                                                            fontSize: 16.0);
-                                                      },
-                                                    );
-                                                  }),
-                                            ],
-                                          ),
-                                        )),
                                     Container(
                                       margin:
-                                      EdgeInsets.only(left: 20, right: 20),
+                                          EdgeInsets.only(left: 20, right: 20),
                                       child: Row(
                                         mainAxisSize: MainAxisSize.max,
                                         crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                                            CrossAxisAlignment.start,
                                         children: [
                                           Text(
                                             "Request Terbaru",
@@ -191,7 +139,7 @@ class _TestAllPBJPageState extends State<TestAllPBJPage> {
                       BlocProvider(
                         create: (BuildContext context) {
                           return approvalBloc
-                            ..add(RequestDataEvent(ApprovalListType.PBJ));
+                            ..add(RequestDataEvent(ApprovalListType.KASBON));
                         },
                         child: BlocBuilder<ApprovalMainPageBloc,
                             ApprovalMainPageState>(
@@ -200,24 +148,68 @@ class _TestAllPBJPageState extends State<TestAllPBJPage> {
                             Widget dataList = Text("");
                             if (state is ApprovalMainPageStateLoading) {}
                             if (state is ApprovalMainPageStateFailure) {}
-                            if (state is ApprovalMainPageStateSuccessListPBJ) {
-                              var pbjList = state.datas;
+                            if (state
+                                is ApprovalMainPageStateSuccessListKasbon) {
+                              var kasbonList = state.datas;
+                              if (kasbonList.isEmpty) {
+                                return Container(
+                                  alignment: Alignment.center,
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Image.network(
+                                        'http://feylabs.my.id/fm/mdln_asset/mdln_empty_image.png',
+                                        // Adjust the image properties as per your requirement
+                                      ),
+                                      SizedBox(height: 10),
+                                      Text(
+                                        'No data available',
+                                        style: TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              }
                               dataList = ListView.builder(
-                                itemCount: pbjList.length,
+                                itemCount: kasbonList.length,
                                 shrinkWrap: true,
                                 physics: const NeverScrollableScrollPhysics(),
                                 itemBuilder: (context, index) {
-                                  final pbjItem = pbjList[index];
+                                  final kasbonItem = kasbonList[index];
                                   var isApproved = false;
-                                  if (pbjItem.status != "T") {
+                                  if (kasbonItem.status != "Y") {
                                     isApproved = true;
                                   }
                                   return ItemApprovalWidget(
+                                    requiredId: kasbonItem.idKasbon,
                                     isApproved: isApproved,
-                                    itemCode:
-                                        "${index + 1} ${pbjItem.noPermintaan}(${pbjList.length})",
-                                    date: pbjItem.tglPermintaan,
-                                    departmentTitle: pbjItem.jenis,
+                                    itemCode: kasbonItem.noKasbon,
+                                    date: kasbonItem.tglBuat,
+                                    departmentTitle: kasbonItem.departemen,
+                                    personName: kasbonItem.namaUser,
+                                    personImage: "",
+                                    descriptiveText: kasbonItem.keperluan,
+                                    onPressed: (String requiredId) {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              DetailComparePage(
+                                                  noCompare:
+                                                      kasbonItem.noKasbon ?? "",
+                                                  idCompare:
+                                                      kasbonItem.idKasbon ??
+                                                          ""),
+                                        ),
+                                      ).then((value) {
+                                        approvalBloc
+                                          ..add(RequestDataEvent(
+                                              ApprovalListType.COMPARE));
+                                      });
+                                    },
                                   );
                                 },
                               );

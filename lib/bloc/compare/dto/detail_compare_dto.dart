@@ -1,19 +1,19 @@
 class DetailCompareDTO {
-  String idCompare;
-  String noCompare;
+  String? idCompare;
+  String? noCompare;
   String? noRef;
-  String compare_date;
-  String desc_compare;
-  String attchFile;
-  String approve;
-  String status;
-  String namaUser;
-  String departemen;
-  String advancePayment;
-  String progressPayment;
-  String diskon;
-  String ppn;
-  String pajakReklame;
+  String? compare_date;
+  String? desc_compare;
+  String? attchFile;
+  String? approve;
+  String? status;
+  String? namaUser;
+  String? departemen;
+  String? advancePayment;
+  String? progressPayment;
+  String? diskon;
+  String? ppn;
+  String? pajakReklame;
 
   DetailCompareDTO({
     required this.idCompare,

@@ -1,30 +1,30 @@
-import 'package:bwa_cozy/bloc/all_approval/approval_main_page_bloc.dart';
-import 'package:bwa_cozy/bloc/all_approval/approval_main_page_event.dart';
-import 'package:bwa_cozy/bloc/all_approval/approval_main_page_state.dart';
-import 'package:bwa_cozy/pages/approval/pbj/detail_pbj_page.dart';
-import 'package:bwa_cozy/repos/approval_main_page_repository.dart';
-import 'package:bwa_cozy/util/enum/menu_type.dart';
+import 'package:bwa_cozy/bloc/kasbon/kasbon_bloc.dart';
+import 'package:bwa_cozy/bloc/kasbon/kasbon_event.dart';
+import 'package:bwa_cozy/bloc/kasbon/kasbon_state.dart';
+import 'package:bwa_cozy/pages/approval/kasbon/kasbon_detail_page.dart';
+import 'package:bwa_cozy/repos/kasbon_repository.dart';
+import 'package:bwa_cozy/util/core/string/html_util.dart';
 import 'package:bwa_cozy/util/my_theme.dart';
 import 'package:bwa_cozy/widget/approval/item_approval_widget.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 
-class PBJWaitingApproval extends StatefulWidget {
-  const PBJWaitingApproval({Key? key}) : super(key: key);
+class KasbonAllApprovedPage extends StatefulWidget {
+  const KasbonAllApprovedPage({Key? key}) : super(key: key);
 
   @override
-  State<PBJWaitingApproval> createState() => _PBJWaitingApprovalState();
+  State<KasbonAllApprovedPage> createState() => _KasbonAllApprovedPageState();
 }
 
-class _PBJWaitingApprovalState extends State<PBJWaitingApproval> {
+class _KasbonAllApprovedPageState extends State<KasbonAllApprovedPage> {
   @override
   Widget build(BuildContext context) {
     double screenHeight = MediaQuery.of(context).size.height;
     double screenWidth = MediaQuery.of(context).size.width;
 
-    ApprovalMainPageRepository approvalRepo = ApprovalMainPageRepository();
-    ApprovalMainPageBloc approvalBloc = ApprovalMainPageBloc(approvalRepo);
+    KasbonRepository compareRepository = KasbonRepository();
+    KasbonBloc compareBloc = KasbonBloc(compareRepository);
 
     return SafeArea(
       bottom: false,
@@ -68,15 +68,16 @@ class _PBJWaitingApprovalState extends State<PBJWaitingApproval> {
                                       },
                                     ),
                                     SizedBox(width: 10),
-                                    Text(
-                                      "PBJ Waiting",
-                                      style: MyTheme.myStylePrimaryTextStyle
-                                          .copyWith(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.w800,
+                                    Expanded(
+                                      child: Text(
+                                        "History Approved Kasbon",
+                                        style: MyTheme.myStylePrimaryTextStyle
+                                            .copyWith(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.w800,
+                                        ),
                                       ),
                                     ),
-                                    Spacer(),
                                   ],
                                 ),
                               ),
@@ -110,19 +111,29 @@ class _PBJWaitingApprovalState extends State<PBJWaitingApproval> {
                                     Container(
                                       margin:
                                           EdgeInsets.only(left: 20, right: 20),
-                                      child: Row(
+                                      child: Column(
                                         mainAxisSize: MainAxisSize.max,
                                         crossAxisAlignment:
-                                            CrossAxisAlignment.start,
+                                            CrossAxisAlignment.stretch,
                                         children: [
                                           Text(
-                                            "Request Terbaru",
+                                            "History Approved Kasbon",
                                             textAlign: TextAlign.start,
                                             style: MyTheme
                                                 .myStylePrimaryTextStyle
                                                 .copyWith(
                                               fontWeight: FontWeight.w600,
                                               fontSize: 18,
+                                            ),
+                                          ),
+                                          Text(
+                                            "Halaman ini menampilkan list kasbon yang telah diapprove",
+                                            textAlign: TextAlign.start,
+                                            style: MyTheme
+                                                .myStylePrimaryTextStyle
+                                                .copyWith(
+                                              fontWeight: FontWeight.w300,
+                                              fontSize: 11,
                                             ),
                                           ),
                                         ],
@@ -137,19 +148,21 @@ class _PBJWaitingApprovalState extends State<PBJWaitingApproval> {
                       ),
                       BlocProvider(
                         create: (BuildContext context) {
-                          return approvalBloc
-                            ..add(RequestDataEvent(ApprovalListType.PBJ));
+                          return compareBloc..add(GetHistoryKasbon());
                         },
-                        child: BlocBuilder<ApprovalMainPageBloc,
-                            ApprovalMainPageState>(
+                        child: BlocBuilder<KasbonBloc, KasbonState>(
                           builder: (context, state) {
                             var status = "";
                             Widget dataList = Text("");
-                            if (state is ApprovalMainPageStateLoading) {}
-                            if (state is ApprovalMainPageStateFailure) {}
-                            if (state is ApprovalMainPageStateSuccessListPBJ) {
-                              var pbjList = state.datas;
-                              if (pbjList.isEmpty) {
+                            if (state is KasbonStateFailure) {}
+                            if (state is KasbonStateLoading) {
+                              return Center(
+                                child: CupertinoActivityIndicator(),
+                              );
+                            }
+                            if (state is KasbonStateLoadHistorySuccess) {
+                              var approvalList = state.datas;
+                              if (approvalList.isEmpty) {
                                 return Container(
                                   alignment: Alignment.center,
                                   child: Column(
@@ -172,39 +185,37 @@ class _PBJWaitingApprovalState extends State<PBJWaitingApproval> {
                                 );
                               }
                               dataList = ListView.builder(
-                                itemCount: pbjList.length,
+                                itemCount: approvalList.length,
                                 shrinkWrap: true,
                                 physics: const NeverScrollableScrollPhysics(),
                                 itemBuilder: (context, index) {
-                                  final pbjItem = pbjList[index];
+                                  final pbjItem = approvalList[index];
                                   var isApproved = false;
                                   if (pbjItem.status != "Y") {
                                     isApproved = true;
                                   }
                                   return ItemApprovalWidget(
-                                    requiredId: pbjItem.noPermintaan,
+                                    requiredId: pbjItem.idKasbon,
                                     isApproved: isApproved,
-                                    itemCode: pbjItem.noPermintaan,
-                                    date: pbjItem.tglPermintaan,
-                                    departmentTitle: pbjItem.departemen ?? "",
-                                    personName: (pbjItem.status ?? "") +
-                                        (pbjItem.namaUser ?? ""),
+                                    itemCode: pbjItem.noKasbon,
+                                    date: pbjItem.tglBuat,
+                                    departmentTitle: pbjItem.departemen,
+                                    personName: pbjItem.namaUser,
+                                    descriptiveText:
+                                        removeHtmlTags(pbjItem.keperluan ?? ""),
                                     personImage: "",
                                     onPressed: (String requiredId) {
-                                      Fluttertoast.showToast(
-                                          msg: requiredId.toString());
-
                                       Navigator.push(
                                         context,
                                         MaterialPageRoute(
-                                          builder: (context) => DetailPBJPage(
-                                              noPermintaan: requiredId),
+                                          builder: (context) =>
+                                              KasbonDetailPage(
+                                            isFromHistory: true,
+                                            noKasbon: pbjItem.noKasbon ?? "",
+                                            idKasbon: pbjItem.idKasbon ?? "",
+                                          ),
                                         ),
-                                      ).then((value) {
-                                        approvalBloc
-                                          ..add(RequestDataEvent(
-                                              ApprovalListType.PBJ));
-                                      });
+                                      );
                                     },
                                   );
                                 },

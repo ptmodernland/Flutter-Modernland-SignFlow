@@ -4,15 +4,21 @@ import 'package:bwa_cozy/bloc/all_approval/approval_main_page_state.dart';
 import 'package:bwa_cozy/bloc/notif/notif_bloc.dart';
 import 'package:bwa_cozy/bloc/notif/notif_event.dart';
 import 'package:bwa_cozy/bloc/notif/notif_state.dart';
+import 'package:bwa_cozy/pages/approval/compare/compare_approved_all_page.dart';
+import 'package:bwa_cozy/pages/approval/compare/compare_waiting_approval_page.dart';
+import 'package:bwa_cozy/pages/approval/compare/detail_compare_page.dart';
+import 'package:bwa_cozy/pages/approval/kasbon/kasbon_approved_all_page.dart';
+import 'package:bwa_cozy/pages/approval/kasbon/kasbon_detail_page.dart';
+import 'package:bwa_cozy/pages/approval/kasbon/kasbon_waiting_approval_page.dart';
 import 'package:bwa_cozy/repos/approval_main_page_repository.dart';
 import 'package:bwa_cozy/repos/notif_repository.dart';
+import 'package:bwa_cozy/util/core/string/html_util.dart';
 import 'package:bwa_cozy/util/enum/menu_type.dart';
 import 'package:bwa_cozy/util/my_theme.dart';
 import 'package:bwa_cozy/widget/approval/item_approval_widget.dart';
 import 'package:bwa_cozy/widget/menus/menu_item_approval_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 
 class ApprovalKasbonMainPage extends StatefulWidget {
   const ApprovalKasbonMainPage({Key? key}) : super(key: key);
@@ -130,31 +136,43 @@ class _ApprovalKasbonMainPageState extends State<ApprovalKasbonMainPage> {
                                                     return MenuItemApprovalWidget(
                                                       unreadBadgeCount: count,
                                                       onLeftTapFunction: () {
-                                                        Fluttertoast.showToast(
-                                                            msg: "Left",
-                                                            toastLength:
-                                                            Toast.LENGTH_SHORT,
-                                                            gravity:
-                                                            ToastGravity.CENTER,
-                                                            timeInSecForIosWeb: 1,
-                                                            backgroundColor:
-                                                            Colors.red,
-                                                            textColor: Colors.white,
-                                                            fontSize: 16.0);
-                                                      },
+                                                    Navigator.push(
+                                                      context,
+                                                      MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            KasbonWaitingApprovalPage(),
+                                                      ),
+                                                    ).then((value) {
+                                                      notifBloc
+                                                        ..add(
+                                                            NotifEventCount());
+                                                      approvalBloc
+                                                        ..add(RequestDataEvent(
+                                                            ApprovalListType
+                                                                .KASBON));
+                                                      print("kocak " +
+                                                          value.toString());
+                                                    });
+                                                  },
                                                       onRightTapFunction: () {
-                                                        Fluttertoast.showToast(
-                                                            msg: "Right",
-                                                            toastLength:
-                                                            Toast.LENGTH_SHORT,
-                                                            gravity:
-                                                            ToastGravity.CENTER,
-                                                            timeInSecForIosWeb: 1,
-                                                            backgroundColor:
-                                                            Colors.red,
-                                                            textColor: Colors.white,
-                                                            fontSize: 16.0);
-                                                      },
+                                                    Navigator.push(
+                                                      context,
+                                                      MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            KasbonAllApprovedPage(),
+                                                      ),
+                                                    ).then((value) {
+                                                      notifBloc
+                                                        ..add(
+                                                            NotifEventCount());
+                                                      approvalBloc
+                                                        ..add(RequestDataEvent(
+                                                            ApprovalListType
+                                                                .KASBON));
+                                                      print("kocak " +
+                                                          value.toString());
+                                                    });
+                                                  },
                                                     );
                                                   }),
                                             ],
@@ -203,6 +221,7 @@ class _ApprovalKasbonMainPageState extends State<ApprovalKasbonMainPage> {
                             if (state
                             is ApprovalMainPageStateSuccessListKasbon) {
                               var pbjList = state.datas;
+
                               if (pbjList.isEmpty) {
                                 return Container(
                                   margin: EdgeInsets.only(
@@ -227,6 +246,7 @@ class _ApprovalKasbonMainPageState extends State<ApprovalKasbonMainPage> {
                                   ),
                                 );
                               }
+
                               dataList = ListView.builder(
                                 itemCount: pbjList.length,
                                 shrinkWrap: true,
@@ -234,16 +254,37 @@ class _ApprovalKasbonMainPageState extends State<ApprovalKasbonMainPage> {
                                 itemBuilder: (context, index) {
                                   final pbjItem = pbjList[index];
                                   var isApproved = false;
-                                  if (pbjItem.status != "T") {
+                                  if (pbjItem.status != "Y") {
                                     isApproved = true;
                                   }
                                   return ItemApprovalWidget(
                                     isApproved: isApproved,
-                                    itemCode: pbjItem.no_kasbon,
-                                    date: pbjItem.tglPermintaan,
-                                    departmentTitle: pbjItem.jenis,
+                                    itemCode: (index + 1).toString() +
+                                        pbjItem.noKasbon.toString() +
+                                        pbjList.length.toString(),
+                                    date: pbjItem.tglBuat,
+                                    requiredId: pbjItem.idKasbon,
                                     personName: pbjItem.namaUser,
-                                    personImage: "",
+                                    departmentTitle: pbjItem.departemen,
+                                    descriptiveText:
+                                        removeHtmlTags(pbjItem.keperluan ?? ""),
+                                    onPressed: (String noCompare) {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              KasbonDetailPage(
+                                            idKasbon: pbjItem.idKasbon ?? "",
+                                            noKasbon: pbjItem.noKasbon ?? "",
+                                          ),
+                                        ),
+                                      ).then((value) {
+                                        notifBloc..add(NotifEventCount());
+                                        approvalBloc
+                                          ..add(RequestDataEvent(
+                                              ApprovalListType.KASBON));
+                                      });
+                                    },
                                   );
                                 },
                               );

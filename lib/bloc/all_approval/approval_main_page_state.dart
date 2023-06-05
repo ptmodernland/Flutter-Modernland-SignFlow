@@ -1,7 +1,7 @@
 import 'package:bwa_cozy/bloc/all_approval/dto/detail_pbj_dto.dart';
 import 'package:bwa_cozy/bloc/all_approval/dto/list_all_compare_dto.dart';
-import 'package:bwa_cozy/bloc/all_approval/dto/list_all_pbj_dto.dart';
-import 'package:bwa_cozy/bloc/all_approval/dto/list_all_pbj_kasbon_dto.dart';
+import 'package:bwa_cozy/bloc/kasbon/dto/ListAllKasbonDTO.dart';
+import 'package:bwa_cozy/bloc/pbj/dto/ListPBJDTO.dart';
 
 abstract class ApprovalMainPageState {}
 
@@ -17,7 +17,7 @@ class ApprovalMainPageStateSuccess extends ApprovalMainPageState {
 }
 
 class ApprovalMainPageStateSuccessListPBJ extends ApprovalMainPageState {
-  final List<ListAllPbjDTO> datas;
+  final List<ListPbjdto> datas;
 
   ApprovalMainPageStateSuccessListPBJ({this.datas = const []});
 }
@@ -35,7 +35,7 @@ class ApprovalMainPageStateSuccessListCompare extends ApprovalMainPageState {
 }
 
 class ApprovalMainPageStateSuccessListKasbon extends ApprovalMainPageState {
-  final List<ListAllKasbonDTO> datas;
+  final List<ListAllKasbonDto> datas;
 
   ApprovalMainPageStateSuccessListKasbon({this.datas = const []});
 }

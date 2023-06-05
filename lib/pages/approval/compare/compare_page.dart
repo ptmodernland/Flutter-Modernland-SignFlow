@@ -258,22 +258,24 @@ class _ApprovalCompareMainPageState extends State<ApprovalCompareMainPage> {
                                   return ItemApprovalWidget(
                                     isApproved: isApproved,
                                     itemCode: (index + 1).toString() +
-                                        pbjItem.noCompare +
+                                        pbjItem.noCompare.toString() +
                                         pbjList.length.toString(),
                                     date: pbjItem.tglPermintaan,
                                     requiredId: pbjItem.idCompare,
                                     personName: pbjItem.namaUser,
                                     departmentTitle: pbjItem.department,
-                                    descriptiveText:
-                                        removeHtmlTags(pbjItem.descCompare),
+                                    descriptiveText: removeHtmlTags(
+                                        pbjItem.descCompare ?? ""),
                                     onPressed: (String noCompare) {
                                       Navigator.push(
                                         context,
                                         MaterialPageRoute(
                                           builder: (context) =>
                                               DetailComparePage(
-                                                  noCompare: pbjItem.noCompare,
-                                                  idCompare: pbjItem.idCompare),
+                                                  noCompare:
+                                                      pbjItem.noCompare ?? "",
+                                                  idCompare:
+                                                      pbjItem.idCompare ?? ""),
                                         ),
                                       ).then((value) {
                                         notifBloc..add(NotifEventCount());

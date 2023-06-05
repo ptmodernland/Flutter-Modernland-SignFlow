@@ -5,7 +5,15 @@ import 'package:bwa_cozy/bloc/compare/compare_comment_bloc.dart';
 import 'package:bwa_cozy/bloc/compare/compare_comment_event.dart';
 import 'package:bwa_cozy/bloc/compare/compare_event.dart';
 import 'package:bwa_cozy/bloc/compare/compare_state.dart';
+import 'package:bwa_cozy/bloc/kasbon/kasbon_action_bloc.dart';
+import 'package:bwa_cozy/bloc/kasbon/kasbon_action_event.dart';
+import 'package:bwa_cozy/bloc/kasbon/kasbon_bloc.dart';
+import 'package:bwa_cozy/bloc/kasbon/kasbon_comment_bloc.dart';
+import 'package:bwa_cozy/bloc/kasbon/kasbon_comment_event.dart';
+import 'package:bwa_cozy/bloc/kasbon/kasbon_event.dart';
+import 'package:bwa_cozy/bloc/kasbon/kasbon_state.dart';
 import 'package:bwa_cozy/repos/compare_repository.dart';
+import 'package:bwa_cozy/repos/kasbon_repository.dart';
 import 'package:bwa_cozy/util/core/string/html_util.dart';
 import 'package:bwa_cozy/util/core/url/base_url.dart';
 import 'package:bwa_cozy/util/enum/action_type.dart';
@@ -20,39 +28,39 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:quickalert/quickalert.dart';
 
-class DetailComparePage extends StatefulWidget {
-  const DetailComparePage(
+class KasbonDetailPage extends StatefulWidget {
+  const KasbonDetailPage(
       {Key? key,
-      required this.idCompare,
-      required this.noCompare,
+      required this.idKasbon,
+      required this.noKasbon,
       this.isFromHistory = false})
       : super(key: key);
 
-  final String idCompare;
-  final String noCompare;
+  final String idKasbon;
+  final String noKasbon;
   final bool isFromHistory;
 
   @override
-  State<DetailComparePage> createState() => _DetailComparePageState();
+  State<KasbonDetailPage> createState() => _KasbonDetailPageState();
 }
 
-class _DetailComparePageState extends State<DetailComparePage> {
+class _KasbonDetailPageState extends State<KasbonDetailPage> {
   final _formKey = GlobalKey<FormState>();
   final _formKey2 = GlobalKey<FormState>();
   final messageController = TextEditingController();
 
-  late CompareRepository compareRepo;
-  late CompareBloc compareBloc;
-  late CompareCommentBloc compareCommentBloc;
-  late CompareActionBloc compareActionBloc;
+  late KasbonRepository kasbonRepository;
+  late KasbonBloc kasbonBloc;
+  late KasbonCommentBloc kasbonCommentBloc;
+  late KasbonActionBloc kasbonActionBloc;
 
   @override
   void initState() {
     super.initState();
-    compareRepo = CompareRepository();
-    compareBloc = CompareBloc(compareRepo);
-    compareCommentBloc = CompareCommentBloc(compareRepo);
-    compareActionBloc = CompareActionBloc(compareRepo);
+    kasbonRepository = KasbonRepository();
+    kasbonBloc = KasbonBloc(kasbonRepository);
+    kasbonCommentBloc = KasbonCommentBloc(kasbonRepository);
+    kasbonActionBloc = KasbonActionBloc(kasbonRepository);
   }
 
   @override
@@ -103,8 +111,8 @@ class _DetailComparePageState extends State<DetailComparePage> {
                                           ),
                                           Flexible(
                                             child: Text(
-                                              "Detail Compare " +
-                                                  widget.idCompare,
+                                              "Detail Kasbon " +
+                                                  widget.noKasbon,
                                               style: MyTheme
                                                   .myStylePrimaryTextStyle
                                                   .copyWith(
@@ -157,7 +165,7 @@ class _DetailComparePageState extends State<DetailComparePage> {
                                         children: [
                                           Text(
                                             "Detail Request #" +
-                                                widget.idCompare,
+                                                widget.noKasbon,
                                             textAlign: TextAlign.start,
                                             style: MyTheme
                                                 .myStylePrimaryTextStyle
@@ -178,23 +186,22 @@ class _DetailComparePageState extends State<DetailComparePage> {
                       ),
                       BlocProvider(
                         create: (BuildContext context) {
-                          return compareBloc
-                            ..add(GetCompareDetailEvent(
-                                idCompare: widget.idCompare.toString()));
+                          return kasbonBloc
+                            ..add(GetKasbonDetailEvent(
+                                idCompare: widget.noKasbon.toString()));
                         },
-                        child: BlocBuilder<CompareBloc, CompareState>(
+                        child: BlocBuilder<KasbonBloc, KasbonState>(
                           builder: (context, state) {
                             var status = "";
                             Widget dataList = Text("");
-                            if (state is CompareStateLoading) {}
-                            if (state is CompareStateFailure) {
+                            if (state is KasbonStateLoading) {}
+                            if (state is KasbonStateFailure) {
                               if (state.type ==
                                   CompareEActionType.LOAD_DETAIL) {
                                 return Text("Error " + state.message);
                               }
                             }
-
-                            if (state is CompareDetailSuccess) {
+                            if (state is KasbonDetailSuccess) {
                               var data = state.data;
 
                               var isApproved = false;
@@ -206,11 +213,11 @@ class _DetailComparePageState extends State<DetailComparePage> {
                                   children: [
                                     ItemApprovalWidget(
                                       isApproved: isApproved,
-                                      itemCode: data.noCompare,
-                                      date: data.compare_date,
+                                      itemCode: data.noKasbon,
+                                      date: data.tglKasbon,
                                       personName: data.namaUser,
-                                      descriptiveText: removeHtmlTags(
-                                          data.desc_compare ?? ""),
+                                      descriptiveText:
+                                          removeHtmlTags(data.keterangan ?? ""),
                                       departmentTitle: data.departemen,
                                     ),
                                     Container(
@@ -240,15 +247,15 @@ class _DetailComparePageState extends State<DetailComparePage> {
                                             children: [
                                               Expanded(
                                                 child: DocumentDetailWidget(
-                                                  title: "Nomor Compare",
-                                                  content: data.noCompare ?? "",
+                                                  title: "Nomor Kasbon",
+                                                  content: data.noKasbon ?? "",
                                                 ),
                                               ),
                                               Expanded(
                                                 child: DocumentDetailWidget(
                                                   title: "Tanggal",
                                                   content:
-                                                      data.compare_date ?? "-",
+                                                      data.tglKasbon ?? "-",
                                                 ),
                                               ),
                                             ],
@@ -259,7 +266,7 @@ class _DetailComparePageState extends State<DetailComparePage> {
                                             children: [
                                               Expanded(
                                                   child: DocumentDetailWidget(
-                                                    title: "Nama Karyawan",
+                                                title: "Nama Karyawan",
                                                 content: data.namaUser ??
                                                     "MDLN Staff",
                                               )),
@@ -278,24 +285,16 @@ class _DetailComparePageState extends State<DetailComparePage> {
                                             children: [
                                               Expanded(
                                                 child: DocumentDetailWidget(
-                                                  title: "Advance Payment",
-                                                  content: data.advancePayment !=
-                                                              null &&
-                                                          data.advancePayment!
-                                                              .isNotEmpty
-                                                      ? data.advancePayment!
-                                                      : "-",
+                                                  title: "Jumlah Kasbon",
+                                                  content:
+                                                      data.jumlah.toString(),
                                                 ),
                                               ),
                                               Expanded(
                                                 child: DocumentDetailWidget(
-                                                  title: "Progress Payment",
-                                                  content: data.progressPayment !=
-                                                              null &&
-                                                          data.progressPayment!
-                                                              .isNotEmpty
-                                                      ? data.progressPayment!
-                                                      : "-",
+                                                  title: "Keterangan",
+                                                  content: data.keterangan
+                                                      .toString(),
                                                 ),
                                               ),
                                             ],
@@ -306,10 +305,10 @@ class _DetailComparePageState extends State<DetailComparePage> {
                                             children: [
                                               Expanded(
                                                   child: DocumentDetailWidget(
-                                                    title: "View Detail",
+                                                title: "View Detail",
                                                 content: "Klik Disini",
-                                                fileURL: DOC_VIEW_COMPARE +
-                                                    (data.idCompare ?? ""),
+                                                fileURL: DOC_VIEW_KASBON +
+                                                    (widget.idKasbon ?? ""),
                                               )),
                                               Expanded(
                                                 child: DocumentDetailWidget(
@@ -317,43 +316,9 @@ class _DetailComparePageState extends State<DetailComparePage> {
                                                   content: data.attchFile ?? "",
                                                   isForDownload: true,
                                                   fileURL:
-                                                      ATTACH_DOWNLOAD_COMPARE +
+                                                      ATTACH_DOWNLOAD_KASBON +
                                                           data.attchFile
                                                               .toString(),
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                          if (data.noRef != null)
-                                            Row(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                Expanded(
-                                                  child: DocumentDetailWidget(
-                                                    title: "Nomor Ref",
-                                                    content: data.noRef ?? "-",
-                                                    isForDownload: false,
-                                                    fileURL:
-                                                        DOC_VIEW_COMPARE_GABUNGAN +
-                                                            data.noRef
-                                                                .toString(),
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          Row(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Expanded(
-                                                child: DocumentDetailWidget(
-                                                  title: "Deskripsi : ",
-                                                  content: removeHtmlTags(
-                                                          data.desc_compare ??
-                                                              "") ??
-                                                      "",
-                                                  isForDownload: false,
                                                 ),
                                               ),
                                             ],
@@ -421,17 +386,16 @@ class _DetailComparePageState extends State<DetailComparePage> {
                       //Load Comment Bloc Provider
                       BlocProvider(
                         create: (BuildContext context) {
-                          return compareCommentBloc
-                            ..add(GetKomentarCompare(
-                                noCompare: widget.noCompare));
+                          return kasbonCommentBloc
+                            ..add(GetKomentarKasbon(noKasbon: widget.noKasbon));
                         },
                         child: Column(
                           children: [
-                            BlocListener<CompareCommentBloc, CompareState>(
+                            BlocListener<KasbonCommentBloc, KasbonState>(
                               listener: (context, state) {
-                                if (state is CompareStateFailure) {
+                                if (state is KasbonStateFailure) {
                                   if (state.type ==
-                                      CompareEActionType.SHOW_KOMENTAR) {
+                                      KasbonEActionType.SHOW_KOMENTAR) {
                                     QuickAlert.show(
                                       context: context,
                                       type: QuickAlertType.error,
@@ -442,9 +406,9 @@ class _DetailComparePageState extends State<DetailComparePage> {
                               },
                               child: Container(),
                             ),
-                            BlocBuilder<CompareCommentBloc, CompareState>(
+                            BlocBuilder<KasbonCommentBloc, KasbonState>(
                               builder: (context, state) {
-                                if (state is CompareStateLoadCommentSuccess) {
+                                if (state is KasbonStateLoadCommentSuccess) {
                                   var commentList = state.datas;
                                   var commentListViewBuilder = ListView.builder(
                                     itemCount: commentList.length,
@@ -458,11 +422,11 @@ class _DetailComparePageState extends State<DetailComparePage> {
                                         isApproved = true;
                                       }
                                       return UserCommentWidget(
-                                        comment: pbjItem.komentar,
-                                        userName: pbjItem.approve,
-                                        postingDate: pbjItem.tglPermintaan,
-                                        bottomText:
-                                            "Status : " + pbjItem.statusApprove,
+                                        comment: pbjItem.komen ?? "",
+                                        userName: pbjItem.approve ?? "",
+                                        postingDate: pbjItem.tgl ?? "",
+                                        bottomText: "Status : " +
+                                            (pbjItem.statusApprove ?? ""),
                                       );
                                     },
                                   );
@@ -491,18 +455,18 @@ class _DetailComparePageState extends State<DetailComparePage> {
                       ),
                       BlocProvider(
                         create: (BuildContext context) {
-                          return compareBloc;
+                          return kasbonBloc;
                         },
                         child: Column(
                           children: [
-                            BlocBuilder<CompareBloc, CompareState>(
+                            BlocBuilder<KasbonBloc, KasbonState>(
                               builder: (context, state) {
                                 var status = "";
-                                if (state is CompareStateInitial) {}
-                                if (state is CompareStateLoading) {
+                                if (state is KasbonStateInitial) {}
+                                if (state is KasbonStateLoading) {
                                   bool isCorrectState = (state.type ==
-                                          CompareEActionType.APPROVE ||
-                                      state.type == CompareEActionType.REJECT);
+                                          KasbonEActionType.APPROVE ||
+                                      state.type == KasbonEActionType.REJECT);
                                   if (isCorrectState) {
                                     return Center(
                                       child: CupertinoActivityIndicator(),
@@ -521,8 +485,7 @@ class _DetailComparePageState extends State<DetailComparePage> {
                                         ElevatedButton(
                                           onPressed: () {
                                             showPinInputDialog(
-                                                type:
-                                                    ApprovalActionType.APPROVE,
+                                                type: KasbonEActionType.APPROVE,
                                                 description:
                                                     "Anda Yakin Ingin Mengapprove Approval ini ?");
                                           },
@@ -542,7 +505,7 @@ class _DetailComparePageState extends State<DetailComparePage> {
                                         ElevatedButton(
                                           onPressed: () {
                                             showPinInputDialog(
-                                                type: ApprovalActionType.REJECT,
+                                                type: KasbonEActionType.REJECT,
                                                 description:
                                                     "Anda Yakin Ingin Menolak Approval ini ?");
                                           },
@@ -586,13 +549,13 @@ class _DetailComparePageState extends State<DetailComparePage> {
                       ),
                       BlocProvider(
                         create: (BuildContext context) {
-                          return compareActionBloc;
+                          return kasbonActionBloc;
                         },
                         child: Column(
                           children: [
-                            BlocListener<CompareActionBloc, CompareState>(
+                            BlocListener<KasbonActionBloc, KasbonState>(
                               listener: (context, state) {
-                                if (state is CompareStateFailure) {
+                                if (state is KasbonStateFailure) {
                                   QuickAlert.show(
                                     context: context,
                                     type: QuickAlertType.error,
@@ -600,17 +563,17 @@ class _DetailComparePageState extends State<DetailComparePage> {
                                   );
                                 }
 
-                                if (state is CompareStateSuccess) {
+                                if (state is KasbonStateSuccess) {
                                   showDialog(
                                     context: context,
                                     builder: (BuildContext context) {
                                       var text = "";
                                       if (state.type ==
-                                          CompareEActionType.APPROVE) {
+                                          KasbonEActionType.APPROVE) {
                                         text = "Request Berhasil Diapprove";
                                       }
                                       if (state.type ==
-                                          CompareEActionType.REJECT) {
+                                          KasbonEActionType.REJECT) {
                                         text = "Request Berhasil Direject";
                                       }
                                       return WillPopScope(
@@ -660,7 +623,7 @@ class _DetailComparePageState extends State<DetailComparePage> {
   }
 
   void showPinInputDialog(
-      {required ApprovalActionType type,
+      {required KasbonEActionType type,
       String description = 'Masukkan PIN anda'}) {
     var pin = "";
     showDialog(
@@ -704,23 +667,23 @@ class _DetailComparePageState extends State<DetailComparePage> {
                   var comment = this.messageController.text;
                   print("send with comment " + comment);
 
-                  if (type == ApprovalActionType.APPROVE) {
-                    compareActionBloc.add(SendQCompareApprove(
+                  if (type == KasbonEActionType.APPROVE) {
+                    kasbonActionBloc.add(SendApprove(
                       pin: pin,
                       comment: this.messageController.text,
-                      noPermintaan: widget.noCompare,
+                      noKasbon: widget.noKasbon,
                     ));
-                    print("no request approve is : " + widget.noCompare);
+                    print("no request approve is : " + widget.noKasbon);
                   }
 
-                  if (type == ApprovalActionType.REJECT) {
-                    compareActionBloc.add(SendQCompareReject(
+                  if (type == KasbonEActionType.REJECT) {
+                    kasbonActionBloc.add(SendReject(
                       pin: pin,
                       comment: this.messageController.text,
-                      nomorCompare: widget.noCompare,
+                      noKasbon: widget.noKasbon,
                     ));
 
-                    print("no request reject is : " + widget.noCompare);
+                    print("no request reject is : " + widget.noKasbon);
                   }
 
                   // Perform any desired operations with the entered PIN
