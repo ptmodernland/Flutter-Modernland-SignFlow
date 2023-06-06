@@ -1,6 +1,8 @@
 import 'package:bwa_cozy/bloc/all_approval/approval_main_page_bloc.dart';
 import 'package:bwa_cozy/bloc/all_approval/approval_main_page_event.dart';
 import 'package:bwa_cozy/bloc/all_approval/approval_main_page_state.dart';
+import 'package:bwa_cozy/bloc/iomcategorycounter/badge_counter_cubit.dart';
+import 'package:bwa_cozy/bloc/iomcategorycounter/badge_counter_state.dart';
 import 'package:bwa_cozy/bloc/notif/notif_bloc.dart';
 import 'package:bwa_cozy/bloc/notif/notif_event.dart';
 import 'package:bwa_cozy/bloc/notif/notif_state.dart';
@@ -8,6 +10,7 @@ import 'package:bwa_cozy/pages/approval/compare/compare_approved_all_page.dart';
 import 'package:bwa_cozy/pages/approval/compare/compare_waiting_approval_page.dart';
 import 'package:bwa_cozy/pages/approval/compare/detail_compare_page.dart';
 import 'package:bwa_cozy/repos/approval_main_page_repository.dart';
+import 'package:bwa_cozy/repos/badge_counter_repository.dart';
 import 'package:bwa_cozy/repos/notif_repository.dart';
 import 'package:bwa_cozy/util/core/string/html_util.dart';
 import 'package:bwa_cozy/util/enum/menu_type.dart';
@@ -37,6 +40,10 @@ class _ApprovalIomMainPageState extends State<ApprovalIomMainPage> {
 
     ApprovalMainPageRepository approvalRepo = ApprovalMainPageRepository();
     ApprovalMainPageBloc approvalBloc = ApprovalMainPageBloc(approvalRepo);
+
+    final badgeCounterRepository = BadgeCounterRepository();
+    final badgeCounterCubit = BadgeCounterCubit(badgeCounterRepository);
+    badgeCounterCubit.fetchBadgeCounter();
 
     return SafeArea(
       bottom: false,
@@ -130,7 +137,7 @@ class _ApprovalIomMainPageState extends State<ApprovalIomMainPage> {
                                                     is NotifStateFailure) {}
                                                 if (state
                                                     is NotifStateSuccess) {
-                                                  count = state.totalCompare;
+                                                  count = state.totalIom;
                                                 }
                                                 return MenuItemApprovalWidget(
                                                   unreadBadgeCount: count,
@@ -168,8 +175,6 @@ class _ApprovalIomMainPageState extends State<ApprovalIomMainPage> {
                                                         ..add(RequestDataEvent(
                                                             ApprovalListType
                                                                 .COMPARE));
-                                                      print("kocak " +
-                                                          value.toString());
                                                     });
                                                   },
                                                 );
@@ -187,94 +192,119 @@ class _ApprovalIomMainPageState extends State<ApprovalIomMainPage> {
                                                 .width,
                                             margin: EdgeInsets.only(
                                                 left: 25, right: 25, top: 50),
-                                            child: Wrap(
-                                              alignment:
-                                                  WrapAlignment.spaceAround,
-                                              spacing: 38,
-                                              runSpacing: 23,
-                                              children: [
-                                                IomMenuIconWidget(
-                                                  iconData: CupertinoIcons
-                                                      .money_dollar_circle,
-                                                  label: "Billionaire Club",
-                                                  badgeCount: 0,
-                                                ),
-                                                IomMenuIconWidget(
-                                                  iconData:
-                                                      CupertinoIcons.doc_chart,
-                                                  label: "Finance Accounting",
-                                                  badgeCount: 3,
-                                                ),
-                                                IomMenuIconWidget(
-                                                  iconData: CupertinoIcons
-                                                      .square_stack_3d_up_fill,
-                                                  label: "Quantity Surveyor",
-                                                  badgeCount: 0,
-                                                ),
-                                                IomMenuIconWidget(
-                                                  iconData: CupertinoIcons
-                                                      .building_2_fill,
-                                                  label: "Town Management",
-                                                  badgeCount: 0,
-                                                ),
-                                                IomMenuIconWidget(
-                                                  iconData:
-                                                      CupertinoIcons.hammer,
-                                                  label: "Technical",
-                                                  badgeCount: 0,
-                                                ),
-                                                IomMenuIconWidget(
-                                                  iconData: CupertinoIcons
-                                                      .person_3_fill,
-                                                  label: "Human Resource",
-                                                  badgeCount: 0,
-                                                ),
-                                                IomMenuIconWidget(
-                                                  iconData:
-                                                      CupertinoIcons.folder,
-                                                  label: "Legal Operation",
-                                                  badgeCount: 0,
-                                                ),
-                                                IomMenuIconWidget(
-                                                  iconData: CupertinoIcons
-                                                      .shopping_cart,
-                                                  label: "Purchasing",
-                                                  badgeCount: 0,
-                                                ),
-                                                IomMenuIconWidget(
-                                                  iconData: CupertinoIcons
-                                                      .chart_bar_alt_fill,
-                                                  label: "Business Development",
-                                                  badgeCount: 0,
-                                                ),
-                                                IomMenuIconWidget(
-                                                  iconData: CupertinoIcons.home,
-                                                  label: "Landed Project",
-                                                  badgeCount: 0,
-                                                ),
-                                                IomMenuIconWidget(
-                                                  iconData:
-                                                      CupertinoIcons.chart_bar,
-                                                  label: "Marketing",
-                                                  badgeCount: 0,
-                                                ),
-                                                IomMenuIconWidget(
-                                                  iconData: CupertinoIcons
-                                                      .check_mark_circled,
-                                                  label: "Permit Certification",
-                                                  badgeCount: 0,
-                                                ),
-                                                IomMenuIconWidget(
-                                                  iconData: CupertinoIcons.gift,
-                                                  label: "Promosi",
-                                                  badgeCount: 0,
-                                                ),
-                                              ],
+                                            child: BlocBuilder<
+                                                BadgeCounterCubit,
+                                                BadgeCounterState>(
+                                              bloc: badgeCounterCubit
+                                                ..fetchBadgeCounter(),
+                                              builder: (context, state) {
+                                                return Wrap(
+                                                  alignment:
+                                                      WrapAlignment.spaceAround,
+                                                  spacing: 38,
+                                                  runSpacing: 23,
+                                                  children: [
+                                                    IomMenuIconWidget(
+                                                      iconData: CupertinoIcons
+                                                          .money_dollar_circle,
+                                                      label: "Billionaire Club",
+                                                      badgeCount: state
+                                                          .totalMarketingClub, //done
+                                                    ),
+                                                    IomMenuIconWidget(
+                                                      iconData: CupertinoIcons
+                                                          .doc_chart,
+                                                      label:
+                                                          "Finance Accounting",
+                                                      badgeCount: state
+                                                          .totalFinance, //done
+                                                    ),
+                                                    IomMenuIconWidget(
+                                                      iconData: CupertinoIcons
+                                                          .square_stack_3d_up_fill,
+                                                      label:
+                                                          "Quantity Surveyor",
+                                                      badgeCount:
+                                                          state.totalQS, //done
+                                                    ),
+                                                    IomMenuIconWidget(
+                                                      iconData: CupertinoIcons
+                                                          .building_2_fill,
+                                                      label: "Town Management",
+                                                      badgeCount:
+                                                          state.totalTown,
+                                                    ),
+                                                    IomMenuIconWidget(
+                                                      iconData:
+                                                          CupertinoIcons.hammer,
+                                                      label: "Technical",
+                                                      badgeCount:
+                                                          state.totalProject,
+                                                    ),
+                                                    IomMenuIconWidget(
+                                                      iconData: CupertinoIcons
+                                                          .person_3_fill,
+                                                      label: "Human Resource",
+                                                      badgeCount:
+                                                          state.totalHRD,
+                                                    ),
+                                                    IomMenuIconWidget(
+                                                      iconData:
+                                                          CupertinoIcons.folder,
+                                                      label: "Legal Operation",
+                                                      badgeCount:
+                                                          state.totalLegal,
+                                                    ),
+                                                    IomMenuIconWidget(
+                                                      iconData: CupertinoIcons
+                                                          .shopping_cart,
+                                                      label: "Purchasing",
+                                                      badgeCount:
+                                                          state.totalPurchasing,
+                                                    ),
+                                                    IomMenuIconWidget(
+                                                      iconData: CupertinoIcons
+                                                          .chart_bar_alt_fill,
+                                                      label:
+                                                          "Business Development",
+                                                      badgeCount:
+                                                          state.totalBDD,
+                                                    ),
+                                                    IomMenuIconWidget(
+                                                      iconData:
+                                                          CupertinoIcons.home,
+                                                      label: "Landed Project",
+                                                      badgeCount:
+                                                          state.totalLanded,
+                                                    ),
+                                                    IomMenuIconWidget(
+                                                      iconData: CupertinoIcons
+                                                          .chart_bar,
+                                                      label: "Marketing",
+                                                      badgeCount:
+                                                          state.totalMarketing,
+                                                    ),
+                                                    IomMenuIconWidget(
+                                                      iconData: CupertinoIcons
+                                                          .check_mark_circled,
+                                                      label:
+                                                          "Permit Certification",
+                                                      badgeCount:
+                                                          state.totalPermit,
+                                                    ),
+                                                    IomMenuIconWidget(
+                                                      iconData:
+                                                          CupertinoIcons.gift,
+                                                      label: "Promosi",
+                                                      badgeCount:
+                                                          state.totalPromosi,
+                                                    ),
+                                                  ],
+                                                );
+                                              },
                                             ),
                                           ),
-                                          SizedBox(
-                                            height: 50,
-                                          ),
+                                          SizedBox(height: 50),
                                         ],
                                       ),
                                     ),
@@ -300,7 +330,7 @@ class _ApprovalIomMainPageState extends State<ApprovalIomMainPage> {
                       BlocProvider(
                         create: (BuildContext context) {
                           return approvalBloc
-                            ..add(RequestDataEvent(ApprovalListType.COMPARE));
+                            ..add(RequestDataEvent(ApprovalListType.IOM));
                         },
                         child: BlocBuilder<ApprovalMainPageBloc,
                             ApprovalMainPageState>(
@@ -374,7 +404,7 @@ class _ApprovalIomMainPageState extends State<ApprovalIomMainPage> {
                                         notifBloc..add(NotifEventCount());
                                         approvalBloc
                                           ..add(RequestDataEvent(
-                                              ApprovalListType.COMPARE));
+                                              ApprovalListType.IOM));
                                       });
                                     },
                                   );

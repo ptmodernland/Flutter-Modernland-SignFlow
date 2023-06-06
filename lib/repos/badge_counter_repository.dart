@@ -7,17 +7,21 @@ import 'package:http/http.dart' as http;
 class BadgeCounterRepository {
   Future<BadgeCounterState> fetchBadgeCounter() async {
     var username = "";
+    final logTag = "badgeCounterState";
     var usersession = await SessionManager.getUserFromSession();
     if (usersession != null) {
-      username = usersession.idUser;
+      username = usersession.username;
     }
     var url = Uri.parse(
-        'https://approval.modernland.co.id/counter_kategori.php?username=' +
+        'https://approval.modernland.co.id/androidiom/counter_kategori.php?username=' +
             username);
     var response = await http.post(url);
 
+    print("getting $logTag");
+
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
+      print("$logTag 200 : " + data.toString());
 
       return BadgeCounterState(
         totalMarketingClub: int.parse(data['total_marketing_club']),
@@ -36,6 +40,7 @@ class BadgeCounterRepository {
         status: data['status'],
       );
     } else {
+      print("$logTag thrown : " + "error");
       throw Exception('Failed to fetch badge counter');
     }
   }
