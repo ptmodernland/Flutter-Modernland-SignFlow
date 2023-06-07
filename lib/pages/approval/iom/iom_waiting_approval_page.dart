@@ -1,5 +1,6 @@
 import 'package:bwa_cozy/bloc/iom/approval_cubit.dart';
 import 'package:bwa_cozy/bloc/iom/approval_state.dart';
+import 'package:bwa_cozy/pages/approval/iom/iomdetail/iom_detail_page.dart';
 import 'package:bwa_cozy/repos/iom/approval_repository.dart';
 import 'package:bwa_cozy/util/core/string/html_util.dart';
 import 'package:bwa_cozy/widget/approval/item_approval_widget.dart';
@@ -75,7 +76,18 @@ class ApprovalList extends StatelessWidget {
                 personName: approvalItem.namaUser,
                 departmentTitle: approvalItem.departemen,
                 descriptiveText: removeHtmlTags(((approvalItem.perihal ?? ""))),
-                onPressed: (String noCompare) {},
+                onPressed: (String noCompare) {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => IomDetailPage(
+                        isFromHistory: false,
+                        idIom: approvalItem.idIom ?? "",
+                        noIom: approvalItem.nomor ?? "",
+                      ),
+                    ),
+                  );
+                },
               );
             },
           );
