@@ -24,27 +24,31 @@ class IomListByCategoryPage extends StatelessWidget {
         appBar: AppBar(
           title: Text(this.title),
         ),
-        body: ApprovalList(),
+        body: ApprovalList(
+          categoryId: categoryId,
+        ),
       ),
     );
   }
 }
 
 class ApprovalList extends StatelessWidget {
-  const ApprovalList();
+  const ApprovalList({this.categoryId = "-99", this.title = ""});
+
+  final String categoryId;
+  final String title;
 
   @override
   Widget build(BuildContext context) {
     final cubit = context.read<ApprovalByCategoryCubit>();
     return BlocBuilder<ApprovalByCategoryCubit, ApprovalState>(
+      bloc: cubit,
       builder: (context, state) {
         if (state is ApprovalLoading) {
           return Center(child: CupertinoActivityIndicator());
         } else if (state is ApprovalEmpty) {
           return Center(child: Text('No approvals found.'));
         } else if (state is ApprovalSuccess) {
-          final approvals = state.approvals;
-
           return ListView.builder(
             itemCount: state.approvals.length,
             shrinkWrap: true,
@@ -57,7 +61,7 @@ class ApprovalList extends StatelessWidget {
               return ItemApprovalWidget(
                 isApproved: isApproved,
                 itemCode:
-                    (index + 1).toString() + approvalItem.nomor.toString(),
+                (index + 1).toString() + approvalItem.nomor.toString(),
                 date: approvalItem.tanggal,
                 requiredId: approvalItem.idIom,
                 personName: approvalItem.namaUser,
@@ -73,7 +77,9 @@ class ApprovalList extends StatelessWidget {
                         noIom: approvalItem.nomor ?? "",
                       ),
                     ),
-                  );
+                  ).then((value) {
+                    cubit.fetchApprovalByCategory(categoryId);
+                  });
                 },
               );
             },

@@ -9,6 +9,7 @@ class ApprovalByCategoryCubit extends Cubit<ApprovalState> {
 
   Future<void> fetchApprovalByCategory(String categoryId) async {
     try {
+      emit(ApprovalLoading());
       final approvals = await repository.getByCategory(categoryId);
       if (approvals.isEmpty) {
         emit(ApprovalEmpty());

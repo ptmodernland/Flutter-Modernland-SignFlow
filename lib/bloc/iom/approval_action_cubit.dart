@@ -20,6 +20,7 @@ class ApprovalActionCubit extends Cubit<ApprovalState> {
         comment: comment,
         idIom: idIom,
       );
+
       if (approvals.status == ResourceStatus.Success) {
         emit(ApprovalStateApproveSuccess(approvals.message ?? ""));
       }
