@@ -1,9 +1,7 @@
+import 'package:bwa_cozy/bloc/iom/approval_action_cubit.dart';
 import 'package:bwa_cozy/bloc/iom/approval_comment_cubit.dart';
 import 'package:bwa_cozy/bloc/iom/approval_detail_cubit.dart';
 import 'package:bwa_cozy/bloc/iom/approval_state.dart';
-import 'package:bwa_cozy/bloc/kasbon/kasbon_action_bloc.dart';
-import 'package:bwa_cozy/bloc/kasbon/kasbon_action_event.dart';
-import 'package:bwa_cozy/bloc/kasbon/kasbon_state.dart';
 import 'package:bwa_cozy/pages/approval/iom/log/iom_log_page.dart';
 import 'package:bwa_cozy/repos/iom/approval_repository.dart';
 import 'package:bwa_cozy/repos/kasbon_repository.dart';
@@ -19,6 +17,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:quickalert/quickalert.dart';
 
 class IomDetailPage extends StatefulWidget {
   const IomDetailPage(
@@ -41,16 +40,16 @@ class _IomDetailPageState extends State<IomDetailPage> {
   final _formKey2 = GlobalKey<FormState>();
   final messageController = TextEditingController();
 
-  late KasbonActionBloc kasbonActionBloc;
   late ApprovalDetailCubit iomDetailCubit;
   late ApprovalCommentCubit iomCommentCubit;
+  late ApprovalActionCubit iomActionCubit;
 
   @override
   void initState() {
     super.initState();
     var kasbonRepository = KasbonRepository();
-    kasbonActionBloc = KasbonActionBloc(kasbonRepository);
 
+    iomActionCubit = ApprovalActionCubit(ApprovalRepository());
     iomCommentCubit = ApprovalCommentCubit(ApprovalRepository());
     iomDetailCubit = ApprovalDetailCubit(ApprovalRepository());
     iomDetailCubit.fetchApprovals(widget.idIom);
@@ -272,7 +271,7 @@ class _IomDetailPageState extends State<IomDetailPage> {
                                           children: [
                                             Expanded(
                                                 child: DocumentDetailWidget(
-                                                  title: "Nama Karyawan :",
+                                              title: "Nama Karyawan :",
                                               content:
                                                   data.namaUser ?? "MDLN Staff",
                                             )),
@@ -382,6 +381,73 @@ class _IomDetailPageState extends State<IomDetailPage> {
                           }
                           return Text("Memuat Detail");
                         },
+                      ),
+                      BlocProvider<ApprovalActionCubit>(
+                        create: (context) => iomActionCubit,
+                        // Replace with your actual cubit instantiation
+                        child: BlocListener<ApprovalActionCubit, ApprovalState>(
+                          listener: (context, state) {
+                            // Navigate to next screen
+                            if (state is ApprovalStateApproveSuccess) {
+                              showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  var text = state.message;
+                                  return WillPopScope(
+                                    onWillPop: () async {
+                                      Navigator.of(context)
+                                          .pop(); // Handle back button press
+                                      return false; // Prevent dialog from being dismissed by back button
+                                    },
+                                    child: CupertinoAlertDialog(
+                                      title: Text(
+                                        'Success',
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                      content: Text(text),
+                                      actions: <Widget>[
+                                        CupertinoDialogAction(
+                                          onPressed: () {
+                                            Navigator.of(context)
+                                                .pop(); // Close the dialog
+                                            Navigator.of(context)
+                                                .pop(); // Go back to the previous page
+                                          },
+                                          child: Text('OK'),
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                },
+                              );
+                            }
+
+                            if (state is ApprovalStateApproveError) {
+                              QuickAlert.show(
+                                context: context,
+                                type: QuickAlertType.error,
+                                text: state.message.toString(),
+                              );
+                            }
+
+                            if (state is ApprovalStateRejectSuccess) {
+                              QuickAlert.show(
+                                context: context,
+                                type: QuickAlertType.success,
+                                text: state.message.toString(),
+                              );
+                            }
+                            if (state is ApprovalStateRejectError) {
+                              QuickAlert.show(
+                                context: context,
+                                type: QuickAlertType.error,
+                                text: state.message.toString(),
+                              );
+                            }
+                          },
+                          child: Container(),
+                        ),
                       ),
                       BlocBuilder<ApprovalCommentCubit, ApprovalState>(
                         bloc: iomCommentCubit
@@ -562,22 +628,15 @@ class _IomDetailPageState extends State<IomDetailPage> {
                   var comment = this.messageController.text;
                   print("send with comment " + comment);
 
-                  if (type == KasbonEActionType.APPROVE) {
-                    kasbonActionBloc.add(SendApprove(
-                      pin: pin,
-                      comment: this.messageController.text,
-                      noKasbon: widget.noIom,
-                    ));
-                    print("no request approve is : " + widget.noIom);
+                  if (type == ApprovalActionType.APPROVE) {
+                    iomActionCubit.approveIom(
+                        noIom: widget.noIom,
+                        idIom: widget.idIom,
+                        comment: messageController.text,
+                        pin: pin);
                   }
 
-                  if (type == KasbonEActionType.REJECT) {
-                    kasbonActionBloc.add(SendReject(
-                      pin: pin,
-                      comment: this.messageController.text,
-                      noKasbon: widget.noIom,
-                    ));
-
+                  if (type == ApprovalActionType.REJECT) {
                     print("no request reject is : " + widget.noIom);
                   }
 

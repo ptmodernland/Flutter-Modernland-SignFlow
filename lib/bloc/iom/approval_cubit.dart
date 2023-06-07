@@ -9,7 +9,15 @@ class ApprovalCubit extends Cubit<ApprovalState> {
 
   Future<void> fetchApprovals() async {
     try {
+      emit(ApprovalLoading());
+      final stopwatch = Stopwatch()
+        ..start(); // Create a stopwatch to measure elapsed time
+
       final approvals = await repository.getApprovals();
+
+      if (stopwatch.elapsed < Duration(seconds: 1)) {
+        await Future.delayed(Duration(seconds: 1)); // Add a delay of 3 seconds
+      }
 
       if (approvals.isEmpty) {
         emit(ApprovalEmpty());

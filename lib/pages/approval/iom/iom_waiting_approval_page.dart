@@ -19,7 +19,6 @@ enum IomPageListType {
 class ApprovalPage extends StatelessWidget {
   final String title;
   final IomPageListType type;
-
   const ApprovalPage(
       {this.title = "IOM", this.type = IomPageListType.SHOW_ALL});
 
@@ -39,7 +38,7 @@ class ApprovalPage extends StatelessWidget {
   }
 }
 
-class ApprovalList extends StatelessWidget {
+class ApprovalList extends StatefulWidget {
   final String title;
   final IomPageListType type;
 
@@ -47,17 +46,21 @@ class ApprovalList extends StatelessWidget {
       {this.title = "IOM", this.type = IomPageListType.SHOW_ALL});
 
   @override
+  State<ApprovalList> createState() => _ApprovalListState();
+}
+
+class _ApprovalListState extends State<ApprovalList> {
+  @override
   Widget build(BuildContext context) {
     final cubit = context.read<ApprovalCubit>();
     return BlocBuilder<ApprovalCubit, ApprovalState>(
+      bloc: cubit,
       builder: (context, state) {
         if (state is ApprovalLoading) {
           return Center(child: CupertinoActivityIndicator());
         } else if (state is ApprovalEmpty) {
           return Center(child: Text('No approvals found.'));
         } else if (state is ApprovalSuccess) {
-          final approvals = state.approvals;
-
           return ListView.builder(
             itemCount: state.approvals.length,
             shrinkWrap: true,
@@ -86,7 +89,9 @@ class ApprovalList extends StatelessWidget {
                         noIom: approvalItem.nomor ?? "",
                       ),
                     ),
-                  );
+                  ).then((value) {
+                    cubit.fetchApprovals();
+                  });
                 },
               );
             },

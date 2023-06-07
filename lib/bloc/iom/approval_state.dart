@@ -63,3 +63,28 @@ class ApprovalLogError extends ApprovalState {
 
   ApprovalLogError(this.message);
 }
+
+//for action
+class ApprovalStateApproveError extends ApprovalState {
+  final String message;
+
+  ApprovalStateApproveError(this.message);
+}
+
+class ApprovalStateApproveSuccess extends ApprovalState {
+  final String message;
+
+  ApprovalStateApproveSuccess(this.message);
+}
+
+class ApprovalStateRejectError extends ApprovalState {
+  final String message;
+
+  ApprovalStateRejectError(this.message);
+}
+
+class ApprovalStateRejectSuccess extends ApprovalState {
+  final String message;
+
+  ApprovalStateRejectSuccess(this.message);
+}
