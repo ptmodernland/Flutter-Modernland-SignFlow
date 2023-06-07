@@ -14,6 +14,23 @@ class IomMenuIconWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final screenSize = MediaQuery.of(context).size;
+    final deviceWidth = screenSize.width;
+    final deviceHeight = screenSize.height;
+
+    double avatarRadius;
+
+    if (deviceWidth <= 600 && deviceHeight <= 800) {
+      // For small devices like phones
+      avatarRadius = deviceWidth * 0.09;
+    } else if (deviceWidth <= 1200 && deviceHeight <= 1200) {
+      // For medium-sized devices like tablets
+      avatarRadius = deviceWidth * 0.08;
+    } else {
+      // For larger devices like iPads
+      avatarRadius = deviceWidth * 0.06;
+    }
+
     return Column(
       children: [
         Stack(
@@ -32,11 +49,11 @@ class IomMenuIconWidget extends StatelessWidget {
                 ],
               ),
               child: CircleAvatar(
-                radius: 50,
+                radius: avatarRadius,
                 backgroundColor: Colors.white,
                 child: Icon(
                   iconData,
-                  size: 40,
+                  size: avatarRadius * 0.8,
                   color: Colors.black,
                 ),
               ),
@@ -64,7 +81,16 @@ class IomMenuIconWidget extends StatelessWidget {
           ],
         ),
         SizedBox(height: 12),
-        Text(label),
+        Container(
+          width: avatarRadius * 2.2,
+          // Adjust the width based on the avatarRadius
+          child: Text(
+            label,
+            textAlign: TextAlign.center,
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+          ),
+        ),
       ],
     );
   }

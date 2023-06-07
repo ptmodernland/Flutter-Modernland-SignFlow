@@ -1,22 +1,19 @@
 import 'package:bwa_cozy/bloc/all_approval/approval_main_page_bloc.dart';
 import 'package:bwa_cozy/bloc/all_approval/approval_main_page_event.dart';
-import 'package:bwa_cozy/bloc/all_approval/approval_main_page_state.dart';
 import 'package:bwa_cozy/bloc/iomcategorycounter/badge_counter_cubit.dart';
 import 'package:bwa_cozy/bloc/iomcategorycounter/badge_counter_state.dart';
 import 'package:bwa_cozy/bloc/notif/notif_bloc.dart';
 import 'package:bwa_cozy/bloc/notif/notif_event.dart';
 import 'package:bwa_cozy/bloc/notif/notif_state.dart';
-import 'package:bwa_cozy/pages/approval/compare/compare_approved_all_page.dart';
-import 'package:bwa_cozy/pages/approval/compare/compare_waiting_approval_page.dart';
-import 'package:bwa_cozy/pages/approval/compare/detail_compare_page.dart';
+import 'package:bwa_cozy/pages/approval/iom/iom_approved_all_page.dart';
+import 'package:bwa_cozy/pages/approval/iom/iom_list_by_category_page.dart';
+import 'package:bwa_cozy/pages/approval/iom/iom_waiting_approval_page.dart';
 import 'package:bwa_cozy/repos/approval_main_page_repository.dart';
 import 'package:bwa_cozy/repos/badge_counter_repository.dart';
 import 'package:bwa_cozy/repos/notif_repository.dart';
-import 'package:bwa_cozy/util/core/string/html_util.dart';
 import 'package:bwa_cozy/util/enum/menu_type.dart';
 import 'package:bwa_cozy/util/my_theme.dart';
 import 'package:bwa_cozy/widget/approval/iom_menu_icon_widget.dart';
-import 'package:bwa_cozy/widget/approval/item_approval_widget.dart';
 import 'package:bwa_cozy/widget/menus/menu_item_approval_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -146,18 +143,23 @@ class _ApprovalIomMainPageState extends State<ApprovalIomMainPage> {
                                                       context,
                                                       MaterialPageRoute(
                                                         builder: (context) =>
-                                                            CompareWaitingApprovalPage(),
+                                                            ApprovalPage(
+                                                          type: IomPageListType
+                                                              .SHOW_WAITING,
+                                                          title:
+                                                              "Menunggu Approval",
+                                                        ),
                                                       ),
                                                     ).then((value) {
+                                                      badgeCounterCubit
+                                                        ..fetchBadgeCounter();
                                                       notifBloc
                                                         ..add(
                                                             NotifEventCount());
                                                       approvalBloc
                                                         ..add(RequestDataEvent(
                                                             ApprovalListType
-                                                                .COMPARE));
-                                                      print("kocak " +
-                                                          value.toString());
+                                                                .IOM));
                                                     });
                                                   },
                                                   onRightTapFunction: () {
@@ -165,16 +167,12 @@ class _ApprovalIomMainPageState extends State<ApprovalIomMainPage> {
                                                       context,
                                                       MaterialPageRoute(
                                                         builder: (context) =>
-                                                            CompareAllApprovedPage(),
+                                                            IomApprovedAllPage(),
                                                       ),
                                                     ).then((value) {
                                                       notifBloc
                                                         ..add(
                                                             NotifEventCount());
-                                                      approvalBloc
-                                                        ..add(RequestDataEvent(
-                                                            ApprovalListType
-                                                                .COMPARE));
                                                     });
                                                   },
                                                 );
@@ -188,10 +186,25 @@ class _ApprovalIomMainPageState extends State<ApprovalIomMainPage> {
                                             CrossAxisAlignment.stretch,
                                         children: [
                                           Container(
+                                            margin: EdgeInsets.only(
+                                                left: 20, right: 20),
+                                            width: double.infinity,
+                                            child: Text(
+                                              "Berdasarkan Kategori",
+                                              textAlign: TextAlign.start,
+                                              style: MyTheme
+                                                  .myStylePrimaryTextStyle
+                                                  .copyWith(
+                                                fontWeight: FontWeight.w500,
+                                                fontSize: 18,
+                                              ),
+                                            ),
+                                          ),
+                                          Container(
                                             width: MediaQuery.sizeOf(context)
                                                 .width,
                                             margin: EdgeInsets.only(
-                                                left: 25, right: 25, top: 50),
+                                                left: 25, right: 25, top: 20),
                                             child: BlocBuilder<
                                                 BadgeCounterCubit,
                                                 BadgeCounterState>(
@@ -204,100 +217,355 @@ class _ApprovalIomMainPageState extends State<ApprovalIomMainPage> {
                                                   spacing: 38,
                                                   runSpacing: 23,
                                                   children: [
-                                                    IomMenuIconWidget(
-                                                      iconData: CupertinoIcons
-                                                          .money_dollar_circle,
-                                                      label: "Billionaire Club",
-                                                      badgeCount: state
-                                                          .totalMarketingClub, //done
+                                                    InkWell(
+                                                      onTap: () {
+                                                        Navigator.push(
+                                                          context,
+                                                          MaterialPageRoute(
+                                                            builder: (context) =>
+                                                                const IomListByCategoryPage(
+                                                              title:
+                                                                  "Billionare Club",
+                                                              categoryId: "1",
+                                                            ),
+                                                          ),
+                                                        ).then((value) {
+                                                          notifBloc
+                                                            ..add(
+                                                                NotifEventCount());
+                                                        });
+                                                      },
+                                                      child: IomMenuIconWidget(
+                                                        iconData: CupertinoIcons
+                                                            .money_dollar_circle,
+                                                        label:
+                                                            "Billionaire\nClub",
+                                                        badgeCount: state
+                                                            .totalMarketingClub, //done
+                                                      ),
                                                     ),
-                                                    IomMenuIconWidget(
-                                                      iconData: CupertinoIcons
-                                                          .doc_chart,
-                                                      label:
-                                                          "Finance Accounting",
-                                                      badgeCount: state
-                                                          .totalFinance, //done
+                                                    InkWell(
+                                                      onTap: () {
+                                                        Navigator.push(
+                                                          context,
+                                                          MaterialPageRoute(
+                                                            builder: (context) =>
+                                                                IomListByCategoryPage(
+                                                              title:
+                                                                  "Finance and Accounting",
+                                                              categoryId: "2",
+                                                            ),
+                                                          ),
+                                                        ).then((value) {
+                                                          notifBloc
+                                                            ..add(
+                                                                NotifEventCount());
+                                                          approvalBloc
+                                                            ..add(RequestDataEvent(
+                                                                ApprovalListType
+                                                                    .COMPARE));
+                                                        });
+                                                      },
+                                                      child: IomMenuIconWidget(
+                                                        iconData: CupertinoIcons
+                                                            .doc_chart,
+                                                        label:
+                                                            "Finance\nAccounting",
+                                                        badgeCount: state
+                                                            .totalFinance, //done
+                                                      ),
                                                     ),
-                                                    IomMenuIconWidget(
-                                                      iconData: CupertinoIcons
-                                                          .square_stack_3d_up_fill,
-                                                      label:
-                                                          "Quantity Surveyor",
-                                                      badgeCount:
-                                                          state.totalQS, //done
+                                                    InkWell(
+                                                      onTap: () {
+                                                        Navigator.push(
+                                                          context,
+                                                          MaterialPageRoute(
+                                                            builder: (context) =>
+                                                                IomListByCategoryPage(
+                                                              title:
+                                                                  "Quantity Surveyor",
+                                                              categoryId: "3",
+                                                            ),
+                                                          ),
+                                                        ).then((value) {
+                                                          notifBloc
+                                                            ..add(
+                                                                NotifEventCount());
+                                                        });
+                                                      },
+                                                      child: IomMenuIconWidget(
+                                                        iconData: CupertinoIcons
+                                                            .square_stack_3d_up_fill,
+                                                        label:
+                                                            "Quantity\nSurveyor",
+                                                        badgeCount: state
+                                                            .totalQS, //done
+                                                      ),
                                                     ),
-                                                    IomMenuIconWidget(
-                                                      iconData: CupertinoIcons
-                                                          .building_2_fill,
-                                                      label: "Town Management",
-                                                      badgeCount:
-                                                          state.totalTown,
+                                                    InkWell(
+                                                      onTap: () {
+                                                        Navigator.push(
+                                                          context,
+                                                          MaterialPageRoute(
+                                                            builder: (context) =>
+                                                                IomListByCategoryPage(
+                                                              title:
+                                                                  "Town Management",
+                                                              categoryId: "11",
+                                                            ),
+                                                          ),
+                                                        ).then((value) {
+                                                          notifBloc
+                                                            ..add(
+                                                                NotifEventCount());
+                                                        });
+                                                      },
+                                                      child: IomMenuIconWidget(
+                                                        iconData: CupertinoIcons
+                                                            .building_2_fill,
+                                                        label:
+                                                            "Town\nManagement",
+                                                        badgeCount:
+                                                            state.totalTown,
+                                                      ),
                                                     ),
-                                                    IomMenuIconWidget(
-                                                      iconData:
-                                                          CupertinoIcons.hammer,
-                                                      label: "Technical",
-                                                      badgeCount:
-                                                          state.totalProject,
+                                                    InkWell(
+                                                      onTap: () {
+                                                        Navigator.push(
+                                                          context,
+                                                          MaterialPageRoute(
+                                                            builder: (context) =>
+                                                                IomListByCategoryPage(
+                                                              title:
+                                                                  "Technical",
+                                                              categoryId: "7",
+                                                            ),
+                                                          ),
+                                                        ).then((value) {
+                                                          notifBloc
+                                                            ..add(
+                                                                NotifEventCount());
+                                                        });
+                                                      },
+                                                      child: IomMenuIconWidget(
+                                                        iconData: CupertinoIcons
+                                                            .hammer,
+                                                        label: "Technical",
+                                                        badgeCount:
+                                                            state.totalProject,
+                                                      ),
                                                     ),
-                                                    IomMenuIconWidget(
-                                                      iconData: CupertinoIcons
-                                                          .person_3_fill,
-                                                      label: "Human Resource",
-                                                      badgeCount:
-                                                          state.totalHRD,
+                                                    InkWell(
+                                                      onTap: () {
+                                                        Navigator.push(
+                                                          context,
+                                                          MaterialPageRoute(
+                                                            builder: (context) =>
+                                                                IomListByCategoryPage(
+                                                              title:
+                                                                  "Human Resource",
+                                                              categoryId: "10",
+                                                            ),
+                                                          ),
+                                                        ).then((value) {
+                                                          notifBloc
+                                                            ..add(
+                                                                NotifEventCount());
+                                                        });
+                                                      },
+                                                      child: IomMenuIconWidget(
+                                                        iconData: CupertinoIcons
+                                                            .person_3_fill,
+                                                        label:
+                                                            "Human\nResource",
+                                                        badgeCount:
+                                                            state.totalHRD,
+                                                      ),
                                                     ),
-                                                    IomMenuIconWidget(
-                                                      iconData:
-                                                          CupertinoIcons.folder,
-                                                      label: "Legal Operation",
-                                                      badgeCount:
-                                                          state.totalLegal,
+                                                    InkWell(
+                                                      onTap: () {
+                                                        Navigator.push(
+                                                          context,
+                                                          MaterialPageRoute(
+                                                            builder: (context) =>
+                                                                IomListByCategoryPage(
+                                                              title:
+                                                                  "Legal and Operation",
+                                                              categoryId: "4",
+                                                            ),
+                                                          ),
+                                                        ).then((value) {
+                                                          notifBloc
+                                                            ..add(
+                                                                NotifEventCount());
+                                                        });
+                                                      },
+                                                      child: IomMenuIconWidget(
+                                                        iconData: CupertinoIcons
+                                                            .folder,
+                                                        label:
+                                                            "Legal\nOperation",
+                                                        badgeCount:
+                                                            state.totalLegal,
+                                                      ),
                                                     ),
-                                                    IomMenuIconWidget(
-                                                      iconData: CupertinoIcons
-                                                          .shopping_cart,
-                                                      label: "Purchasing",
-                                                      badgeCount:
-                                                          state.totalPurchasing,
+                                                    InkWell(
+                                                      onTap: () {
+                                                        Navigator.push(
+                                                          context,
+                                                          MaterialPageRoute(
+                                                            builder: (context) =>
+                                                                IomListByCategoryPage(
+                                                              title:
+                                                                  "Purchasing",
+                                                              categoryId: "5",
+                                                            ),
+                                                          ),
+                                                        ).then((value) {
+                                                          notifBloc
+                                                            ..add(
+                                                                NotifEventCount());
+                                                        });
+                                                      },
+                                                      child: IomMenuIconWidget(
+                                                        iconData: CupertinoIcons
+                                                            .shopping_cart,
+                                                        label: "Purchasing",
+                                                        badgeCount: state
+                                                            .totalPurchasing,
+                                                      ),
                                                     ),
-                                                    IomMenuIconWidget(
-                                                      iconData: CupertinoIcons
-                                                          .chart_bar_alt_fill,
-                                                      label:
-                                                          "Business Development",
-                                                      badgeCount:
-                                                          state.totalBDD,
+                                                    InkWell(
+                                                      onTap: () {
+                                                        Navigator.push(
+                                                          context,
+                                                          MaterialPageRoute(
+                                                            builder: (context) =>
+                                                                IomListByCategoryPage(
+                                                              title:
+                                                                  "Business Development",
+                                                              categoryId: "6",
+                                                            ),
+                                                          ),
+                                                        ).then((value) {
+                                                          notifBloc
+                                                            ..add(
+                                                                NotifEventCount());
+                                                        });
+                                                      },
+                                                      child: IomMenuIconWidget(
+                                                        iconData: CupertinoIcons
+                                                            .chart_bar_alt_fill,
+                                                        label:
+                                                            "Business\nDevelopment",
+                                                        badgeCount:
+                                                            state.totalBDD,
+                                                      ),
                                                     ),
-                                                    IomMenuIconWidget(
-                                                      iconData:
-                                                          CupertinoIcons.home,
-                                                      label: "Landed Project",
-                                                      badgeCount:
-                                                          state.totalLanded,
+                                                    InkWell(
+                                                      onTap: () {
+                                                        Navigator.push(
+                                                          context,
+                                                          MaterialPageRoute(
+                                                            builder: (context) =>
+                                                                IomListByCategoryPage(
+                                                              title:
+                                                                  "Landed Project",
+                                                              categoryId: "12",
+                                                            ),
+                                                          ),
+                                                        ).then((value) {
+                                                          notifBloc
+                                                            ..add(
+                                                                NotifEventCount());
+                                                        });
+                                                      },
+                                                      child: IomMenuIconWidget(
+                                                        iconData:
+                                                            CupertinoIcons.home,
+                                                        label:
+                                                            "Landed\nProject",
+                                                        badgeCount:
+                                                            state.totalLanded,
+                                                      ),
                                                     ),
-                                                    IomMenuIconWidget(
-                                                      iconData: CupertinoIcons
-                                                          .chart_bar,
-                                                      label: "Marketing",
-                                                      badgeCount:
-                                                          state.totalMarketing,
+                                                    InkWell(
+                                                      onTap: () {
+                                                        Navigator.push(
+                                                          context,
+                                                          MaterialPageRoute(
+                                                            builder: (context) =>
+                                                                IomListByCategoryPage(
+                                                              title:
+                                                                  "Marketing",
+                                                              categoryId: "9",
+                                                            ),
+                                                          ),
+                                                        ).then((value) {
+                                                          notifBloc
+                                                            ..add(
+                                                                NotifEventCount());
+                                                        });
+                                                      },
+                                                      child: IomMenuIconWidget(
+                                                        iconData: CupertinoIcons
+                                                            .chart_bar,
+                                                        label: "Marketing",
+                                                        badgeCount: state
+                                                            .totalMarketing,
+                                                      ),
                                                     ),
-                                                    IomMenuIconWidget(
-                                                      iconData: CupertinoIcons
-                                                          .check_mark_circled,
-                                                      label:
-                                                          "Permit Certification",
-                                                      badgeCount:
-                                                          state.totalPermit,
+                                                    InkWell(
+                                                      onTap: () {
+                                                        Navigator.push(
+                                                          context,
+                                                          MaterialPageRoute(
+                                                            builder: (context) =>
+                                                                IomListByCategoryPage(
+                                                              title:
+                                                                  "Permit & Certification",
+                                                              categoryId: "13",
+                                                            ),
+                                                          ),
+                                                        ).then((value) {
+                                                          notifBloc
+                                                            ..add(
+                                                                NotifEventCount());
+                                                        });
+                                                      },
+                                                      child: IomMenuIconWidget(
+                                                        iconData: CupertinoIcons
+                                                            .check_mark_circled,
+                                                        label:
+                                                            "Permit\nCertification",
+                                                        badgeCount:
+                                                            state.totalPermit,
+                                                      ),
                                                     ),
-                                                    IomMenuIconWidget(
-                                                      iconData:
-                                                          CupertinoIcons.gift,
-                                                      label: "Promosi",
-                                                      badgeCount:
-                                                          state.totalPromosi,
+                                                    InkWell(
+                                                      onTap: () {
+                                                        Navigator.push(
+                                                          context,
+                                                          MaterialPageRoute(
+                                                            builder: (context) =>
+                                                                IomListByCategoryPage(
+                                                              title: "Promosi",
+                                                              categoryId: "8",
+                                                            ),
+                                                          ),
+                                                        ).then((value) {
+                                                          notifBloc
+                                                            ..add(
+                                                                NotifEventCount());
+                                                        });
+                                                      },
+                                                      child: IomMenuIconWidget(
+                                                        iconData:
+                                                            CupertinoIcons.gift,
+                                                        label: "Promosi",
+                                                        badgeCount:
+                                                            state.totalPromosi,
+                                                      ),
                                                     ),
                                                   ],
                                                 );
@@ -313,108 +581,6 @@ class _ApprovalIomMainPageState extends State<ApprovalIomMainPage> {
                               ),
                             ),
                           ],
-                        ),
-                      ),
-                      Container(
-                        margin: EdgeInsets.only(left: 20, right: 20),
-                        width: double.infinity,
-                        child: Text(
-                          "Request Terbaru",
-                          textAlign: TextAlign.start,
-                          style: MyTheme.myStylePrimaryTextStyle.copyWith(
-                            fontWeight: FontWeight.w600,
-                            fontSize: 18,
-                          ),
-                        ),
-                      ),
-                      BlocProvider(
-                        create: (BuildContext context) {
-                          return approvalBloc
-                            ..add(RequestDataEvent(ApprovalListType.IOM));
-                        },
-                        child: BlocBuilder<ApprovalMainPageBloc,
-                            ApprovalMainPageState>(
-                          builder: (context, state) {
-                            var status = "";
-                            Widget dataList = Text("");
-                            if (state is ApprovalMainPageStateLoading) {}
-                            if (state is ApprovalMainPageStateFailure) {}
-                            if (state
-                                is ApprovalMainPageStateSuccessListCompare) {
-                              var pbjList = state.datas;
-
-                              if (pbjList.isEmpty) {
-                                return Container(
-                                  margin: EdgeInsets.only(
-                                      top: 50, left: 20, right: 20),
-                                  alignment: Alignment.center,
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Image.network(
-                                        'http://feylabs.my.id/fm/mdln_asset/mdln_empty_image.png',
-                                        // Adjust the image properties as per your requirement
-                                      ),
-                                      SizedBox(height: 10),
-                                      Text(
-                                        'Belum Ada Request Baru',
-                                        style: TextStyle(
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                );
-                              }
-
-                              dataList = ListView.builder(
-                                itemCount: pbjList.length,
-                                shrinkWrap: true,
-                                physics: const NeverScrollableScrollPhysics(),
-                                itemBuilder: (context, index) {
-                                  final pbjItem = pbjList[index];
-                                  var isApproved = false;
-                                  if (pbjItem.status != "Y") {
-                                    isApproved = true;
-                                  }
-                                  return ItemApprovalWidget(
-                                    isApproved: isApproved,
-                                    itemCode: (index + 1).toString() +
-                                        pbjItem.noCompare.toString() +
-                                        pbjList.length.toString(),
-                                    date: pbjItem.tglPermintaan,
-                                    requiredId: pbjItem.idCompare,
-                                    personName: pbjItem.namaUser,
-                                    departmentTitle: pbjItem.department,
-                                    descriptiveText: removeHtmlTags(
-                                        pbjItem.descCompare ?? ""),
-                                    onPressed: (String noCompare) {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) =>
-                                              DetailComparePage(
-                                                  noCompare:
-                                                      pbjItem.noCompare ?? "",
-                                                  idCompare:
-                                                      pbjItem.idCompare ?? ""),
-                                        ),
-                                      ).then((value) {
-                                        notifBloc..add(NotifEventCount());
-                                        approvalBloc
-                                          ..add(RequestDataEvent(
-                                              ApprovalListType.IOM));
-                                      });
-                                    },
-                                  );
-                                },
-                              );
-                            }
-                            return Container(
-                              child: dataList,
-                            );
-                          },
                         ),
                       ),
                       SizedBox(

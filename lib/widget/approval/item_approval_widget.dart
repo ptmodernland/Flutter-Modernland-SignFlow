@@ -85,7 +85,7 @@ class ItemApprovalWidget extends StatelessWidget {
         }
       },
       child: Container(
-        margin: EdgeInsets.only(left: 20, right: 20, bottom: 10),
+        margin: EdgeInsets.only(left: 20, right: 20, top: 12),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
           border: Border.all(

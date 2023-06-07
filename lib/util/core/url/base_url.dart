@@ -8,6 +8,9 @@ final String DOC_VIEW_COMPARE =
 final String DOC_VIEW_KASBON =
     "https://approval.modernland.co.id/kasbon/view_mobile/";
 
+final String DOC_VIEW_IOM =
+    "https://approval.modernland.co.id/memo/view_mobile/";
+
 final String DOC_VIEW_REALISASI =
     "https://approval.modernland.co.id/realisasi/view_mobile/";
 
