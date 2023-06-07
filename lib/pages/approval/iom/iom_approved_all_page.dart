@@ -47,7 +47,7 @@ class ApprovalList extends StatelessWidget {
             itemBuilder: (context, index) {
               final approvalItem = state.approvals[index];
               var isApproved = false;
-              if (approvalItem.status != "Y") {
+              if (approvalItem.status != "Y" || approvalItem.status != "C") {
                 isApproved = true;
               }
               return ItemApprovalWidget(
@@ -57,7 +57,7 @@ class ApprovalList extends StatelessWidget {
                 date: approvalItem.tanggal,
                 requiredId: approvalItem.idIom,
                 personName: approvalItem.namaUser,
-                departmentTitle: approvalItem.departemen,
+                departmentTitle: approvalItem.kategoriIom,
                 descriptiveText: removeHtmlTags(((approvalItem.perihal ?? ""))),
                 onPressed: (String noCompare) {
                   Navigator.push(

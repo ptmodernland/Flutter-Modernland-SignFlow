@@ -61,7 +61,7 @@ class ApprovalList extends StatelessWidget {
                 date: approvalItem.tanggal,
                 requiredId: approvalItem.idIom,
                 personName: approvalItem.namaUser,
-                departmentTitle: approvalItem.departemen,
+                departmentTitle: approvalItem.kategoriIom,
                 descriptiveText: removeHtmlTags(((approvalItem.perihal ?? ""))),
                 onPressed: (String noCompare) {
                   Navigator.push(

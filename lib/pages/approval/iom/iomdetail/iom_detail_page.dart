@@ -1,20 +1,9 @@
-import 'package:bwa_cozy/bloc/compare/compare_action_bloc.dart';
-import 'package:bwa_cozy/bloc/compare/compare_action_event.dart';
-import 'package:bwa_cozy/bloc/compare/compare_bloc.dart';
-import 'package:bwa_cozy/bloc/compare/compare_comment_bloc.dart';
-import 'package:bwa_cozy/bloc/compare/compare_comment_event.dart';
-import 'package:bwa_cozy/bloc/compare/compare_event.dart';
-import 'package:bwa_cozy/bloc/compare/compare_state.dart';
+import 'package:bwa_cozy/bloc/iom/approval_comment_cubit.dart';
 import 'package:bwa_cozy/bloc/iom/approval_detail_cubit.dart';
 import 'package:bwa_cozy/bloc/iom/approval_state.dart';
 import 'package:bwa_cozy/bloc/kasbon/kasbon_action_bloc.dart';
 import 'package:bwa_cozy/bloc/kasbon/kasbon_action_event.dart';
-import 'package:bwa_cozy/bloc/kasbon/kasbon_bloc.dart';
-import 'package:bwa_cozy/bloc/kasbon/kasbon_comment_bloc.dart';
-import 'package:bwa_cozy/bloc/kasbon/kasbon_comment_event.dart';
-import 'package:bwa_cozy/bloc/kasbon/kasbon_event.dart';
 import 'package:bwa_cozy/bloc/kasbon/kasbon_state.dart';
-import 'package:bwa_cozy/repos/compare_repository.dart';
 import 'package:bwa_cozy/repos/iom/approval_repository.dart';
 import 'package:bwa_cozy/repos/kasbon_repository.dart';
 import 'package:bwa_cozy/util/core/string/html_util.dart';
@@ -29,7 +18,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:quickalert/quickalert.dart';
 
 class IomDetailPage extends StatefulWidget {
   const IomDetailPage(
@@ -52,19 +40,17 @@ class _IomDetailPageState extends State<IomDetailPage> {
   final _formKey2 = GlobalKey<FormState>();
   final messageController = TextEditingController();
 
-  late KasbonBloc kasbonBloc;
-  late KasbonCommentBloc kasbonCommentBloc;
   late KasbonActionBloc kasbonActionBloc;
   late ApprovalDetailCubit iomDetailCubit;
+  late ApprovalCommentCubit iomCommentCubit;
 
   @override
   void initState() {
     super.initState();
     var kasbonRepository = KasbonRepository();
-    kasbonBloc = KasbonBloc(kasbonRepository);
-    kasbonCommentBloc = KasbonCommentBloc(kasbonRepository);
     kasbonActionBloc = KasbonActionBloc(kasbonRepository);
 
+    iomCommentCubit = ApprovalCommentCubit(ApprovalRepository());
     iomDetailCubit = ApprovalDetailCubit(ApprovalRepository());
     iomDetailCubit.fetchApprovals(widget.idIom);
   }
@@ -117,7 +103,7 @@ class _IomDetailPageState extends State<IomDetailPage> {
                                           ),
                                           Flexible(
                                             child: Text(
-                                              widget.noIom,
+                                              "#" + widget.noIom,
                                               maxLines: 2,
                                               overflow: TextOverflow.ellipsis,
                                               style: MyTheme
@@ -148,222 +134,14 @@ class _IomDetailPageState extends State<IomDetailPage> {
                           ),
                         ),
                         width: MediaQuery.sizeOf(context).width,
-                        child: Stack(
-                          children: [
-                            Container(
-                              margin:
-                                  EdgeInsets.only(top: 20, left: 0, right: 0),
-                              width: double.infinity,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.vertical(
-                                    top: Radius.circular(30.0)),
-                              ),
-                              child: Container(
-                                child: Column(
-                                  children: [],
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      BlocProvider(
-                        create: (BuildContext context) {
-                          return kasbonBloc
-                            ..add(GetKasbonDetailEvent(
-                                idCompare: widget.noIom.toString()));
-                        },
-                        child: BlocBuilder<KasbonBloc, KasbonState>(
-                          builder: (context, state) {
-                            var status = "";
-                            Widget dataList = Text("");
-                            if (state is KasbonStateLoading) {}
-                            if (state is KasbonStateFailure) {
-                              if (state.type ==
-                                  CompareEActionType.LOAD_DETAIL) {
-                                return Text("Error " + state.message);
-                              }
-                            }
-                            if (state is KasbonDetailSuccess) {
-                              var data = state.data;
-
-                              var isApproved = false;
-                              if (data.status != "Y") {
-                                isApproved = true;
-                              }
-                              return Container(
-                                child: Column(
-                                  children: [
-                                    ItemApprovalWidget(
-                                      isApproved: isApproved,
-                                      itemCode: data.noKasbon,
-                                      date: data.tglKasbon,
-                                      personName: data.namaUser,
-                                      descriptiveText:
-                                          removeHtmlTags(data.keterangan ?? ""),
-                                      departmentTitle: data.departemen,
-                                    ),
-                                    Container(
-                                      padding: const EdgeInsets.only(
-                                          left: 20.0, right: 20.0),
-                                      width: MediaQuery.sizeOf(context).width,
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.stretch,
-                                        children: [
-                                          Text(
-                                            "Detail Dokumen",
-                                            textAlign: TextAlign.start,
-                                            style: MyTheme
-                                                .myStylePrimaryTextStyle
-                                                .copyWith(
-                                              fontWeight: FontWeight.w600,
-                                              fontSize: 18,
-                                            ),
-                                          ),
-                                          SizedBox(
-                                            height: 20,
-                                          ),
-                                          Row(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Expanded(
-                                                child: DocumentDetailWidget(
-                                                  title: "Nomor Kasbon",
-                                                  content: data.noKasbon ?? "",
-                                                ),
-                                              ),
-                                              Expanded(
-                                                child: DocumentDetailWidget(
-                                                  title: "Tanggal",
-                                                  content:
-                                                      data.tglKasbon ?? "-",
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                          Row(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Expanded(
-                                                  child: DocumentDetailWidget(
-                                                title: "Nama Karyawan",
-                                                content: data.namaUser ??
-                                                    "MDLN Staff",
-                                              )),
-                                              Expanded(
-                                                child: DocumentDetailWidget(
-                                                  title: "Department",
-                                                  content: data.departemen ??
-                                                      "Modernland",
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                          Row(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Expanded(
-                                                child: DocumentDetailWidget(
-                                                  title: "Jumlah Kasbon",
-                                                  content:
-                                                      data.jumlah.toString(),
-                                                ),
-                                              ),
-                                              Expanded(
-                                                child: DocumentDetailWidget(
-                                                  title: "Keterangan",
-                                                  content: data.keterangan
-                                                      .toString(),
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                          Row(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Expanded(
-                                                  child: DocumentDetailWidget(
-                                                title: "View Detail",
-                                                content: "Klik Disini",
-                                                fileURL: DOC_VIEW_IOM +
-                                                    (widget.idIom ?? ""),
-                                              )),
-                                              Expanded(
-                                                child: DocumentDetailWidget(
-                                                  title: "Download File",
-                                                  content: data.attchFile ?? "",
-                                                  isForDownload: true,
-                                                  fileURL:
-                                                      ATTACH_DOWNLOAD_KASBON +
-                                                          data.attchFile
-                                                              .toString(),
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                          SizedBox(
-                                            height: 20,
-                                          ),
-                                          if (widget.isFromHistory == false)
-                                            Text(
-                                              "Komentar",
-                                              textAlign: TextAlign.start,
-                                              style: MyTheme
-                                                  .myStylePrimaryTextStyle
-                                                  .copyWith(
-                                                fontWeight: FontWeight.w600,
-                                                fontSize: 18,
-                                              ),
-                                            ),
-                                          if (!widget.isFromHistory)
-                                            Form(
-                                              key: _formKey,
-                                              child: Column(
-                                                mainAxisSize: MainAxisSize.min,
-                                                children: [
-                                                  CustomTextInput(
-                                                    textEditController:
-                                                        messageController,
-                                                    hintTextString:
-                                                        'Isi Tanggapan',
-                                                    inputType:
-                                                        InputType.Default,
-                                                    enableBorder: true,
-                                                    minLines: 3,
-                                                    themeColor:
-                                                        Theme.of(context)
-                                                            .primaryColor,
-                                                    cornerRadius: 18.0,
-                                                    textValidator: (value) {
-                                                      if (value?.isEmpty ??
-                                                          true) {
-                                                        return 'Isi field ini terlebih dahulu';
-                                                      }
-                                                      return null;
-                                                    },
-                                                    textColor: Colors.black,
-                                                    errorMessage:
-                                                        'Username cant be empty',
-                                                    labelText:
-                                                        'Tanggapan/Komentar/Review',
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                        ],
-                                      ),
-                                    )
-                                  ],
-                                ),
-                              );
-                            }
-                            return Container();
-                          },
+                        child: Container(
+                          margin: EdgeInsets.only(top: 20, left: 0, right: 0),
+                          width: double.infinity,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.vertical(
+                                top: Radius.circular(30.0)),
+                          ),
+                          child: Container(),
                         ),
                       ),
                       BlocBuilder<ApprovalDetailCubit, ApprovalState>(
@@ -389,10 +167,10 @@ class _IomDetailPageState extends State<IomDetailPage> {
                                     isApproved: isApproved,
                                     itemCode: data.nomor,
                                     date: data.tanggal,
-                                    personName: data.dari,
+                                    personName: data.namaUser,
                                     descriptiveText:
                                         removeHtmlTags(data.perihal ?? ""),
-                                    departmentTitle: data.jenis,
+                                    departmentTitle: data.departemen,
                                   ),
                                   Container(
                                     padding: const EdgeInsets.only(
@@ -403,7 +181,8 @@ class _IomDetailPageState extends State<IomDetailPage> {
                                           CrossAxisAlignment.stretch,
                                       children: [
                                         Text(
-                                          "Detail Dokumen",
+                                          "Detail Dokumen : " +
+                                              (data.kategoriIom ?? ""),
                                           textAlign: TextAlign.start,
                                           style: MyTheme.myStylePrimaryTextStyle
                                               .copyWith(
@@ -426,8 +205,38 @@ class _IomDetailPageState extends State<IomDetailPage> {
                                             ),
                                           ],
                                         ),
-                                        SizedBox(
-                                          height: 10,
+                                        Row(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Expanded(
+                                              child: DocumentDetailWidget(
+                                                title: "Perihal : ",
+                                                content: removeHtmlTags(
+                                                    data.perihal ?? ""),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        Row(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Expanded(
+                                              child: DocumentDetailWidget(
+                                                title: "Dari : ",
+                                                content: removeHtmlTags(
+                                                    data.dari ?? ""),
+                                              ),
+                                            ),
+                                            Expanded(
+                                              child: DocumentDetailWidget(
+                                                title: "CC : ",
+                                                content: removeHtmlTags(
+                                                    data.cc ?? ""),
+                                              ),
+                                            ),
+                                          ],
                                         ),
                                         Row(
                                           crossAxisAlignment:
@@ -460,7 +269,7 @@ class _IomDetailPageState extends State<IomDetailPage> {
                                             Expanded(
                                               child: DocumentDetailWidget(
                                                 title: "Department",
-                                                content: data.tanggal ??
+                                                content: data.departemen ??
                                                     "Modernland",
                                               ),
                                             ),
@@ -512,17 +321,15 @@ class _IomDetailPageState extends State<IomDetailPage> {
                                         SizedBox(
                                           height: 20,
                                         ),
-                                        if (widget.isFromHistory == false)
-                                          Text(
-                                            "Komentar",
-                                            textAlign: TextAlign.start,
-                                            style: MyTheme
-                                                .myStylePrimaryTextStyle
-                                                .copyWith(
-                                              fontWeight: FontWeight.w600,
-                                              fontSize: 18,
-                                            ),
+                                        Text(
+                                          "Komentar",
+                                          textAlign: TextAlign.start,
+                                          style: MyTheme.myStylePrimaryTextStyle
+                                              .copyWith(
+                                            fontWeight: FontWeight.w600,
+                                            fontSize: 18,
                                           ),
+                                        ),
                                         if (!widget.isFromHistory)
                                           Form(
                                             key: _formKey,
@@ -563,69 +370,126 @@ class _IomDetailPageState extends State<IomDetailPage> {
                               ),
                             );
                           }
-                          return Text("Kenapa Ini");
+                          return Text("Memuat Detail");
                         },
                       ),
-                      BlocProvider(
-                        create: (BuildContext context) {
-                          return kasbonActionBloc;
-                        },
-                        child: Column(
-                          children: [
-                            BlocListener<KasbonActionBloc, KasbonState>(
-                              listener: (context, state) {
-                                if (state is KasbonStateFailure) {
-                                  QuickAlert.show(
-                                    context: context,
-                                    type: QuickAlertType.error,
-                                    text: state.message.toString(),
-                                  );
-                                }
+                      BlocBuilder<ApprovalCommentCubit, ApprovalState>(
+                        bloc: iomCommentCubit
+                          ..fetchApprovalComment(widget.noIom),
+                        builder: (context, state) {
+                          Widget emptyState = Container(
+                            margin: EdgeInsets.only(
+                                left: 20, right: 20, bottom: 50, top: 50),
+                            alignment: Alignment.center,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Image.network(
+                                  'http://feylabs.my.id/fm/mdln_asset/mdln_empty_image.png',
+                                  // Adjust the image properties as per your requirement
+                                ),
+                                SizedBox(height: 10),
+                                Text(
+                                  'Belum Ada Komentar',
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          );
 
-                                if (state is KasbonStateSuccess) {
-                                  showDialog(
-                                    context: context,
-                                    builder: (BuildContext context) {
-                                      var text = "";
-                                      if (state.type ==
-                                          KasbonEActionType.APPROVE) {
-                                        text = "Request Berhasil Diapprove";
-                                      }
-                                      if (state.type ==
-                                          KasbonEActionType.REJECT) {
-                                        text = "Request Berhasil Direject";
-                                      }
-                                      return WillPopScope(
-                                        onWillPop: () async {
-                                          Navigator.of(context)
-                                              .pop(); // Handle back button press
-                                          return false; // Prevent dialog from being dismissed by back button
-                                        },
-                                        child: CupertinoAlertDialog(
-                                          title: Text(
-                                            'Success',
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                          content: Text(text),
-                                          actions: <Widget>[
-                                            CupertinoDialogAction(
-                                              onPressed: () {
-                                                Navigator.of(context)
-                                                    .pop(); // Close the dialog
-                                                Navigator.of(context)
-                                                    .pop(); // Go back to the previous page
-                                              },
-                                              child: Text('OK'),
-                                            ),
-                                          ],
-                                        ),
-                                      );
-                                    },
-                                  );
+                          if (state is ApprovalLoading) {
+                            return Text("Loading");
+                          }
+                          if (state is ApprovalCommentError) {
+                            return Text("Success : " + state.message);
+                          }
+                          if (state is ApprovalCommentSuccess) {
+                            var commentList = state.comments;
+                            var commentListViewBuilder = ListView.builder(
+                              itemCount: commentList.length,
+                              shrinkWrap: true,
+                              physics: const NeverScrollableScrollPhysics(),
+                              itemBuilder: (context, index) {
+                                final pbjItem = commentList[index];
+                                var isApproved = false;
+                                if (pbjItem.status != "T") {
+                                  isApproved = true;
                                 }
+                                return UserCommentWidget(
+                                  comment: pbjItem.komen ?? "",
+                                  userName: pbjItem.approve ?? "",
+                                  postingDate: pbjItem.tgl ?? "",
+                                  bottomText: "Status : " +
+                                      (pbjItem.statusApprove ?? ""),
+                                );
                               },
-                              child: Container(),
+                            );
+                            return commentListViewBuilder;
+                          }
+                          return emptyState;
+                        },
+                      ),
+                      Container(
+                        margin: EdgeInsets.only(
+                            left: 20, right: 20, top: 20, bottom: 20),
+                        width: MediaQuery.sizeOf(context).width,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            ElevatedButton(
+                              onPressed: () {
+                                showPinInputDialog(
+                                    type: ApprovalActionType.APPROVE,
+                                    description:
+                                        "Anda Yakin Ingin Mengapprove Approval ini ?");
+                              },
+                              child: Text(
+                                'Approve',
+                                style: MyTheme.myStyleButtonTextStyle,
+                              ),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Color(0xff33DC9F),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(
+                                      20.0), // Adjust the radius as needed
+                                ),
+                              ),
+                            ),
+                            ElevatedButton(
+                              onPressed: () {
+                                showPinInputDialog(
+                                    type: ApprovalActionType.REJECT,
+                                    description:
+                                        "Anda Yakin Ingin Menolak Approval ini ?");
+                              },
+                              child: Text(
+                                'Reject',
+                                style: MyTheme.myStyleButtonTextStyle,
+                              ),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Color(0xffFF5B5B),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(
+                                      20.0), // Adjust the radius as needed
+                                ),
+                              ),
+                            ),
+                            ElevatedButton(
+                              onPressed: () {},
+                              child: Text(
+                                'Recommend',
+                                style: MyTheme.myStyleButtonTextStyle,
+                              ),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Color(0xffC4C4C4),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(
+                                      20.0), // Adjust the radius as needed
+                                ),
+                              ),
                             ),
                           ],
                         ),
@@ -642,7 +506,7 @@ class _IomDetailPageState extends State<IomDetailPage> {
   }
 
   void showPinInputDialog(
-      {required KasbonEActionType type,
+      {required ApprovalActionType type,
       String description = 'Masukkan PIN anda'}) {
     var pin = "";
     showDialog(

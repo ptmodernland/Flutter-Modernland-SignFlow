@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:bwa_cozy/bloc/_wrapper/response_wrapper.dart';
 import 'package:bwa_cozy/repos/iom/dto/Iom_detail_dto.dart';
 import 'package:bwa_cozy/repos/iom/dto/approval_item_dto.dart';
+import 'package:bwa_cozy/repos/iom/dto/iom_comment_dto.dart';
 import 'package:bwa_cozy/util/storage/sessionmanager/session_manager.dart';
 import 'package:http/http.dart' as http;
 
@@ -64,6 +65,21 @@ class ApprovalRepository {
       return approvals;
     } else {
       throw Exception('Failed to load approvals by category');
+    }
+  }
+
+  Future<List<IomCommentDto>> getIOMComment(String nomorIom) async {
+    final url =
+        'https://approval.modernland.co.id/androidiom/get_komen_memo.php?no=$nomorIom';
+    final response = await http.get(Uri.parse(url));
+
+    if (response.statusCode == 200) {
+      final jsonData = json.decode(response.body) as List<dynamic>;
+      final approvals =
+          jsonData.map((item) => IomCommentDto.fromJson(item)).toList();
+      return approvals;
+    } else {
+      throw Exception('Failed to load iom comment');
     }
   }
 

@@ -5,18 +5,17 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class DocumentDetailWidget extends StatelessWidget {
-  DocumentDetailWidget(
-      {super.key,
-      this.title = "Nama Calon",
-      this.content = "Yossy Gheasanta",
-      this.icon = const Icon(CupertinoIcons.info_circle),
-      this.fileURL = null,
-      this.isForDownload = false});
+  DocumentDetailWidget({super.key,
+    this.title = "Nama Calon",
+    this.content = "Yossy Gheasanta",
+    this.icon = const Icon(CupertinoIcons.info_circle),
+    this.fileURL = null,
+    this.isForDownload = false});
 
   final String? fileURL;
   final String title;
   final String content;
-  final Color color = Colors.black54;
+  final Color color = Colors.black;
   final Icon icon;
   final bool isForDownload;
 
@@ -92,7 +91,7 @@ class DocumentDetailWidget extends StatelessWidget {
                 },
                 child: Container(
                   child: Text(
-                    content,
+                    content.isEmpty ? '-' : content,
                     textAlign: TextAlign.start,
                     style: GoogleFonts.lato().copyWith(
                       fontSize: 14,
