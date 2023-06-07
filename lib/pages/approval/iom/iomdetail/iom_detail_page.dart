@@ -4,6 +4,7 @@ import 'package:bwa_cozy/bloc/iom/approval_state.dart';
 import 'package:bwa_cozy/bloc/kasbon/kasbon_action_bloc.dart';
 import 'package:bwa_cozy/bloc/kasbon/kasbon_action_event.dart';
 import 'package:bwa_cozy/bloc/kasbon/kasbon_state.dart';
+import 'package:bwa_cozy/pages/approval/iom/log/iom_log_page.dart';
 import 'package:bwa_cozy/repos/iom/approval_repository.dart';
 import 'package:bwa_cozy/repos/kasbon_repository.dart';
 import 'package:bwa_cozy/util/core/string/html_util.dart';
@@ -181,8 +182,7 @@ class _IomDetailPageState extends State<IomDetailPage> {
                                           CrossAxisAlignment.stretch,
                                       children: [
                                         Text(
-                                          "Detail Dokumen : " +
-                                              (data.kategoriIom ?? ""),
+                                          "Document Header",
                                           textAlign: TextAlign.start,
                                           style: MyTheme.myStylePrimaryTextStyle
                                               .copyWith(
@@ -199,23 +199,18 @@ class _IomDetailPageState extends State<IomDetailPage> {
                                           children: [
                                             Expanded(
                                               child: DocumentDetailWidget(
-                                                title: "Nomor IOM",
-                                                content: data.nomor ?? "",
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                        Row(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Expanded(
-                                              child: DocumentDetailWidget(
                                                 title: "Perihal : ",
                                                 content: removeHtmlTags(
                                                     data.perihal ?? ""),
                                               ),
                                             ),
+                                            Expanded(
+                                              child: DocumentDetailWidget(
+                                                title: "Dari : ",
+                                                content: removeHtmlTags(
+                                                    data.dari ?? ""),
+                                              ),
+                                            ),
                                           ],
                                         ),
                                         Row(
@@ -224,9 +219,9 @@ class _IomDetailPageState extends State<IomDetailPage> {
                                           children: [
                                             Expanded(
                                               child: DocumentDetailWidget(
-                                                title: "Dari : ",
+                                                title: "Kepada : ",
                                                 content: removeHtmlTags(
-                                                    data.dari ?? ""),
+                                                    data.kepada ?? ""),
                                               ),
                                             ),
                                             Expanded(
@@ -238,19 +233,34 @@ class _IomDetailPageState extends State<IomDetailPage> {
                                             ),
                                           ],
                                         ),
+                                        SizedBox(
+                                          height: 10,
+                                        ),
+                                        Text(
+                                          "IOM " + (data.kategoriIom ?? ""),
+                                          textAlign: TextAlign.start,
+                                          style: MyTheme.myStylePrimaryTextStyle
+                                              .copyWith(
+                                            fontWeight: FontWeight.w600,
+                                            fontSize: 18,
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          height: 10,
+                                        ),
                                         Row(
                                           crossAxisAlignment:
                                               CrossAxisAlignment.start,
                                           children: [
                                             Expanded(
                                               child: DocumentDetailWidget(
-                                                title: "Nomor IOM",
+                                                title: "Nomor IOM :",
                                                 content: data.nomor ?? "",
                                               ),
                                             ),
                                             Expanded(
                                               child: DocumentDetailWidget(
-                                                title: "Tanggal",
+                                                title: "Tanggal :",
                                                 content: data.tanggal ?? "-",
                                               ),
                                             ),
@@ -262,33 +272,15 @@ class _IomDetailPageState extends State<IomDetailPage> {
                                           children: [
                                             Expanded(
                                                 child: DocumentDetailWidget(
-                                              title: "Nama Karyawan",
+                                                  title: "Nama Karyawan :",
                                               content:
                                                   data.namaUser ?? "MDLN Staff",
                                             )),
                                             Expanded(
                                               child: DocumentDetailWidget(
-                                                title: "Department",
+                                                title: "Department :",
                                                 content: data.departemen ??
                                                     "Modernland",
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                        Row(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Expanded(
-                                              child: DocumentDetailWidget(
-                                                title: "Jumlah Kasbon",
-                                                content: data.dari.toString(),
-                                              ),
-                                            ),
-                                            Expanded(
-                                              child: DocumentDetailWidget(
-                                                title: "Keterangan",
-                                                content: data.cc.toString(),
                                               ),
                                             ),
                                           ],
@@ -321,12 +313,30 @@ class _IomDetailPageState extends State<IomDetailPage> {
                                         SizedBox(
                                           height: 20,
                                         ),
+                                        OutlinedButton(
+                                          onPressed: () {
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    IomLogPage(
+                                                  noIom: data.nomor ?? "",
+                                                  title: "Log #" +
+                                                      (data.nomor ?? ""),
+                                                ),
+                                              ),
+                                            );
+                                          },
+                                          child: Text("Lihat History"),
+                                        ),
+                                        SizedBox(
+                                          height: 20,
+                                        ),
                                         Text(
                                           "Komentar",
                                           textAlign: TextAlign.start,
                                           style: MyTheme.myStylePrimaryTextStyle
                                               .copyWith(
-                                            fontWeight: FontWeight.w600,
                                             fontSize: 18,
                                           ),
                                         ),
@@ -427,7 +437,9 @@ class _IomDetailPageState extends State<IomDetailPage> {
                                 );
                               },
                             );
-                            return commentListViewBuilder;
+                            return Container(
+                                margin: EdgeInsets.only(left: 10, right: 10),
+                                child: commentListViewBuilder);
                           }
                           return emptyState;
                         },

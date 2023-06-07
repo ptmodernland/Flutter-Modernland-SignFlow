@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:bwa_cozy/bloc/_wrapper/response_wrapper.dart';
 import 'package:bwa_cozy/repos/iom/dto/Iom_detail_dto.dart';
+import 'package:bwa_cozy/repos/iom/dto/Iom_log_dto.dart';
 import 'package:bwa_cozy/repos/iom/dto/approval_item_dto.dart';
 import 'package:bwa_cozy/repos/iom/dto/iom_comment_dto.dart';
 import 'package:bwa_cozy/util/storage/sessionmanager/session_manager.dart';
@@ -62,6 +63,21 @@ class ApprovalRepository {
       final jsonData = json.decode(response.body) as List<dynamic>;
       final approvals =
           jsonData.map((item) => ApprovalItem.fromJson(item)).toList();
+      return approvals;
+    } else {
+      throw Exception('Failed to load approvals by category');
+    }
+  }
+
+  Future<List<IomLogDto>> getMemoLog(String idIom) async {
+    const url =
+        'https://approval.modernland.co.id/androidiom/get_log_memo.php?';
+    final response = await http.get(Uri.parse(url));
+
+    if (response.statusCode == 200) {
+      final jsonData = json.decode(response.body) as List<dynamic>;
+      final approvals =
+          jsonData.map((item) => IomLogDto.fromJson(item)).toList();
       return approvals;
     } else {
       throw Exception('Failed to load approvals by category');
