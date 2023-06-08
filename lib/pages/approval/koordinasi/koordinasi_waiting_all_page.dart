@@ -68,6 +68,7 @@ class _RekomendasiListState extends State<RekomendasiList> {
                     MaterialPageRoute(
                       builder: (context) => IomDetailPage(
                         isFromHistory: false,
+                        isFromRekomendasi: true,
                         idIom: approvalItem.idIom ?? "",
                         noIom: approvalItem.nomor ?? "",
                       ),

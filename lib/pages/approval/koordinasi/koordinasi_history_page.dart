@@ -54,7 +54,7 @@ class _RekomendasiListState extends State<RekomendasiList> {
             itemBuilder: (context, index) {
               var approvalItem = state.approvals[index];
               return ItemApprovalWidget(
-                isApproved: false,
+                isApproved: true,
                 itemCode:
                     (index + 1).toString() + approvalItem.nomor.toString(),
                 date: approvalItem.tanggal,
@@ -67,7 +67,8 @@ class _RekomendasiListState extends State<RekomendasiList> {
                     context,
                     MaterialPageRoute(
                       builder: (context) => IomDetailPage(
-                        isFromHistory: false,
+                        isFromHistory: true,
+                        isFromRekomendasi: true,
                         idIom: approvalItem.idIom ?? "",
                         noIom: approvalItem.nomor ?? "",
                       ),

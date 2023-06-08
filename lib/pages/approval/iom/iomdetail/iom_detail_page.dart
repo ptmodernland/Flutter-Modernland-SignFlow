@@ -6,7 +6,6 @@ import 'package:bwa_cozy/bloc/iom/approval_state.dart';
 import 'package:bwa_cozy/pages/approval/iom/log/iom_log_page.dart';
 import 'package:bwa_cozy/pages/approval/koordinasi/koordinasi_choose_head.dart';
 import 'package:bwa_cozy/repos/iom/approval_repository.dart';
-import 'package:bwa_cozy/repos/kasbon_repository.dart';
 import 'package:bwa_cozy/util/core/string/html_util.dart';
 import 'package:bwa_cozy/util/core/url/base_url.dart';
 import 'package:bwa_cozy/util/enum/action_type.dart';
@@ -26,12 +25,14 @@ class IomDetailPage extends StatefulWidget {
       {Key? key,
       required this.idIom,
       required this.noIom,
-      this.isFromHistory = false})
+      this.isFromHistory = false,
+      this.isFromRekomendasi = false})
       : super(key: key);
 
   final String idIom;
   final String noIom;
   final bool isFromHistory;
+  final bool isFromRekomendasi;
 
   @override
   State<IomDetailPage> createState() => _IomDetailPageState();
@@ -50,7 +51,6 @@ class _IomDetailPageState extends State<IomDetailPage> {
   @override
   void initState() {
     super.initState();
-    var kasbonRepository = KasbonRepository();
 
     iomActionCubit = ApprovalActionCubit(ApprovalRepository());
     iomCommentCubit = ApprovalCommentCubit(ApprovalRepository());
@@ -524,10 +524,18 @@ class _IomDetailPageState extends State<IomDetailPage> {
                             children: [
                               ElevatedButton(
                                 onPressed: () {
-                                  showPinInputDialog(
-                                      type: ApprovalActionType.APPROVE,
-                                      description:
-                                      "Anda Yakin Ingin Mengapprove Approval ini ?");
+                                  if (widget.isFromRekomendasi) {
+                                    showPinInputDialog(
+                                        type: ApprovalActionType
+                                            .KOORDINASI_APPROVE,
+                                        description:
+                                            "Anda Yakin Ingin Mengapprove Koordinasi ini ?");
+                                  } else {
+                                    showPinInputDialog(
+                                        type: ApprovalActionType.APPROVE,
+                                        description:
+                                            "Anda Yakin Ingin Mengapprove Approval ini ?");
+                                  }
                                 },
                                 child: Text(
                                   'Approve',
@@ -543,10 +551,18 @@ class _IomDetailPageState extends State<IomDetailPage> {
                               ),
                               ElevatedButton(
                                 onPressed: () {
-                                  showPinInputDialog(
-                                      type: ApprovalActionType.REJECT,
-                                      description:
-                                      "Anda Yakin Ingin Menolak Approval ini ?");
+                                  if (widget.isFromRekomendasi) {
+                                    showPinInputDialog(
+                                        type: ApprovalActionType
+                                            .KOORDINASI_REJECT,
+                                        description:
+                                            "Anda Yakin Ingin Menolak Approval Koordinasi ini ?");
+                                  } else {
+                                    showPinInputDialog(
+                                        type: ApprovalActionType.REJECT,
+                                        description:
+                                            "Anda Yakin Ingin Menolak Approval ini ?");
+                                  }
                                 },
                                 child: Text(
                                   'Reject',
@@ -560,31 +576,32 @@ class _IomDetailPageState extends State<IomDetailPage> {
                                   ),
                                 ),
                               ),
-                              ElevatedButton(
-                                onPressed: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) =>
-                                          KoordinasiChooseHeadPage(
-                                        idIom: widget.idIom,
-                                        nomorIom: widget.noIom,
+                              if (widget.isFromRekomendasi != true)
+                                ElevatedButton(
+                                  onPressed: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            KoordinasiChooseHeadPage(
+                                          idIom: widget.idIom,
+                                          nomorIom: widget.noIom,
+                                        ),
                                       ),
+                                    );
+                                  },
+                                  child: Text(
+                                    'Recommend',
+                                    style: MyTheme.myStyleButtonTextStyle,
+                                  ),
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: Color(0xffC4C4C4),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(
+                                          20.0), // Adjust the radius as needed
                                     ),
-                                  );
-                                },
-                                child: Text(
-                                  'Recommend',
-                                  style: MyTheme.myStyleButtonTextStyle,
-                                ),
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: Color(0xffC4C4C4),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(
-                                        20.0), // Adjust the radius as needed
                                   ),
                                 ),
-                              ),
                             ],
                           ),
                         ),
