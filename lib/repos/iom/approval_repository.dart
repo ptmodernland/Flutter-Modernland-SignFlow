@@ -4,6 +4,7 @@ import 'package:bwa_cozy/bloc/_wrapper/response_wrapper.dart';
 import 'package:bwa_cozy/repos/iom/dto/Iom_detail_dto.dart';
 import 'package:bwa_cozy/repos/iom/dto/Iom_log_dto.dart';
 import 'package:bwa_cozy/repos/iom/dto/approval_item_dto.dart';
+import 'package:bwa_cozy/repos/iom/dto/dept_head_dto.dart';
 import 'package:bwa_cozy/repos/iom/dto/iom_comment_dto.dart';
 import 'package:bwa_cozy/util/storage/sessionmanager/session_manager.dart';
 import 'package:http/http.dart' as http;
@@ -224,6 +225,22 @@ class ApprovalRepository {
     } catch (error) {
       print("error on $logTag " + error.toString());
       return ResponseWrapper(null, ResourceStatus.Error, error.toString());
+    }
+  }
+
+  Future<List<DeptHeadDto>> getDeptHead({String? query}) async {
+    final baseUrl =
+        Uri.parse('https://approval.modernland.co.id/androidiom/get_head.php');
+    Uri surl = baseUrl.replace(queryParameters: {'query': query});
+    final response = await http.get(surl);
+
+    if (response.statusCode == 200) {
+      final jsonData = json.decode(response.body) as List<dynamic>;
+      final approvals =
+          jsonData.map((item) => DeptHeadDto.fromJson(item)).toList();
+      return approvals;
+    } else {
+      throw Exception('Failed to load iom comment');
     }
   }
 }

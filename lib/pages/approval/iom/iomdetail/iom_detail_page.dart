@@ -1,8 +1,10 @@
 import 'package:bwa_cozy/bloc/iom/approval_action_cubit.dart';
 import 'package:bwa_cozy/bloc/iom/approval_comment_cubit.dart';
 import 'package:bwa_cozy/bloc/iom/approval_detail_cubit.dart';
+import 'package:bwa_cozy/bloc/iom/approval_head_dept_cubit.dart';
 import 'package:bwa_cozy/bloc/iom/approval_state.dart';
 import 'package:bwa_cozy/pages/approval/iom/log/iom_log_page.dart';
+import 'package:bwa_cozy/pages/approval/koordinasi/koordinasi_choose_head.dart';
 import 'package:bwa_cozy/repos/iom/approval_repository.dart';
 import 'package:bwa_cozy/repos/kasbon_repository.dart';
 import 'package:bwa_cozy/util/core/string/html_util.dart';
@@ -40,6 +42,7 @@ class _IomDetailPageState extends State<IomDetailPage> {
   final _formKey2 = GlobalKey<FormState>();
   final messageController = TextEditingController();
 
+  late ApprovalHeadDeptCubit iomDeptHeadCubit;
   late ApprovalDetailCubit iomDetailCubit;
   late ApprovalCommentCubit iomCommentCubit;
   late ApprovalActionCubit iomActionCubit;
@@ -52,6 +55,7 @@ class _IomDetailPageState extends State<IomDetailPage> {
     iomActionCubit = ApprovalActionCubit(ApprovalRepository());
     iomCommentCubit = ApprovalCommentCubit(ApprovalRepository());
     iomDetailCubit = ApprovalDetailCubit(ApprovalRepository());
+    iomDeptHeadCubit = ApprovalHeadDeptCubit(ApprovalRepository());
     iomDetailCubit.fetchApprovals(widget.idIom);
   }
 
@@ -557,7 +561,18 @@ class _IomDetailPageState extends State<IomDetailPage> {
                                 ),
                               ),
                               ElevatedButton(
-                                onPressed: () {},
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          KoordinasiChooseHeadPage(
+                                        idIom: widget.idIom,
+                                        nomorIom: widget.noIom,
+                                      ),
+                                    ),
+                                  );
+                                },
                                 child: Text(
                                   'Recommend',
                                   style: MyTheme.myStyleButtonTextStyle,

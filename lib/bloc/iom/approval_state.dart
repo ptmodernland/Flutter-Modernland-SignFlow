@@ -1,6 +1,7 @@
 import 'package:bwa_cozy/repos/iom/dto/Iom_detail_dto.dart';
 import 'package:bwa_cozy/repos/iom/dto/Iom_log_dto.dart';
 import 'package:bwa_cozy/repos/iom/dto/approval_item_dto.dart';
+import 'package:bwa_cozy/repos/iom/dto/dept_head_dto.dart';
 import 'package:bwa_cozy/repos/iom/dto/iom_comment_dto.dart';
 
 class ApprovalState {}
@@ -62,6 +63,12 @@ class ApprovalLogError extends ApprovalState {
   final String message;
 
   ApprovalLogError(this.message);
+}
+
+class ApprovalDeptHeadSuccess extends ApprovalState {
+  final List<DeptHeadDto> deptHeads;
+
+  ApprovalDeptHeadSuccess({required this.deptHeads});
 }
 
 //for action
