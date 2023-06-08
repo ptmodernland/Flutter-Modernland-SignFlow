@@ -8,6 +8,8 @@ class ApprovalState {}
 
 class ApprovalLoading extends ApprovalState {}
 
+class ApprovalInitial extends ApprovalState {}
+
 class ApprovalEmpty extends ApprovalState {}
 
 class ApprovalSuccess extends ApprovalState {
