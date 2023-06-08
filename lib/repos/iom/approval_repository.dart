@@ -70,8 +70,9 @@ class ApprovalRepository {
   }
 
   Future<List<IomLogDto>> getMemoLog(String idIom) async {
-    const url =
-        'https://approval.modernland.co.id/androidiom/get_log_memo.php?';
+    String url =
+        'https://approval.modernland.co.id/androidiom/get_log_memo.php?no=' +
+            idIom;
     final response = await http.get(Uri.parse(url));
 
     if (response.statusCode == 200) {
@@ -188,7 +189,7 @@ class ApprovalRepository {
       }
       // Prepare the request
       var url = Uri.parse(
-          'https://approval.modernland.co.id/androidiom/proses_cancel.jsp?');
+          'https://approval.modernland.co.id/androidiom/proses_cancel_memo.jsp?');
 
       var body = {
         'nomor': noIom,
@@ -211,7 +212,7 @@ class ApprovalRepository {
         print("result $logTag 200");
         if (resStatus) {
           return ResponseWrapper(
-              "Success", ResourceStatus.Success, "Berhasil Mengapprove IOM");
+              "Success", ResourceStatus.Success, "Berhasil Mereject IOM");
         } else {
           return ResponseWrapper(resMessage, ResourceStatus.Error,
               "Gagal Approve IOM : " + resMessage);

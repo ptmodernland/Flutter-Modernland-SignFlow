@@ -510,68 +510,69 @@ class _IomDetailPageState extends State<IomDetailPage> {
                           return emptyState;
                         },
                       ),
-                      Container(
-                        margin: EdgeInsets.only(
-                            left: 20, right: 20, top: 20, bottom: 20),
-                        width: MediaQuery.sizeOf(context).width,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
-                          children: [
-                            ElevatedButton(
-                              onPressed: () {
-                                showPinInputDialog(
-                                    type: ApprovalActionType.APPROVE,
-                                    description:
-                                        "Anda Yakin Ingin Mengapprove Approval ini ?");
-                              },
-                              child: Text(
-                                'Approve',
-                                style: MyTheme.myStyleButtonTextStyle,
-                              ),
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Color(0xff33DC9F),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(
-                                      20.0), // Adjust the radius as needed
+                      if (widget.isFromHistory != true)
+                        Container(
+                          margin: EdgeInsets.only(
+                              left: 20, right: 20, top: 20, bottom: 20),
+                          width: MediaQuery.sizeOf(context).width,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: [
+                              ElevatedButton(
+                                onPressed: () {
+                                  showPinInputDialog(
+                                      type: ApprovalActionType.APPROVE,
+                                      description:
+                                      "Anda Yakin Ingin Mengapprove Approval ini ?");
+                                },
+                                child: Text(
+                                  'Approve',
+                                  style: MyTheme.myStyleButtonTextStyle,
+                                ),
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Color(0xff33DC9F),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(
+                                        20.0), // Adjust the radius as needed
+                                  ),
                                 ),
                               ),
-                            ),
-                            ElevatedButton(
-                              onPressed: () {
-                                showPinInputDialog(
-                                    type: ApprovalActionType.REJECT,
-                                    description:
-                                        "Anda Yakin Ingin Menolak Approval ini ?");
-                              },
-                              child: Text(
-                                'Reject',
-                                style: MyTheme.myStyleButtonTextStyle,
-                              ),
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Color(0xffFF5B5B),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(
-                                      20.0), // Adjust the radius as needed
+                              ElevatedButton(
+                                onPressed: () {
+                                  showPinInputDialog(
+                                      type: ApprovalActionType.REJECT,
+                                      description:
+                                      "Anda Yakin Ingin Menolak Approval ini ?");
+                                },
+                                child: Text(
+                                  'Reject',
+                                  style: MyTheme.myStyleButtonTextStyle,
+                                ),
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Color(0xffFF5B5B),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(
+                                        20.0), // Adjust the radius as needed
+                                  ),
                                 ),
                               ),
-                            ),
-                            ElevatedButton(
-                              onPressed: () {},
-                              child: Text(
-                                'Recommend',
-                                style: MyTheme.myStyleButtonTextStyle,
-                              ),
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Color(0xffC4C4C4),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(
-                                      20.0), // Adjust the radius as needed
+                              ElevatedButton(
+                                onPressed: () {},
+                                child: Text(
+                                  'Recommend',
+                                  style: MyTheme.myStyleButtonTextStyle,
+                                ),
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Color(0xffC4C4C4),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(
+                                        20.0), // Adjust the radius as needed
+                                  ),
                                 ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
-                      ),
                     ],
                   ),
                 ),
@@ -637,7 +638,11 @@ class _IomDetailPageState extends State<IomDetailPage> {
                   }
 
                   if (type == ApprovalActionType.REJECT) {
-                    print("no request reject is : " + widget.noIom);
+                    iomActionCubit.rejectIom(
+                        noIom: widget.noIom,
+                        idIom: widget.idIom,
+                        comment: messageController.text,
+                        pin: pin);
                   }
 
                   // Perform any desired operations with the entered PIN
