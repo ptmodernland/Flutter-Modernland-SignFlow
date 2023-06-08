@@ -11,6 +11,8 @@ class NotifStateSuccess extends NotifCoreState {
   final String totalRealisasi;
   final String totalSemua;
   final String totalIom;
+  final String totalKoordinasi;
+  final String totalKoordinasiAndIom;
 
   NotifStateSuccess({
     this.totalPermohonan = "",
@@ -19,6 +21,8 @@ class NotifStateSuccess extends NotifCoreState {
     this.totalRealisasi = "",
     this.totalSemua = "",
     this.totalIom = "",
+    this.totalKoordinasi = "",
+    this.totalKoordinasiAndIom = "",
   });
 }
 

@@ -197,12 +197,12 @@ class _ApprovalIomMainPageState extends State<ApprovalIomMainPage> {
                         if (state is NotifStateLoading) {}
                         if (state is NotifStateFailure) {}
                         if (state is NotifStateSuccess) {
-                          count = state.totalIom;
+                          count = state.totalKoordinasi;
                         }
                         return MenuItemApprovalWidget(
                           unreadBadgeCount: count,
-                          titleLeft: "Koordinasi Diberikan",
-                          titleRight: "History Koordinasi",
+                          titleLeft: "Permintaan\nKoordinasi",
+                          titleRight: "History\nKoordinasi",
                           onLeftTapFunction: () {
                             Navigator.push(
                               context,

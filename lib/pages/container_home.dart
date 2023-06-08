@@ -275,7 +275,7 @@ class _BottomIconWithBadgeState extends State<BottomIconWithBadge> {
             icon = Icon(CupertinoIcons.home);
           }
           if (widget.menuType == BottomMenuType.IOM) {
-            count = state.totalIom;
+            count = state.totalKoordinasiAndIom;
           }
           if (widget.menuType == BottomMenuType.COMPARE) {
             count = state.totalCompare;
