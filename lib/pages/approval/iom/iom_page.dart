@@ -8,6 +8,8 @@ import 'package:bwa_cozy/bloc/notif/notif_state.dart';
 import 'package:bwa_cozy/pages/approval/iom/iom_approved_all_page.dart';
 import 'package:bwa_cozy/pages/approval/iom/iom_list_by_category_page.dart';
 import 'package:bwa_cozy/pages/approval/iom/iom_waiting_approval_page.dart';
+import 'package:bwa_cozy/pages/approval/koordinasi/koordinasi_history_page.dart';
+import 'package:bwa_cozy/pages/approval/koordinasi/koordinasi_waiting_all_page.dart';
 import 'package:bwa_cozy/repos/approval_main_page_repository.dart';
 import 'package:bwa_cozy/repos/badge_counter_repository.dart';
 import 'package:bwa_cozy/repos/notif_repository.dart';
@@ -207,23 +209,21 @@ class _ApprovalIomMainPageState extends State<ApprovalIomMainPage> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => ApprovalPage(
-                                  type: IomPageListType.SHOW_WAITING,
-                                  title: "Menunggu Approval",
-                                ),
+                                builder: (context) =>
+                                    KoordinasiWaitingAllPage(),
                               ),
                             ).then((value) {
-                              badgeCounterCubit..fetchBadgeCounter();
-                              notifBloc..add(NotifEventCount());
+                              badgeCounterCubit.fetchBadgeCounter();
+                              notifBloc.add(NotifEventCount());
                               approvalBloc
-                                ..add(RequestDataEvent(ApprovalListType.IOM));
+                                  .add(RequestDataEvent(ApprovalListType.IOM));
                             });
                           },
                           onRightTapFunction: () {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => IomApprovedAllPage(),
+                                builder: (context) => KoordinasiHistoryPage(),
                               ),
                             ).then((value) {
                               notifBloc..add(NotifEventCount());

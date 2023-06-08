@@ -4,6 +4,8 @@ import 'package:bwa_cozy/bloc/_wrapper/response_wrapper.dart';
 import 'package:bwa_cozy/util/storage/sessionmanager/session_manager.dart';
 import 'package:http/http.dart' as http;
 
+import './dto/rekomendasi_waiting_dto.dart';
+
 class RekomendasiRepository {
   Future<ResponseWrapper<String>> giveKoordinasi({
     String noIom = "",
@@ -66,6 +68,46 @@ class RekomendasiRepository {
     } catch (error) {
       print("error on $logTag " + error.toString());
       return ResponseWrapper(null, ResourceStatus.Error, error.toString());
+    }
+  }
+
+  Future<List<RekomendasiWaitingDto>> getWaitingKoordinasi() async {
+    var username = "";
+    var usersession = await SessionManager.getUserFromSession();
+    if (usersession != null) {
+      username = usersession.username;
+    }
+    final url =
+        'https://approval.modernland.co.id/androidiom/list_koordinasi_waiting.php?username=$username';
+    final response = await http.get(Uri.parse(url));
+
+    if (response.statusCode == 200) {
+      final jsonData = json.decode(response.body) as List<dynamic>;
+      final approvals =
+          jsonData.map((item) => RekomendasiWaitingDto.fromJson(item)).toList();
+      return approvals;
+    } else {
+      throw Exception('Failed to load approvals');
+    }
+  }
+
+  Future<List<RekomendasiWaitingDto>> getHistoryKoordinasi() async {
+    var username = "";
+    var usersession = await SessionManager.getUserFromSession();
+    if (usersession != null) {
+      username = usersession.username;
+    }
+    final url =
+        'https://approval.modernland.co.id/androidiom/list_koordinasi_history.php?username=$username';
+    final response = await http.get(Uri.parse(url));
+
+    if (response.statusCode == 200) {
+      final jsonData = json.decode(response.body) as List<dynamic>;
+      final approvals =
+          jsonData.map((item) => RekomendasiWaitingDto.fromJson(item)).toList();
+      return approvals;
+    } else {
+      throw Exception('Failed to load approvals');
     }
   }
 
