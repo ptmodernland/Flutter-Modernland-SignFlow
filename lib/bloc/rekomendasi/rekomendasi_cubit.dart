@@ -5,11 +5,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 class RekomendasiCubit extends Cubit<RekomendasiState> {
   final RekomendasiRepository repository;
 
-  RekomendasiCubit(this.repository) : super(RekomendasiLoading());
+  RekomendasiCubit(this.repository) : super(RekomendasiStateLoading());
 
   Future<void> fetchWaiting() async {
     try {
-      emit(RekomendasiLoading());
+      emit(RekomendasiStateLoading());
       final stopwatch = Stopwatch()
         ..start(); // Create a stopwatch to measure elapsed time
 
@@ -20,18 +20,18 @@ class RekomendasiCubit extends Cubit<RekomendasiState> {
       }
 
       if (approvals.isEmpty) {
-        emit(RekomendasiEmpty());
+        emit(RekomendasiStateEmpty());
       } else {
         emit(RekomendasiLoadWaitingSuccess(approvals));
       }
     } catch (e) {
-      emit(RekomendasiError('Failed to load approvals: $e'));
+      emit(RekomendasiStateError('Failed to load approvals: $e'));
     }
   }
 
   Future<void> fetchHistory() async {
     try {
-      emit(RekomendasiLoading());
+      emit(RekomendasiStateLoading());
       final stopwatch = Stopwatch()
         ..start(); // Create a stopwatch to measure elapsed time
 
@@ -42,12 +42,12 @@ class RekomendasiCubit extends Cubit<RekomendasiState> {
       }
 
       if (approvals.isEmpty) {
-        emit(RekomendasiEmpty());
+        emit(RekomendasiStateEmpty());
       } else {
         emit(RekomendasiLoadWaitingSuccess(approvals));
       }
     } catch (e) {
-      emit(RekomendasiError('Failed to load history koordinasi: $e'));
+      emit(RekomendasiStateError('Failed to load history koordinasi: $e'));
     }
   }
 }

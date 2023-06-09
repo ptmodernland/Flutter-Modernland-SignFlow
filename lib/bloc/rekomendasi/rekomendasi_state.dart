@@ -2,11 +2,11 @@ import 'package:bwa_cozy/repos/rekomendasi/dto/rekomendasi_waiting_dto.dart';
 
 class RekomendasiState {}
 
-class RekomendasiLoading extends RekomendasiState {}
+class RekomendasiStateLoading extends RekomendasiState {}
 
-class RekomendasiInitial extends RekomendasiState {}
+class RekomendaStateInitial extends RekomendasiState {}
 
-class RekomendasiEmpty extends RekomendasiState {}
+class RekomendasiStateEmpty extends RekomendasiState {}
 
 class RekomendasiLoadWaitingSuccess extends RekomendasiState {
   final List<RekomendasiWaitingDto> approvals;
@@ -14,8 +14,14 @@ class RekomendasiLoadWaitingSuccess extends RekomendasiState {
   RekomendasiLoadWaitingSuccess(this.approvals);
 }
 
-class RekomendasiError extends RekomendasiState {
+class RekomendasiStateSuccess extends RekomendasiState {
   final String message;
 
-  RekomendasiError(this.message);
+  RekomendasiStateSuccess(this.message);
+}
+
+class RekomendasiStateError extends RekomendasiState {
+  final String message;
+
+  RekomendasiStateError(this.message);
 }

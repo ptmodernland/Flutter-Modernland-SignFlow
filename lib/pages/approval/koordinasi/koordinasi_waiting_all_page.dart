@@ -43,9 +43,9 @@ class _RekomendasiListState extends State<RekomendasiList> {
     return BlocBuilder<RekomendasiCubit, RekomendasiState>(
       bloc: cubit,
       builder: (context, state) {
-        if (state is RekomendasiLoading) {
+        if (state is RekomendasiStateLoading) {
           return Center(child: CupertinoActivityIndicator());
-        } else if (state is RekomendasiEmpty) {
+        } else if (state is RekomendasiStateEmpty) {
           return Center(child: Text('No approvals found.'));
         } else if (state is RekomendasiLoadWaitingSuccess) {
           return ListView.builder(
@@ -55,32 +55,34 @@ class _RekomendasiListState extends State<RekomendasiList> {
               var approvalItem = state.approvals[index];
               return ItemApprovalWidget(
                 isApproved: false,
-                itemCode:
-                    (index + 1).toString() + approvalItem.nomor.toString(),
+                itemCode: approvalItem.nomor.toString(),
                 date: approvalItem.tanggal,
                 requiredId: approvalItem.idIom,
                 personName: approvalItem.namaUser,
                 departmentTitle: approvalItem.departemen,
-                descriptiveText: removeHtmlTags(((approvalItem.perihal ?? ""))),
+                descriptiveText:
+                    "Koordinasi diminta oleh : ${approvalItem.namaUser} untuk ${approvalItem.untuk}\n" +
+                        removeHtmlTags(((approvalItem.perihal ?? ""))),
                 onPressed: (String noCompare) {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
                       builder: (context) => IomDetailPage(
                         isFromHistory: false,
+                        idKoordinasi: approvalItem.idKordinasi ?? "",
                         isFromRekomendasi: true,
                         idIom: approvalItem.idIom ?? "",
                         noIom: approvalItem.nomor ?? "",
                       ),
                     ),
                   ).then((value) {
-                    // cubit.fetchWaiting();
+                    cubit.fetchWaiting();
                   });
                 },
               );
             },
           );
-        } else if (state is RekomendasiError) {
+        } else if (state is RekomendasiStateError) {
           return Center(child: Text('Error: ${state.message}'));
         } else {
           return Container();

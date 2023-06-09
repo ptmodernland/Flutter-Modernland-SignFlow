@@ -88,8 +88,7 @@ class _ApprovalListState extends State<ApprovalList> {
                         var text = state.message;
                         return WillPopScope(
                           onWillPop: () async {
-                            Navigator.of(context)
-                                .pop(); // Handle back button press
+                            // Handback button press
                             return false; // Prevent dialog from being dismissed by back button
                           },
                           child: CupertinoAlertDialog(
@@ -105,6 +104,7 @@ class _ApprovalListState extends State<ApprovalList> {
                                       .pop(); // Close the dialog
                                   Navigator.of(context)
                                       .pop(); // Go back to the previous page
+                                  Navigator.of(context).pop(); //
                                 },
                                 child: Text('OK'),
                               ),

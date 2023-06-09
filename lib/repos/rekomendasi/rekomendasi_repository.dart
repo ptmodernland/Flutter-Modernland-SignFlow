@@ -114,11 +114,11 @@ class RekomendasiRepository {
   Future<ResponseWrapper<String>> approveKoordinasi({
     String noIom = "",
     String idIom = "",
+    String idKoordinasi = "",
     String comment = "",
     String pin = "",
-    String headUsername = "",
   }) async {
-    var logTag = "Approve IOM";
+    var logTag = "Approve Koordinasi";
     try {
       print("trying $logTag");
       var userID = "";
@@ -128,13 +128,69 @@ class RekomendasiRepository {
       }
       // Prepare the request
       var url = Uri.parse(
-          'https://approval.modernland.co.id/androidiom/proses_approve.jsp?');
+          'https://approval.modernland.co.id/androidiom/proses_approve_kordinasi.jsp?');
 
       var body = {
         'nomor': noIom,
-        'id_iom': idIom,
-        'id_user': userID ?? '',
-        'head': headUsername ?? '',
+        'id': idIom,
+        'id_user': userID,
+        'id_kordinasi': idKoordinasi ?? '',
+        'komen': comment ?? null,
+        'passwordUser': pin ?? '',
+      };
+
+      // Set the form data
+      print("$logTag" + "SS");
+      var response = await http.post(url, body: body);
+      var responseBody = response.body;
+      var jsonResponse = jsonDecode(responseBody);
+      bool resStatus = jsonResponse['status'];
+      var resMessage = jsonResponse['pesan'];
+      final result = jsonDecode(response.body);
+      print(result.toString());
+      if (response.statusCode == 200) {
+        print("result $logTag 200");
+        if (resStatus) {
+          return ResponseWrapper("Success", ResourceStatus.Success,
+              "Berhasil Meng-approve Koordinasi\nKoordinasi akan dikonversi menjadi IOM dan akan segera dikirimkan sesaat lagi");
+        } else {
+          return ResponseWrapper(resMessage, ResourceStatus.Error,
+              "Gagal Men-gapprove Rekomendasi : " + resMessage);
+        }
+      } else {
+        print("result $logTag Terjadi Kesalahan");
+        return ResponseWrapper(null, ResourceStatus.Error, resMessage);
+      }
+    } catch (error) {
+      print("error on $logTag " + error.toString());
+      return ResponseWrapper(null, ResourceStatus.Error, error.toString());
+    }
+  }
+
+  Future<ResponseWrapper<String>> rejectKoordinasi({
+    String noIom = "",
+    String idIom = "",
+    String idKoordinasi = "",
+    String comment = "",
+    String pin = "",
+  }) async {
+    var logTag = "Reject Koordinasi";
+    try {
+      print("trying $logTag");
+      var userID = "";
+      var usersession = await SessionManager.getUserFromSession();
+      if (usersession != null) {
+        userID = usersession.idUser;
+      }
+      // Prepare the request
+      var url = Uri.parse(
+          'https://approval.modernland.co.id/androidiom/proses_cancel_kordinasi.jsp?');
+
+      var body = {
+        'nomor': noIom,
+        'id': idIom,
+        'id_user': userID,
+        'id_kordinasi': idKoordinasi ?? '',
         'komen': comment ?? null,
         'passwordUser': pin ?? '',
       };
@@ -152,10 +208,10 @@ class RekomendasiRepository {
         print("result $logTag 200");
         if (resStatus) {
           return ResponseWrapper(
-              "Success", ResourceStatus.Success, "Berhasil Mengapprove");
+              "Success", ResourceStatus.Success, "Berhasil Menolak Koordinasi");
         } else {
           return ResponseWrapper(resMessage, ResourceStatus.Error,
-              "Gagal Approve : " + resMessage);
+              "Gagal Menolak Rekomendas:\n" + resMessage);
         }
       } else {
         print("result $logTag Terjadi Kesalahan");
