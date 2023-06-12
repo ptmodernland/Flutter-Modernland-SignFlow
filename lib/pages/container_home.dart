@@ -2,8 +2,8 @@ import 'package:bwa_cozy/bloc/notif/notif_bloc.dart';
 import 'package:bwa_cozy/bloc/notif/notif_event.dart';
 import 'package:bwa_cozy/bloc/notif/notif_state.dart';
 import 'package:bwa_cozy/pages/approval/compare/compare_page.dart';
+import 'package:bwa_cozy/pages/approval/iom/iom_page.dart';
 import 'package:bwa_cozy/pages/approval/kasbon/kasbon_page.dart';
-import 'package:bwa_cozy/pages/approval/pbj/filter/pbj_filter_page.dart';
 import 'package:bwa_cozy/pages/approval/pbj/pbj_page.dart';
 import 'package:bwa_cozy/pages/approval/realisasi/realisasi_page.dart';
 import 'package:bwa_cozy/pages/home/home_page.dart';
@@ -13,6 +13,7 @@ import 'package:bwa_cozy/util/enum/menu_type.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ContainerHomePage extends StatefulWidget {
   const ContainerHomePage({Key? key, this.isFromLogin = false})
@@ -62,7 +63,7 @@ class _ContainerHomePageState extends State<ContainerHomePage>
         child: HomePage(notifBloc),
       ),
       Center(
-        child: PBJFilterPage(),
+        child: ApprovalIomMainPage(),
       ),
       Center(
         child: ApprovalPBJMainPage(),
@@ -190,6 +191,28 @@ class BottomIconWithBadge extends StatefulWidget {
 }
 
 class _BottomIconWithBadgeState extends State<BottomIconWithBadge> {
+  int savedIconCounter = 0; // Variable to store the saved icon counter
+
+  @override
+  void initState() {
+    super.initState();
+    loadSavedIconCounter(); // Load the saved icon counter when the widget is initialized
+  }
+
+  // Function to save the icon counter to shared preferences
+  Future<void> saveIconCounter(int count) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setInt(widget.menuType.toString(), count);
+  }
+
+  // Function to load the saved icon counter from shared preferences
+  Future<void> loadSavedIconCounter() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      savedIconCounter = prefs.getInt(widget.menuType.toString()) ?? 0;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<NotifCoreBloc, NotifCoreState>(
@@ -235,10 +258,15 @@ class _BottomIconWithBadgeState extends State<BottomIconWithBadge> {
 
         if (state is NotifStateLoading) {
           print("UI Notif Counter Loading");
+          // Display the saved icon counter
+          count = savedIconCounter.toString();
         }
 
         if (state is NotifStateFailure) {
           print("UI Notif Counter error " + state.error.toString());
+
+          // Display the saved icon counter
+          count = savedIconCounter.toString();
         }
 
         if (state is NotifStateSuccess) {
@@ -247,7 +275,7 @@ class _BottomIconWithBadgeState extends State<BottomIconWithBadge> {
             icon = Icon(CupertinoIcons.home);
           }
           if (widget.menuType == BottomMenuType.IOM) {
-            count = state.totalIom;
+            count = state.totalKoordinasiAndIom;
           }
           if (widget.menuType == BottomMenuType.COMPARE) {
             count = state.totalCompare;
@@ -281,6 +309,8 @@ class _BottomIconWithBadgeState extends State<BottomIconWithBadge> {
               textAlign: TextAlign.center,
             );
           }
+          // Save the icon counter to shared preferences
+          saveIconCounter(int.tryParse(count) ?? 0);
         }
 
         return Center(

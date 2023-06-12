@@ -1,3 +1,4 @@
+import 'package:bwa_cozy/widget/core/draggable_back_button.dart';
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
@@ -24,8 +25,7 @@ class _CommonWebviewPageState extends State<CommonWebviewPage> {
           },
           onPageStarted: (String url) {},
           onPageFinished: (String url) {},
-          onWebResourceError: (WebResourceError error) {
-          },
+          onWebResourceError: (WebResourceError error) {},
           onNavigationRequest: (NavigationRequest request) {
             if (request.url.startsWith('https://www.youtube.com/')) {
               return NavigationDecision.prevent;
@@ -36,11 +36,14 @@ class _CommonWebviewPageState extends State<CommonWebviewPage> {
       )
       ..loadRequest(Uri.parse(widget.url));
 
-    return Scaffold(
-      body: Stack(
-        children: [
-          WebViewWidget(controller: webViewcontroller),
-        ],
+    return SafeArea(
+      child: Scaffold(
+        body: Stack(
+          children: [
+            WebViewWidget(controller: webViewcontroller),
+            DraggableBackButton()
+          ],
+        ),
       ),
     );
   }

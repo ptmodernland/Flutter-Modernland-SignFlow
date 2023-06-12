@@ -85,7 +85,7 @@ class ItemApprovalWidget extends StatelessWidget {
         }
       },
       child: Container(
-        margin: EdgeInsets.only(left: 20, right: 20, bottom: 10),
+        margin: EdgeInsets.only(left: 20, right: 20, top: 12),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
           border: Border.all(
@@ -148,8 +148,17 @@ class ItemApprovalWidget extends StatelessWidget {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
+                        SizedBox(
+                          height: 10,
+                        ),
                         Text(
-                          "Deskripsi : \n${descriptiveText ?? ""}",
+                          "Deskripsi : ",
+                          overflow: TextOverflow.ellipsis,
+                          style: MyTheme.myStylePrimaryTextStyle.copyWith(
+                              fontSize: 12, fontWeight: FontWeight.w600),
+                        ),
+                        Text(
+                          "${descriptiveText ?? ""}",
                           maxLines: 3,
                           overflow: TextOverflow.ellipsis,
                           style: MyTheme.myStylePrimaryTextStyle
@@ -172,7 +181,7 @@ class ItemApprovalWidget extends StatelessWidget {
                       ),
                       child: Text(
                         (isApproved ?? false)
-                            ? "Approved"
+                            ? "Processed"
                             : "Waiting for Approval",
                         // Update text based on approval status
                         style: MyTheme.myStyleSecondaryTextStyle

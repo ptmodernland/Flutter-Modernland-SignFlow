@@ -8,7 +8,6 @@ import 'package:bwa_cozy/util/my_theme.dart';
 import 'package:bwa_cozy/widget/approval/item_approval_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 
 class PBJWaitingApproval extends StatefulWidget {
   const PBJWaitingApproval({Key? key}) : super(key: key);
@@ -191,9 +190,6 @@ class _PBJWaitingApprovalState extends State<PBJWaitingApproval> {
                                         (pbjItem.namaUser ?? ""),
                                     personImage: "",
                                     onPressed: (String requiredId) {
-                                      Fluttertoast.showToast(
-                                          msg: requiredId.toString());
-
                                       Navigator.push(
                                         context,
                                         MaterialPageRoute(

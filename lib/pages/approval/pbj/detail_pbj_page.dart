@@ -218,6 +218,9 @@ class _DetailPBJPageState extends State<DetailPBJPage> {
                                         crossAxisAlignment:
                                             CrossAxisAlignment.stretch,
                                         children: [
+                                          SizedBox(
+                                            height: 20,
+                                          ),
                                           Text(
                                             "Detail Dokumen",
                                             textAlign: TextAlign.start,
@@ -400,20 +403,20 @@ class _DetailPBJPageState extends State<DetailPBJPage> {
                                       ),
                                     );
                                   }
-                                  return Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.stretch,
-                                    children: [
-                                      Container(
-                                        height: 1,
-                                        color: Colors.grey[300],
-                                      ),
-                                      SizedBox(
-                                        height: 20,
-                                      ),
-                                      emptyState,
-                                      commentListViewBuilder,
-                                    ],
+                                  return Container(
+                                    margin:
+                                        EdgeInsets.only(left: 10, right: 10),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.stretch,
+                                      children: [
+                                        SizedBox(
+                                          height: 20,
+                                        ),
+                                        emptyState,
+                                        commentListViewBuilder,
+                                      ],
+                                    ),
                                   );
                                 }
                                 return Container();

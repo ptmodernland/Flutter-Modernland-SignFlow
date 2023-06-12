@@ -200,7 +200,6 @@ class _PBJAllApprovedPageState extends State<PBJAllApprovedPage> {
                                     onPressed: (String requiredId) {
                                       Fluttertoast.showToast(
                                           msg: requiredId.toString());
-
                                       Navigator.push(
                                         context,
                                         MaterialPageRoute(
@@ -209,7 +208,6 @@ class _PBJAllApprovedPageState extends State<PBJAllApprovedPage> {
                                               noPermintaan: requiredId),
                                         ),
                                       ).then((value) {
-                                        pbjBloc..add(GetHistoryPBJ());
                                       });
                                     },
                                   );

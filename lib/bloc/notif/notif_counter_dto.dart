@@ -5,6 +5,8 @@ class NotifCounterDTO {
   String totalCompare;
   String totalKasbon;
   String totalRealisasi;
+  String totalKoordinasi;
+  String totalKoordinasiAndIom;
   String totalSemua;
   bool status;
 
@@ -14,6 +16,8 @@ class NotifCounterDTO {
     required this.totalCompare,
     required this.totalKasbon,
     required this.totalRealisasi,
+    required this.totalKoordinasi,
+    required this.totalKoordinasiAndIom,
     required this.totalSemua,
     required this.status,
   });
@@ -24,7 +28,9 @@ class NotifCounterDTO {
       totalPermohonan: json['total_permohonan'],
       totalCompare: json['total_compare'],
       totalKasbon: json['total_kasbon'],
+      totalKoordinasi: json['total_koordinasi'],
       totalRealisasi: json['total_realisasi'],
+      totalKoordinasiAndIom: json['total_koor_and_iom'],
       totalSemua: json['totalsemua'],
       status: json['status'],
     );

@@ -185,20 +185,6 @@ class _ApprovalPBJMainPageState extends State<ApprovalPBJMainPage> {
                                         children: [],
                                       ),
                                     ),
-                                    Container(
-                                      margin:
-                                          EdgeInsets.only(left: 20, right: 20),
-                                      width: double.infinity,
-                                      child: Text(
-                                        "Request Terbaru",
-                                        textAlign: TextAlign.start,
-                                        style: MyTheme.myStylePrimaryTextStyle
-                                            .copyWith(
-                                          fontWeight: FontWeight.w600,
-                                          fontSize: 18,
-                                        ),
-                                      ),
-                                    ),
                                   ],
                                 ),
                               ),

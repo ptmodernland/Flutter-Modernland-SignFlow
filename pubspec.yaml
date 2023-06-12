@@ -58,6 +58,15 @@ dependencies:
   firebase_core_platform_interface: 4.5.1
   rflutter_alert: ^2.0.4
 
+  flutter_launcher_icons: "^0.13.1"
+
+flutter_launcher_icons:
+  ios: true
+  android: false
+  remove_alpha_ios: true
+  background_color_ios: "#ffffff"
+  image_path: "asset/img/icons/app_icon.png"
+  min_sdk_android: 21 # android min sdk min:16, default 21
 
 dev_dependencies:
   flutter_test:

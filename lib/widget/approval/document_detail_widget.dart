@@ -5,18 +5,17 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class DocumentDetailWidget extends StatelessWidget {
-  DocumentDetailWidget(
-      {super.key,
-      this.title = "Nama Calon",
-      this.content = "Yossy Gheasanta",
-      this.icon = const Icon(CupertinoIcons.info_circle),
-      this.fileURL = null,
-      this.isForDownload = false});
+  DocumentDetailWidget({super.key,
+    this.title = "Nama Calon",
+    this.content = "Yossy Gheasanta",
+    this.icon = const Icon(CupertinoIcons.info_circle),
+    this.fileURL = null,
+    this.isForDownload = false});
 
   final String? fileURL;
   final String title;
   final String content;
-  final Color color = Colors.black54;
+  final Color color = Colors.black;
   final Icon icon;
   final bool isForDownload;
 
@@ -27,27 +26,30 @@ class DocumentDetailWidget extends StatelessWidget {
         Row(
           mainAxisSize: MainAxisSize.max,
           children: [
-            Icon(
-              CupertinoIcons.info_circle, // Replace with the desired icon
-              color: color,
-            ),
+            // Icon(
+            //   CupertinoIcons.info_circle, // Replace with the desired icon
+            //   color: color,
+            // ),
             SizedBox(width: 8), // Adjust the width as needed
             Expanded(
               child: Text(
                 title,
                 textAlign: TextAlign.start,
                 style: GoogleFonts.lato().copyWith(
-                    fontSize: 14, color: color, fontWeight: FontWeight.w800),
+                    fontSize: 15, color: color, fontWeight: FontWeight.w500),
               ),
             ),
           ],
         ),
+        SizedBox(
+          height: 3,
+        ),
         Row(
           children: [
-            Icon(
-              CupertinoIcons.info_circle, // Replace with the desired icon
-              color: Colors.transparent,
-            ),
+            // Icon(
+            //   CupertinoIcons.info_circle, // Replace with the desired icon
+            //   color: Colors.transparent,
+            // ),
             SizedBox(width: 8), // Adjust the width as needed
             Expanded(
               child: GestureDetector(
@@ -92,16 +94,16 @@ class DocumentDetailWidget extends StatelessWidget {
                 },
                 child: Container(
                   child: Text(
-                    content,
+                    content.isEmpty ? '-' : content,
                     textAlign: TextAlign.start,
                     style: GoogleFonts.lato().copyWith(
-                      fontSize: 14,
+                      fontSize: 13,
                       color: fileURL != null
                           ? Colors
                               .blue // Set the color to a link color if it's a link
                           : Colors.black,
                       // Set a default color if it's not a link or null
-                      fontWeight: FontWeight.w300,
+                      fontWeight: FontWeight.w100,
                       decoration: fileURL != null
                           ? TextDecoration
                               .underline // Underline the text if it's a link
@@ -113,6 +115,9 @@ class DocumentDetailWidget extends StatelessWidget {
               ),
             ),
           ],
+        ),
+        SizedBox(
+          height: 10,
         ),
       ],
     );
