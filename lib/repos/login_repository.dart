@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:bwa_cozy/bloc/_wrapper/response_wrapper.dart';
 import 'package:bwa_cozy/bloc/login/login_payload.dart';
 import 'package:bwa_cozy/bloc/login/login_response.dart';
+import 'package:bwa_cozy/util/pref/fcm_token_helper.dart';
 import 'package:bwa_cozy/util/storage/sessionmanager/session_manager.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -13,10 +14,12 @@ class LoginRepository {
       // Prepare the request
       var url = Uri.parse('https://api-approval.modernland.co.id/login.jsp');
       // Set the form data
+
+      var token = await getDeviceFCMToken();
       var body = {
         'username': payload.username,
         'password': payload.password,
-        'token': payload.token,
+        'token': token,
         'address': payload.address,
         'ip': payload.ip,
         'brand': payload.brand,
