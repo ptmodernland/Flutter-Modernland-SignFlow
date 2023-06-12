@@ -1,7 +1,13 @@
+import 'package:bwa_cozy/pages/modernland_init.dart';
 import 'package:bwa_cozy/pages/splash/splash_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:firebase_core/firebase_core.dart';
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  //initialize firebase from firebase core plugin
+  await Firebase.initializeApp();
   runApp(const MyApp());
 }
 
@@ -20,7 +26,7 @@ class MyApp extends StatelessWidget {
       color: Colors.black,
       debugShowCheckedModeBanner: false,
       theme: theme,
-      home: SplashScreenPage(),
+      home: const ModernlandInitialPage(),
     );
   }
 }
