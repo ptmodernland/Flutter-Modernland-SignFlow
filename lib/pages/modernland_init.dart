@@ -2,6 +2,7 @@ import 'package:bwa_cozy/pages/splash/splash_screen.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:quickalert/quickalert.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ModernlandInitialPage extends StatefulWidget {
   const ModernlandInitialPage({Key? key}) : super(key: key);
@@ -12,8 +13,8 @@ class ModernlandInitialPage extends StatefulWidget {
 
 class _ModernlandInitialPageState extends State<ModernlandInitialPage>
     with SingleTickerProviderStateMixin {
-  AnimationController? _animationController;
-  Animation<double>? _animation;
+  late AnimationController _animationController;
+  late Animation<double> _animation;
 
   @override
   void initState() {
@@ -21,28 +22,26 @@ class _ModernlandInitialPageState extends State<ModernlandInitialPage>
     init();
     _animationController = AnimationController(
       vsync: this,
-      duration: const Duration(seconds: 2),
+      duration: const Duration(seconds: 5),
     );
     _animation = CurvedAnimation(
-      parent: _animationController!,
-      curve: Curves.easeIn,
+      parent: _animationController,
+      curve: Curves.easeInToLinear,
     );
-    _animationController!.forward();
-    _animationController!.addStatusListener((status) {
-      if (status == AnimationStatus.completed) {
-        // Navigation to next page
-        Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (context) => SplashScreenPage()),
-        );
-      }
+    _animationController.forward().whenComplete(() {
+      // Navigation to next page after 5 seconds
+      navigateToNextPage();
     });
   }
 
   init() async {
     String deviceToken = await getDeviceToken();
-    print("###### PRINT DEVICE TOKEN TO USE FOR PUSH NOTIFCIATION ######");
+    print("###### PRINT DEVICE TOKEN TO USE FOR PUSH NOTIFICATION ######");
     print("#######" + deviceToken);
     print("############################################################");
+
+    // Save the token into SharedPreferences
+    saveTokenToDevice(deviceToken);
 
     // listen for user to click on notification
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage remoteMessage) {
@@ -67,17 +66,47 @@ class _ModernlandInitialPageState extends State<ModernlandInitialPage>
 
   @override
   void dispose() {
-    _animationController?.dispose();
+    _animationController.dispose();
     super.dispose();
   }
 
   //get device token to use for push notification
-  Future getDeviceToken() async {
+  Future<String> getDeviceToken() async {
     //request user permission for push notification
-    FirebaseMessaging.instance.requestPermission();
+    await FirebaseMessaging.instance.requestPermission(
+      sound: true,
+      alert: true,
+      announcement: false,
+      carPlay: false,
+      criticalAlert: false,
+      badge: true,
+      provisional: false,
+    );
+
+    await FirebaseMessaging.instance
+        .setForegroundNotificationPresentationOptions(
+      badge: true,
+      alert: true,
+      sound: true,
+    );
+
+    await FirebaseMessaging.onMessage.listen((event) {});
+
     FirebaseMessaging _firebaseMessage = FirebaseMessaging.instance;
     String? deviceToken = await _firebaseMessage.getToken();
-    return (deviceToken == null) ? "" : deviceToken;
+    return deviceToken ?? "";
+  }
+
+  // Save the device token into SharedPreferences
+  Future<void> saveTokenToDevice(String token) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString('deviceToken', token);
+  }
+
+  void navigateToNextPage() {
+    Navigator.of(context).pushReplacement(
+      MaterialPageRoute(builder: (context) => SplashScreenPage()),
+    );
   }
 
   @override
@@ -86,7 +115,7 @@ class _ModernlandInitialPageState extends State<ModernlandInitialPage>
       backgroundColor: Colors.white, // Set your desired background color here
       body: Center(
         child: ScaleTransition(
-          scale: _animation!,
+          scale: _animation,
           child: Expanded(
             flex: MediaQuery.of(context).size.width > 600 ? 3 : 10,
             child: LayoutBuilder(
