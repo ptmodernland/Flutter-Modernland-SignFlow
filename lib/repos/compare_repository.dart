@@ -134,7 +134,13 @@ class CompareRepository {
       // Prepare the request
       var url = Uri.parse(
           'https://approval.modernland.co.id/androidiom/list_compare_new.php?username=' +
-              username);
+              username +
+              "&daritanggal=" +
+              (startDate ?? "") +
+              "&sampaitanggal=" +
+              (endDate ?? "") +
+              "&no_compare=" +
+              (noPermintaan ?? ""));
       // Set the form data
       print("URL History PBJ");
       // Send the request

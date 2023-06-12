@@ -11,7 +11,11 @@ class CompareBloc extends Bloc<CompareEvent, CompareState> {
       emit(CompareStateLoading());
       print("start bloc request");
       try {
-        final request = await repo.getHistoryCompare();
+        final request = await repo.getHistoryCompare(
+          startDate: event.startDate,
+          endDate: event.endDate,
+          noPermintaan: event.noPermintaan,
+        );
         if (request.data != null) {
           emit(CompareStateLoadHistorySuccess(datas: request.data!));
           print("success bloc approval_main_page");
