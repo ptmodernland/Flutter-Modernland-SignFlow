@@ -22,7 +22,7 @@ class LoginRepository {
         'token': token,
         'address': payload.address,
         'ip': payload.ip,
-        'brand': payload.brand,
+        'brand': "iPhone",
         'model': payload.model,
         'phonetype': payload.phonetype,
         'proses': 'cek_login'

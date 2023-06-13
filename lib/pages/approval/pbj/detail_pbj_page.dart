@@ -23,11 +23,15 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:quickalert/quickalert.dart';
 
 class DetailPBJPage extends StatefulWidget {
-  const DetailPBJPage(
-      {Key? key, required this.noPermintaan, this.isFromHistory = false})
-      : super(key: key);
+  const DetailPBJPage({
+    Key? key,
+    required this.noPermintaan,
+    this.isFromHistory = false,
+    this.isFromNotification = false,
+  }) : super(key: key);
   final String noPermintaan;
   final bool isFromHistory;
+  final bool isFromNotification;
 
   @override
   State<DetailPBJPage> createState() => _DetailPBJPageState();
@@ -312,15 +316,17 @@ class _DetailPBJPageState extends State<DetailPBJPage> {
                                                 mainAxisSize: MainAxisSize.min,
                                                 children: [
                                                   CustomTextInput(
-                                                    textEditController: messageController,
-                                                    hintTextString: 'Isi Tanggapan',
-                                                    inputType: InputType
-                                                        .Default,
+                                                    textEditController:
+                                                        messageController,
+                                                    hintTextString:
+                                                        'Isi Tanggapan',
+                                                    inputType:
+                                                        InputType.Default,
                                                     enableBorder: true,
                                                     minLines: 3,
-                                                    themeColor: Theme
-                                                        .of(context)
-                                                        .primaryColor,
+                                                    themeColor:
+                                                        Theme.of(context)
+                                                            .primaryColor,
                                                     cornerRadius: 18.0,
                                                     textValidator: (value) {
                                                       if (value?.isEmpty ??
@@ -330,8 +336,10 @@ class _DetailPBJPageState extends State<DetailPBJPage> {
                                                       return null;
                                                     },
                                                     textColor: Colors.black,
-                                                    errorMessage: 'Username cant be empty',
-                                                    labelText: 'Tanggapan/Komentar/Review',
+                                                    errorMessage:
+                                                        'Username cant be empty',
+                                                    labelText:
+                                                        'Tanggapan/Komentar/Review',
                                                   ),
                                                 ],
                                               ),
