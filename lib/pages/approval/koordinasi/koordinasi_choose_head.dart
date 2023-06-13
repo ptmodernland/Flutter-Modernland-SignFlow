@@ -1,8 +1,10 @@
 import 'package:bwa_cozy/bloc/iom/approval_head_dept_cubit.dart';
 import 'package:bwa_cozy/bloc/iom/approval_state.dart';
 import 'package:bwa_cozy/bloc/iom/give_koordinasi_cubit.dart';
+import 'package:bwa_cozy/bloc/stream/stream_cubit.dart';
 import 'package:bwa_cozy/repos/iom/approval_repository.dart';
 import 'package:bwa_cozy/repos/rekomendasi/rekomendasi_repository.dart';
+import 'package:bwa_cozy/repos/stream/stream_repository.dart';
 import 'package:bwa_cozy/util/enum/action_type.dart';
 import 'package:bwa_cozy/widget/approval/choose_dept_head_item.dart';
 import 'package:bwa_cozy/widget/core/blurred_dialog.dart';
@@ -55,10 +57,12 @@ class _ApprovalListState extends State<ApprovalList> {
   final messageController = TextEditingController();
   late GiveKoordinasiCubit koordinasiActionCubit;
   late ApprovalHeadDeptCubit approvalHeadListCubit;
+  late StreamCubit streamCubit;
 
   @override
   void initState() {
     super.initState();
+    streamCubit = StreamCubit(StreamRepository());
     koordinasiActionCubit = GiveKoordinasiCubit(RekomendasiRepository());
     approvalHeadListCubit = ApprovalHeadDeptCubit(ApprovalRepository());
   }
@@ -175,6 +179,36 @@ class _ApprovalListState extends State<ApprovalList> {
                 ],
               ),
             ),
+            // BlocProvider(
+            //   create: (_) => streamCubit,
+            //   child: Column(
+            //     children: [
+            //       BlocBuilder<StreamCubit, StreamState>(
+            //         bloc: streamCubit..fetchStream(),
+            //         builder: (context, state) {
+            //           if (state is StreamStateLoading) {
+            //             return Center(child: CupertinoActivityIndicator());
+            //           } else if (state is StreamStateLoadSuccess) {
+            //             print("success nieee" + state.datas.toString());
+            //             return Container(
+            //               height: 100,
+            //               child: ListView.builder(
+            //                 itemCount: state.datas.length,
+            //                 scrollDirection: Axis.horizontal,
+            //                 itemBuilder: (context, index) {
+            //                   final item = state.datas[index];
+            //                   return Text(item.title??"");
+            //                 },
+            //               ),
+            //             );
+            //           } else {
+            //             return Text("Halo Gais");
+            //           }
+            //         },
+            //       ),
+            //     ],
+            //   ),
+            // ),
             BlocBuilder<ApprovalHeadDeptCubit, ApprovalState>(
               bloc: approvalHeadListCubit..fetchDeptHead(),
               builder: (context, state) {
