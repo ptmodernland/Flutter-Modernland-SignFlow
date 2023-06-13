@@ -1,13 +1,11 @@
 import 'package:bwa_cozy/bloc/notif/notif_bloc.dart';
+import 'package:bwa_cozy/bloc/stream/orderbook_cubit.dart';
 import 'package:bwa_cozy/bloc/stream/stream_cubit.dart';
 import 'package:bwa_cozy/bloc/stream/stream_state.dart';
-import 'package:bwa_cozy/pages/detail/detail_project_page.dart';
 import 'package:bwa_cozy/repos/stream/stream_repository.dart';
 import 'package:bwa_cozy/util/my_colors.dart';
 import 'package:bwa_cozy/util/my_theme.dart';
 import 'package:bwa_cozy/util/resposiveness.dart';
-import 'package:bwa_cozy/widget/recommended_space/recommended_space_ui_model.dart';
-import 'package:bwa_cozy/widget/recommended_space/recommended_space_widget.dart';
 import 'package:bwa_cozy/widget/stream/stream_card.dart';
 import 'package:bwa_cozy/widget/stream/stream_ui_model.dart';
 import 'package:bwa_cozy/widget/tips_and_trick/tips_and_trick_ui_model.dart';
@@ -25,11 +23,13 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   late StreamCubit streamCubit;
+  late OrderbookCubit orderbookCubit;
 
   @override
   void initState() {
     super.initState();
     streamCubit = StreamCubit(StreamRepository());
+    orderbookCubit = OrderbookCubit(StreamRepository());
   }
 
   @override
@@ -45,7 +45,7 @@ class _HomePageState extends State<HomePage> {
               ),
               InkWell(
                 onDoubleTap: () {
-                  StreamRepository().getMDLNNews();
+                  orderbookCubit.fetchPrice();
                 },
                 child: Image.asset(
                   "asset/img/icons/logo_modernland.png",
@@ -78,7 +78,10 @@ class _HomePageState extends State<HomePage> {
                       bloc: streamCubit..fetchStream(),
                       builder: (context, state) {
                         if (state is StreamStateLoading) {
-                          return Center(child: CupertinoActivityIndicator());
+                          return Container(
+                              height: 300,
+                              child:
+                                  Center(child: CupertinoActivityIndicator()));
                         } else if (state is StreamStateLoadSuccess) {
                           print("success nieee" + state.datas.toString());
                           return Container(
@@ -117,43 +120,130 @@ class _HomePageState extends State<HomePage> {
                 style: MyTheme.myStyleSecondaryTextStyle
                     .copyWith(fontSize: 20, color: AppColors.primaryColor2),
               ),
-              Container(
-                height: 275,
-                margin: EdgeInsets.only(top: 20),
-                child: ListView(
-                  primary: false,
-                  scrollDirection: Axis.vertical,
+              const SizedBox(
+                height: 20,
+              ),
+              BlocProvider(
+                create: (_) => orderbookCubit,
+                child: Column(
                   children: [
-                    RecommendedSpaceWidget(
-                      uimodel: RecommendedSpaceUIModel(
-                        name: "Cluster Yossy",
-                        location: "Jakarta Garden City",
-                      ),
-                    ),
-                    RecommendedSpaceWidget(
-                      onCardTap: (id) {
-                        // Handle the card tap event with the provided id
-                        print('Tapped on card with ID: $id');
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) {
-                            return DetailProjectPage(
-                              projectId: id,
-                            );
-                          }),
-                        );
-                        // Perform any other actions based on the id
-                      },
-                      uimodel: RecommendedSpaceUIModel(
-                        name: "Gajah Mada Suit",
-                        location: "Novotel Gajah Mada ",
-                      ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Row(
+                          children: [
+                            Container(
+                              margin: EdgeInsets.only(left: 10, right: 10),
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black.withOpacity(0.3),
+                                    blurRadius: 4.0,
+                                    spreadRadius: 2.0,
+                                    offset: Offset(0, 2),
+                                  ),
+                                ],
+                              ),
+                              child: const CircleAvatar(
+                                radius: 45.0,
+                                backgroundImage: NetworkImage(
+                                  'http://feylabs.my.id/fm/mdln_asset/mdln_circle_placeholder.png',
+                                ),
+                                backgroundColor: Colors.transparent,
+                              ),
+                            ),
+                            SizedBox(
+                              width: 20,
+                            ),
+                            Container(
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    "Modernland Realty (IDX:MDLN)",
+                                    style: MyTheme.myStylePrimaryTextStyle
+                                        .copyWith(
+                                      fontSize: 18,
+                                    ),
+                                  ),
+                                  RichText(
+                                    text: const TextSpan(
+                                      style: TextStyle(
+                                          color: Colors.black, fontSize: 16),
+                                      children: <TextSpan>[
+                                        TextSpan(
+                                            text: 'Harga Saham MDLN hari ini '),
+                                        TextSpan(
+                                          text: 'naik 25%',
+                                          style: TextStyle(
+                                              color: Colors.green,
+                                              fontWeight: FontWeight.w600),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                        Container(
+                          margin: EdgeInsets.only(right: 10),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: [
+                              BlocBuilder<OrderbookCubit, StreamState>(
+                                bloc: orderbookCubit..fetchPrice(),
+                                builder: (context, state) {
+                                  if (state is StreamStateLoading) {
+                                    return Container(
+                                        height: 100,
+                                        child: Center(
+                                            child:
+                                                CupertinoActivityIndicator()));
+                                  } else if (state
+                                      is StreamStateOrderbookSuccess) {
+                                    var data = state.datas;
+                                    return Column(
+                                      children: [
+                                        Text(
+                                          data.data?.lastprice.toString() ??
+                                              "0",
+                                          style: MyTheme.myStylePrimaryTextStyle
+                                              .copyWith(
+                                                  fontSize: 18,
+                                                  fontWeight: FontWeight.w700),
+                                        ),
+                                        Text(
+                                          "(+23)",
+                                          style: MyTheme
+                                              .myStyleSecondaryTextStyle
+                                              .copyWith(
+                                                  color: Colors.green,
+                                                  fontWeight: FontWeight.w600),
+                                        )
+                                      ],
+                                    );
+                                  } else {
+                                    return Text("Loading");
+                                  }
+                                },
+                              ),
+                            ],
+                          ),
+                        )
+                      ],
                     ),
                   ],
                 ),
               ),
+              const SizedBox(
+                height: 20,
+              ),
               Text(
-                "Tips and Trick",
+                "Shareholder Transaction (EOD)",
                 style: MyTheme.myStyleSecondaryTextStyle
                     .copyWith(fontSize: 20, color: AppColors.primaryColor2),
               ),

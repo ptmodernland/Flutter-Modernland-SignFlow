@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:bwa_cozy/bloc/_wrapper/response_wrapper.dart';
+import 'package:bwa_cozy/repos/stream/Orderbook_dto.dart';
 import 'package:bwa_cozy/repos/stream/stream_paging_dto.dart';
 import 'package:http/http.dart' as http;
 
@@ -38,5 +39,25 @@ class StreamRepository {
       return ResponseWrapper(null, ResourceStatus.Error, error.toString());
     }
     return ResponseWrapper(null, ResourceStatus.Success, "Login Berhasil");
+  }
+
+  Future<ResponseWrapper<OrderbookDto>> getMDLNPrice() async {
+    const url = 'https://snips-api.feylabs.my.id/api/mdln-focused/price';
+    final response = await http.get(Uri.parse(url));
+    try {
+      if (response.statusCode == 200) {
+        print("mdln price success ");
+        var responseBody = response.body;
+        var jsonResponse = jsonDecode(responseBody);
+        final data = OrderbookDto.fromJson(jsonResponse);
+        return ResponseWrapper(data, ResourceStatus.Success, "OK");
+      } else {
+        return ResponseWrapper(null, ResourceStatus.Error, "Error");
+      }
+    } catch (e) {
+      print("mdln price error :" + e.toString());
+      return ResponseWrapper(
+          null, ResourceStatus.Error, "Error :" + e.toString());
+    }
   }
 }

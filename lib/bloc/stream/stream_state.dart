@@ -1,3 +1,4 @@
+import 'package:bwa_cozy/repos/stream/Orderbook_dto.dart';
 import 'package:bwa_cozy/repos/stream/stream_paging_dto.dart';
 
 abstract class StreamState {}
@@ -27,6 +28,12 @@ class StreamStateLoadSuccess extends StreamState {
   final List<StreamData> datas;
 
   StreamStateLoadSuccess({this.datas = const []});
+}
+
+class StreamStateOrderbookSuccess extends StreamState {
+  final OrderbookDto datas;
+
+  StreamStateOrderbookSuccess({required this.datas});
 }
 
 class StreamStateFailure extends StreamState {
