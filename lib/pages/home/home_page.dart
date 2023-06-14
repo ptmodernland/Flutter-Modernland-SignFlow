@@ -1,11 +1,17 @@
+import 'dart:math';
+
 import 'package:bwa_cozy/bloc/notif/notif_bloc.dart';
 import 'package:bwa_cozy/bloc/stream/orderbook_cubit.dart';
+import 'package:bwa_cozy/bloc/stream/shareholder_movement_cubit.dart';
 import 'package:bwa_cozy/bloc/stream/stream_cubit.dart';
 import 'package:bwa_cozy/bloc/stream/stream_state.dart';
 import 'package:bwa_cozy/repos/stream/stream_repository.dart';
+import 'package:bwa_cozy/util/core/string/currency_util.dart';
 import 'package:bwa_cozy/util/my_colors.dart';
 import 'package:bwa_cozy/util/my_theme.dart';
+import 'package:bwa_cozy/util/responsiveness/scale_size.dart';
 import 'package:bwa_cozy/util/resposiveness.dart';
+import 'package:bwa_cozy/widget/common/shareholder_transaction_widget.dart';
 import 'package:bwa_cozy/widget/stream/stream_card.dart';
 import 'package:bwa_cozy/widget/stream/stream_ui_model.dart';
 import 'package:bwa_cozy/widget/tips_and_trick/tips_and_trick_ui_model.dart';
@@ -24,16 +30,34 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   late StreamCubit streamCubit;
   late OrderbookCubit orderbookCubit;
+  late ShareholderMovementCubit shareholderCubit;
 
   @override
   void initState() {
     super.initState();
     streamCubit = StreamCubit(StreamRepository());
     orderbookCubit = OrderbookCubit(StreamRepository());
+    shareholderCubit = ShareholderMovementCubit(StreamRepository());
   }
 
   @override
   Widget build(BuildContext context) {
+    const rowHeight = 5.0;
+    final rowSpacer = TableRow(children: [
+      SizedBox(
+        height: rowHeight,
+      ),
+      SizedBox(
+        height: rowHeight,
+      ),
+      SizedBox(
+        height: rowHeight,
+      ),
+      SizedBox(
+        height: rowHeight,
+      ),
+    ]);
+
     return Scaffold(
       body: SafeArea(
         child: Padding(
@@ -65,10 +89,24 @@ class _HomePageState extends State<HomePage> {
               SizedBox(
                 height: 25,
               ),
-              Text(
-                "Modernland Market Snips",
-                style: MyTheme.myStyleSecondaryTextStyle
-                    .copyWith(fontSize: 20, color: AppColors.primaryColor2),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    "Modernland Market Snips",
+                    style: MyTheme.myStyleSecondaryTextStyle.copyWith(
+                        fontSize: ScaleSize.textScaleFactor(context,
+                            maxTextScaleFactor: 60),
+                        color: AppColors.primaryColor2),
+                  ),
+                  Text(
+                    "Lihat Semua",
+                    style: MyTheme.myStyleSecondaryTextStyle.copyWith(
+                        fontSize: ScaleSize.textScaleFactor(context,
+                            maxTextScaleFactor: 50),
+                        color: AppColors.primaryColor2),
+                  ),
+                ],
               ),
               BlocProvider(
                 create: (_) => streamCubit,
@@ -81,7 +119,7 @@ class _HomePageState extends State<HomePage> {
                           return Container(
                               height: 300,
                               child:
-                                  Center(child: CupertinoActivityIndicator()));
+                              Center(child: CupertinoActivityIndicator()));
                         } else if (state is StreamStateLoadSuccess) {
                           print("success nieee" + state.datas.toString());
                           return Container(
@@ -117,135 +155,95 @@ class _HomePageState extends State<HomePage> {
               ),
               Text(
                 "Stock Movement",
-                style: MyTheme.myStyleSecondaryTextStyle
-                    .copyWith(fontSize: 20, color: AppColors.primaryColor2),
+                style: MyTheme.myStyleSecondaryTextStyle.copyWith(
+                    fontSize: ScaleSize.textScaleFactor(context,
+                        maxTextScaleFactor: 55),
+                    color: AppColors.primaryColor2),
               ),
               const SizedBox(
+                height: 20,
+              ),
+              buildStockMovementCard(context, rowSpacer),
+              const SizedBox(
+                height: 20,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    "Shareholder Transaction (EOD)",
+                    style: MyTheme.myStyleSecondaryTextStyle.copyWith(
+                        fontSize: ScaleSize.textScaleFactor(context,
+                            maxTextScaleFactor: 60),
+                        color: AppColors.primaryColor2),
+                  ),
+                  Text(
+                    "Lihat Semua",
+                    style: MyTheme.myStyleSecondaryTextStyle.copyWith(
+                        fontSize: ScaleSize.textScaleFactor(context,
+                            maxTextScaleFactor: 40),
+                        color: AppColors.primaryColor2),
+                  ),
+                ],
+              ),
+              SizedBox(
                 height: 20,
               ),
               BlocProvider(
-                create: (_) => orderbookCubit,
+                create: (_) => shareholderCubit..fetchShareholder(),
                 child: Column(
                   children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Row(
-                          children: [
-                            Container(
-                              margin: EdgeInsets.only(left: 10, right: 10),
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.black.withOpacity(0.3),
-                                    blurRadius: 4.0,
-                                    spreadRadius: 2.0,
-                                    offset: Offset(0, 2),
-                                  ),
-                                ],
-                              ),
-                              child: const CircleAvatar(
-                                radius: 45.0,
-                                backgroundImage: NetworkImage(
-                                  'http://feylabs.my.id/fm/mdln_asset/mdln_circle_placeholder.png',
-                                ),
-                                backgroundColor: Colors.transparent,
-                              ),
+                    BlocBuilder<ShareholderMovementCubit, StreamState>(
+                      bloc: shareholderCubit..fetchShareholder(),
+                      builder: (context, state) {
+                        if (state is StreamStateLoading) {
+                          return Container(
+                              height: 100,
+                              child:
+                                  Center(child: CupertinoActivityIndicator()));
+                        } else if (state is StreamStateLoadShareholder) {
+                          return Container(
+                            height: 180,
+                            child: ListView.builder(
+                              itemCount: min(state.datas.length, 5),
+                              // Limit the count to a maximum of 5
+                              scrollDirection: Axis.horizontal,
+                              itemBuilder: (context, index) {
+                                final item = state.datas[index];
+                                var photoUrl = "";
+                                var isBuying = false;
+                                var shareHolderName = item.name ?? "Investor ";
+                                var buyingValue = item.changes?.value ?? "0";
+
+                                if (item.changes?.value?.contains("+") ==
+                                    true) {
+                                  isBuying = true;
+                                }
+
+                                var description = shareHolderName;
+
+                                if (isBuying) {
+                                  description += "\n" + buyingValue + " shares";
+                                } else {
+                                  description += "\n" + buyingValue + " shares";
+                                }
+                                return ShareholderTransactionWidget(
+                                  userName: item.name ?? "",
+                                  comment: description,
+                                  postingDate: item.date ?? "",
+                                  bottomText:
+                                      (item.current?.percentage ?? "") + "%",
+                                );
+                              },
                             ),
-                            SizedBox(
-                              width: 20,
-                            ),
-                            Container(
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    "Modernland Realty (IDX:MDLN)",
-                                    style: MyTheme.myStylePrimaryTextStyle
-                                        .copyWith(
-                                      fontSize: 18,
-                                    ),
-                                  ),
-                                  RichText(
-                                    text: const TextSpan(
-                                      style: TextStyle(
-                                          color: Colors.black, fontSize: 16),
-                                      children: <TextSpan>[
-                                        TextSpan(
-                                            text: 'Harga Saham MDLN hari ini '),
-                                        TextSpan(
-                                          text: 'naik 25%',
-                                          style: TextStyle(
-                                              color: Colors.green,
-                                              fontWeight: FontWeight.w600),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                        Container(
-                          margin: EdgeInsets.only(right: 10),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            children: [
-                              BlocBuilder<OrderbookCubit, StreamState>(
-                                bloc: orderbookCubit..fetchPrice(),
-                                builder: (context, state) {
-                                  if (state is StreamStateLoading) {
-                                    return Container(
-                                        height: 100,
-                                        child: Center(
-                                            child:
-                                                CupertinoActivityIndicator()));
-                                  } else if (state
-                                      is StreamStateOrderbookSuccess) {
-                                    var data = state.datas;
-                                    return Column(
-                                      children: [
-                                        Text(
-                                          data.data?.lastprice.toString() ??
-                                              "0",
-                                          style: MyTheme.myStylePrimaryTextStyle
-                                              .copyWith(
-                                                  fontSize: 18,
-                                                  fontWeight: FontWeight.w700),
-                                        ),
-                                        Text(
-                                          "(+23)",
-                                          style: MyTheme
-                                              .myStyleSecondaryTextStyle
-                                              .copyWith(
-                                                  color: Colors.green,
-                                                  fontWeight: FontWeight.w600),
-                                        )
-                                      ],
-                                    );
-                                  } else {
-                                    return Text("Loading");
-                                  }
-                                },
-                              ),
-                            ],
-                          ),
-                        )
-                      ],
+                          );
+                        } else {
+                          return Text("Halo Gais");
+                        }
+                      },
                     ),
                   ],
                 ),
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              Text(
-                "Shareholder Transaction (EOD)",
-                style: MyTheme.myStyleSecondaryTextStyle
-                    .copyWith(fontSize: 20, color: AppColors.primaryColor2),
               ),
               Container(
                 height: 275,
@@ -272,6 +270,329 @@ class _HomePageState extends State<HomePage> {
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  Widget buildStockMovementCard(BuildContext context, TableRow rowSpacer) {
+    return Card(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10),
+      ),
+      elevation: 8,
+      child: BlocProvider(
+        create: (_) => orderbookCubit,
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(
+                  left: 10, right: 10, bottom: 20, top: 20),
+              child: Column(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
+                        children: [
+                          Container(
+                            margin: EdgeInsets.only(left: 10, right: 10),
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withOpacity(0.3),
+                                  blurRadius: 4.0,
+                                  spreadRadius: 2.0,
+                                  offset: Offset(0, 2),
+                                ),
+                              ],
+                            ),
+                            child: CircleAvatar(
+                              radius: MediaQuery.of(context).size.width * 0.07,
+                              backgroundImage: NetworkImage(
+                                'http://feylabs.my.id/fm/mdln_asset/mdln_circle_placeholder.png',
+                              ),
+                              backgroundColor: Colors.transparent,
+                            ),
+                          ),
+                          SizedBox(
+                            width: 10,
+                          ),
+                          Container(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  "MDLN",
+                                  style:
+                                      MyTheme.myStylePrimaryTextStyle.copyWith(
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: ScaleSize.textScaleFactor(context,
+                                        maxTextScaleFactor: 60),
+                                  ),
+                                ),
+                                RichText(
+                                  text: TextSpan(
+                                    style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: ScaleSize.textScaleFactor(
+                                          context,
+                                          maxTextScaleFactor: 45),
+                                    ),
+                                    children: <TextSpan>[
+                                      TextSpan(
+                                        text: "PT Modernland Realty Tbk.",
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                      Expanded(
+                        child: Container(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: [
+                              BlocBuilder<OrderbookCubit, StreamState>(
+                                bloc: orderbookCubit..fetchPrice(),
+                                builder: (context, state) {
+                                  if (state is StreamStateLoading) {
+                                    return CupertinoActivityIndicator();
+                                  } else if (state
+                                      is StreamStateOrderbookSuccess) {
+                                    var data = state.datas;
+                                    var percentageString = state
+                                            .datas.data?.percentageChange
+                                            .toString() ??
+                                        "";
+                                    var pointChange =
+                                        state.datas.data?.change.toString() ??
+                                            "";
+                                    final double pointChangeValue =
+                                        double.tryParse(pointChange) ?? 0;
+                                    return Column(
+                                      children: [
+                                        Align(
+                                          alignment: Alignment.centerRight,
+                                          child: Text(
+                                            data.data?.lastprice.toString() ??
+                                                "0",
+                                            style: MyTheme
+                                                .myStylePrimaryTextStyle
+                                                .copyWith(
+                                              fontSize:
+                                                  ScaleSize.textScaleFactor(
+                                                      context,
+                                                      maxTextScaleFactor: 60),
+                                              fontWeight: FontWeight.w700,
+                                            ),
+                                          ),
+                                        ),
+                                        Align(
+                                          alignment: Alignment.centerRight,
+                                          child: Text(
+                                            '$percentageString% (${pointChangeValue >= 0 ? '+' : ''}$pointChange)',
+                                            style: MyTheme
+                                                .myStyleSecondaryTextStyle
+                                                .copyWith(
+                                              fontSize:
+                                                  ScaleSize.textScaleFactor(
+                                                      context,
+                                                      maxTextScaleFactor: 50),
+                                              color: pointChangeValue < 0
+                                                  ? Colors.red
+                                                  : Colors.green,
+                                              fontWeight: FontWeight.w600,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    );
+                                  } else {
+                                    return Text("...");
+                                  }
+                                },
+                              ),
+                            ],
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
+                ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Table(
+                border: TableBorder.symmetric(
+                    inside: BorderSide.none,
+                    // outside: BorderSide(width: 1, color: Colors.grey),
+                    outside: BorderSide.none),
+                defaultVerticalAlignment: TableCellVerticalAlignment.middle,
+                children: [
+                  TableRow(
+                    children: [
+                      TableCell(child: Text('Open')),
+                      TableCell(
+                        child: BlocBuilder<OrderbookCubit, StreamState>(
+                          bloc: orderbookCubit,
+                          builder: (context, state) {
+                            if (state is StreamStateLoading) {
+                              return buildLoadingIndicator();
+                            } else if (state is StreamStateOrderbookSuccess) {
+                              return Text(
+                                state.datas.data?.open.toString() ?? "-",
+                                style: TextStyle(
+                                  color: (state.datas.data?.change ?? 0) < 0
+                                      ? Colors.red
+                                      : Colors.green,
+                                ),
+                              );
+                            } else {
+                              return Text("-");
+                            }
+                          },
+                        ),
+                      ),
+                      TableCell(child: Text('Lot')),
+                      TableCell(
+                        child: BlocBuilder<OrderbookCubit, StreamState>(
+                          bloc: orderbookCubit,
+                          builder: (context, state) {
+                            if (state is StreamStateLoading) {
+                              return buildLoadingIndicator();
+                            } else if (state is StreamStateOrderbookSuccess) {
+                              return Text(
+                                toAbbreviatedNumberString(
+                                    (state.datas.data?.volume ?? 0) / 100),
+                                style: TextStyle(
+                                  color: (state.datas.data?.change ?? 0) < 0
+                                      ? Colors.red
+                                      : Colors.green,
+                                ),
+                              );
+                            } else {
+                              return Text("-");
+                            }
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                  rowSpacer,
+                  TableRow(
+                    children: [
+                      TableCell(child: Text('High')),
+                      TableCell(
+                        child: BlocBuilder<OrderbookCubit, StreamState>(
+                          bloc: orderbookCubit,
+                          builder: (context, state) {
+                            if (state is StreamStateLoading) {
+                              return buildLoadingIndicator();
+                            } else if (state is StreamStateOrderbookSuccess) {
+                              return Text(
+                                  state.datas.data?.high.toString() ?? "-",
+                                  style: TextStyle(
+                                    color: (state.datas.data?.change ?? 0) < 0
+                                        ? Colors.red
+                                        : Colors.green,
+                                  ));
+                            } else {
+                              return Text("-");
+                            }
+                          },
+                        ),
+                      ),
+                      TableCell(child: Text('Val')),
+                      TableCell(
+                        child: BlocBuilder<OrderbookCubit, StreamState>(
+                          bloc: orderbookCubit,
+                          builder: (context, state) {
+                            if (state is StreamStateLoading) {
+                              return buildLoadingIndicator();
+                            } else if (state is StreamStateOrderbookSuccess) {
+                              return Text(
+                                  toAbbreviatedNumberString(
+                                      state.datas.data?.value),
+                                  style: TextStyle(
+                                    color: (state.datas.data?.change ?? 0) < 0
+                                        ? Colors.red
+                                        : Colors.green,
+                                  ));
+                            } else {
+                              return Text("-");
+                            }
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                  rowSpacer,
+                  TableRow(
+                    children: [
+                      TableCell(child: Text('Low')),
+                      TableCell(
+                        child: BlocBuilder<OrderbookCubit, StreamState>(
+                          bloc: orderbookCubit,
+                          builder: (context, state) {
+                            if (state is StreamStateLoading) {
+                              return buildLoadingIndicator();
+                            } else if (state is StreamStateOrderbookSuccess) {
+                              return Text(
+                                  state.datas.data?.low.toString() ?? "-",
+                                  style: TextStyle(
+                                    color: (state.datas.data?.change ?? 0) < 0
+                                        ? Colors.red
+                                        : Colors.green,
+                                  ));
+                            } else {
+                              return Text("-");
+                            }
+                          },
+                        ),
+                      ),
+                      TableCell(child: Text('Average')),
+                      TableCell(
+                        child: BlocBuilder<OrderbookCubit, StreamState>(
+                          bloc: orderbookCubit,
+                          builder: (context, state) {
+                            if (state is StreamStateLoading) {
+                              return buildLoadingIndicator();
+                            } else if (state is StreamStateOrderbookSuccess) {
+                              return Text(
+                                  state.datas.data?.average.toString() ?? "-",
+                                  style: TextStyle(
+                                    color: (state.datas.data?.change ?? 0) < 0
+                                        ? Colors.red
+                                        : Colors.green,
+                                  ));
+                            } else {
+                              return Text("-");
+                            }
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Container buildLoadingIndicator() {
+    return Container(
+      child: Align(
+        alignment: Alignment.centerLeft,
+        child: CupertinoActivityIndicator(radius: 4),
       ),
     );
   }

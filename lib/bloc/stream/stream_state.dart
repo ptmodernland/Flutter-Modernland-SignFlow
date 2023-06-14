@@ -1,4 +1,5 @@
 import 'package:bwa_cozy/repos/stream/Orderbook_dto.dart';
+import 'package:bwa_cozy/repos/stream/shareholder_transaction_dto.dart';
 import 'package:bwa_cozy/repos/stream/stream_paging_dto.dart';
 
 abstract class StreamState {}
@@ -28,6 +29,12 @@ class StreamStateLoadSuccess extends StreamState {
   final List<StreamData> datas;
 
   StreamStateLoadSuccess({this.datas = const []});
+}
+
+class StreamStateLoadShareholder extends StreamState {
+  final List<ShareholderMovementDTO> datas;
+
+  StreamStateLoadShareholder({this.datas = const []});
 }
 
 class StreamStateOrderbookSuccess extends StreamState {

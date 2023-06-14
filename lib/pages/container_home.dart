@@ -123,7 +123,7 @@ class _ContainerHomePageState extends State<ContainerHomePage>
       selectedItemColor: Colors.red,
       unselectedItemColor: Colors.grey,
       showSelectedLabels: true,
-      showUnselectedLabels: true,
+      showUnselectedLabels: false,
       items: [
         BottomNavigationBarItem(
           icon: BottomIconWithBadge(

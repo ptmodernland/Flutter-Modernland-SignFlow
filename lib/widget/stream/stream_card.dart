@@ -45,6 +45,17 @@ class StreamCard extends StatelessWidget {
                   width: photoWidth,
                   height: photoHeight,
                   fit: BoxFit.cover,
+                  errorBuilder: (context, error, stackTrace) {
+                    return Container(
+                      width: photoWidth,
+                      height: photoHeight,
+                      color: Colors.grey, // Placeholder color or image
+                      child: Icon(
+                        Icons.error,
+                        color: Colors.white,
+                      ),
+                    );
+                  },
                 ),
               ),
             ],
