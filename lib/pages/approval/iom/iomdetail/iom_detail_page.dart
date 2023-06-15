@@ -235,7 +235,9 @@ class _IomDetailPageState extends State<IomDetailPage> {
                       bloc: iomDetailCubit..fetchApprovals(widget.idIom),
                       builder: (context, state) {
                         if (state is ApprovalDetailLoading) {
-                          return Text("Loading");
+                          return Container(
+                              height: 400,
+                              child: Center(child: Text("Loading")));
                         }
                         if (state is ApprovalDetailError) {
                           return Text("Success : " + state.message);
@@ -558,7 +560,7 @@ class _IomDetailPageState extends State<IomDetailPage> {
                         );
 
                         if (state is ApprovalLoading) {
-                          return Text("Loading");
+                          return Text("");
                         }
                         if (state is ApprovalCommentError) {
                           return Text("Success : " + state.message);

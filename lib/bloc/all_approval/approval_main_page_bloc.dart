@@ -10,6 +10,7 @@ class ApprovalMainPageBloc
 
   ApprovalMainPageBloc(this._repo) : super(ApprovalMainPageStateInitial()) {
     on<RequestPBJDetailEvent>((event, emit) async {
+      emit(ApprovalMainPageStateLoading());
       try {
         final request = await _repo.getPBJDetail(event.noPermintaan);
         if (request.data != null) {

@@ -252,7 +252,8 @@ class _CompareAllApprovedPageState extends State<CompareAllApprovedPage> {
       {required FilterCompareCubit filterCompareCubit,
       required CompareBloc compareBloc,
       required BuildContext context}) {
-    return Column(
+    return Container();
+    Column(
       children: [
         Container(
           margin: EdgeInsets.only(left: 20, right: 20, top: 20),

@@ -177,24 +177,17 @@ class _ApprovalRealisasiMainPageState extends State<ApprovalRealisasiMainPage> {
                                           ),
                                         )),
                                     Container(
+                                      width: double.infinity,
                                       margin:
                                           EdgeInsets.only(left: 20, right: 20),
-                                      child: Row(
-                                        mainAxisSize: MainAxisSize.max,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            "Request Terbaru",
-                                            textAlign: TextAlign.start,
-                                            style: MyTheme
-                                                .myStylePrimaryTextStyle
-                                                .copyWith(
-                                              fontWeight: FontWeight.w600,
-                                              fontSize: 18,
-                                            ),
-                                          ),
-                                        ],
+                                      child: Text(
+                                        "Request Terbaru",
+                                        textAlign: TextAlign.start,
+                                        style: MyTheme.myStylePrimaryTextStyle
+                                            .copyWith(
+                                          fontWeight: FontWeight.w600,
+                                          fontSize: 18,
+                                        ),
                                       ),
                                     ),
                                   ],
