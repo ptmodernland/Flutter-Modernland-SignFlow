@@ -216,31 +216,6 @@ class _ProfilePageState extends State<ProfilePage> {
                                         GestureDetector(
                                           onTap: () {
                                             openwhatsapp(
-                                                context, "+6285780258444");
-                                          },
-                                          child: Card(
-                                            color: Colors.green,
-                                            elevation: 4,
-                                            margin: EdgeInsets.all(10),
-                                            child: ListTile(
-                                              title: Text(
-                                                "Ardi Dzariat (Untuk Website)",
-                                                style: MyTheme
-                                                    .myStyleSecondaryTextStyle
-                                                    .copyWith(
-                                                        color: Colors.white),
-                                              ),
-                                              subtitle: Text("0857-8025-8444"),
-                                              trailing: CircleAvatar(
-                                                backgroundImage: NetworkImage(
-                                                    "https://www.kindpng.com/picc/m/19-195256_whatsapp-icon-whatsapp-logo-jpg-download-hd-png.png"),
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                        GestureDetector(
-                                          onTap: () {
-                                            openwhatsapp(
                                                 context, "+6282113530950");
                                           },
                                           child: Card(
@@ -256,6 +231,31 @@ class _ProfilePageState extends State<ProfilePage> {
                                                         color: Colors.white),
                                               ),
                                               subtitle: Text("082113530950"),
+                                              trailing: CircleAvatar(
+                                                backgroundImage: NetworkImage(
+                                                    "https://www.kindpng.com/picc/m/19-195256_whatsapp-icon-whatsapp-logo-jpg-download-hd-png.png"),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                        GestureDetector(
+                                          onTap: () {
+                                            openwhatsapp(
+                                                context, "+6285780258444");
+                                          },
+                                          child: Card(
+                                            color: Colors.green,
+                                            elevation: 4,
+                                            margin: EdgeInsets.all(10),
+                                            child: ListTile(
+                                              title: Text(
+                                                "Ardi Dzariat (Untuk Website)",
+                                                style: MyTheme
+                                                    .myStyleSecondaryTextStyle
+                                                    .copyWith(
+                                                        color: Colors.white),
+                                              ),
+                                              subtitle: Text("0857-8025-8444"),
                                               trailing: CircleAvatar(
                                                 backgroundImage: NetworkImage(
                                                     "https://www.kindpng.com/picc/m/19-195256_whatsapp-icon-whatsapp-logo-jpg-download-hd-png.png"),
@@ -449,10 +449,8 @@ class _ProfilePageState extends State<ProfilePage> {
 
   openwhatsapp(BuildContext context, String number) async {
     var whatsapp = "+" + number;
-    var whatsappURl_android =
-        "whatsapp://send?phone=" + whatsapp + "&text=Permintaan+reset+sandi";
-    var whatappURL_ios =
-        "https://wa.me/$whatsapp?text=${Uri.parse("Permintaan+reset+sandi")}";
+    var whatsappURl_android = "whatsapp://send?phone=" + whatsapp + "&";
+    var whatappURL_ios = "https://wa.me/$whatsapp?text=${Uri.parse("")}";
     if (Platform.isIOS) {
       // for iOS phone only
       if (await canLaunch(whatappURL_ios)) {

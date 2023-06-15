@@ -6,6 +6,7 @@ class StreamUIModel {
   String webUrl = "";
   String description = "";
   bool isFavorited = false;
+  String bottomText = "";
 
   StreamUIModel(
       {this.name = "",
@@ -13,6 +14,7 @@ class StreamUIModel {
       this.photoUrl = "",
       this.webUrl = '',
       this.description = "",
+      this.bottomText = "",
       this.photoAsset = "",
       this.isFavorited = false});
 }

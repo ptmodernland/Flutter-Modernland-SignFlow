@@ -72,12 +72,10 @@ class TipsAndTrickWidget extends StatelessWidget {
                   Align(
                     alignment: Alignment.centerRight,
                     child: IconButton(
-                      iconSize: 18,
+                      iconSize: 15,
                       color: Colors.grey[200],
                       icon: Icon(Icons.arrow_forward_ios),
-                      onPressed: (){
-
-                      },
+                      onPressed: () {},
                     ) ,
                   ),
                 ],

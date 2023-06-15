@@ -5,12 +5,16 @@ import 'package:bwa_cozy/bloc/stream/orderbook_cubit.dart';
 import 'package:bwa_cozy/bloc/stream/shareholder_movement_cubit.dart';
 import 'package:bwa_cozy/bloc/stream/stream_cubit.dart';
 import 'package:bwa_cozy/bloc/stream/stream_state.dart';
+import 'package:bwa_cozy/pages/common/webview_page.dart';
+import 'package:bwa_cozy/pages/stock/mdln_news_all_page.dart';
+import 'package:bwa_cozy/pages/stock/mdln_shareholder_all_page.dart';
 import 'package:bwa_cozy/repos/stream/stream_repository.dart';
 import 'package:bwa_cozy/util/core/string/currency_util.dart';
 import 'package:bwa_cozy/util/my_colors.dart';
 import 'package:bwa_cozy/util/my_theme.dart';
 import 'package:bwa_cozy/util/responsiveness/scale_size.dart';
 import 'package:bwa_cozy/util/resposiveness.dart';
+import 'package:bwa_cozy/widget/common/broadcast_message_widget.dart';
 import 'package:bwa_cozy/widget/common/shareholder_transaction_widget.dart';
 import 'package:bwa_cozy/widget/stream/stream_card.dart';
 import 'package:bwa_cozy/widget/stream/stream_ui_model.dart';
@@ -77,15 +81,10 @@ class _HomePageState extends State<HomePage> {
                   height: 50,
                 ),
               ),
-              Text(
-                "Modernland Approval",
-                style: MyTheme.myStylePrimaryTextStyle
-                    .copyWith(fontSize: 20, fontWeight: MyTheme.bold),
+              SizedBox(
+                height: 25,
               ),
-              Text(
-                "Modernland Approval revolutionizes the approval process, empowering efficient decision-making and expediting critical assessments.",
-                style: MyTheme.myStyleSecondaryTextStyle.copyWith(fontSize: 15),
-              ),
+              BroadcastMessageWidget(),
               SizedBox(
                 height: 25,
               ),
@@ -96,15 +95,25 @@ class _HomePageState extends State<HomePage> {
                     "Modernland Market Snips",
                     style: MyTheme.myStyleSecondaryTextStyle.copyWith(
                         fontSize: ScaleSize.textScaleFactor(context,
-                            maxTextScaleFactor: 60),
+                            maxTextScaleFactor: 33),
                         color: AppColors.primaryColor2),
                   ),
-                  Text(
-                    "Lihat Semua",
-                    style: MyTheme.myStyleSecondaryTextStyle.copyWith(
-                        fontSize: ScaleSize.textScaleFactor(context,
-                            maxTextScaleFactor: 50),
-                        color: AppColors.primaryColor2),
+                  InkWell(
+                    onTap: () {
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) {
+                        return MDLNNewsAllPage(
+                          title: "MDLN Snips",
+                        );
+                      }));
+                    },
+                    child: Text(
+                      "Lihat Semua",
+                      style: MyTheme.myStyleSecondaryTextStyle.copyWith(
+                          fontSize: ScaleSize.textScaleFactor(context,
+                              maxTextScaleFactor: 28),
+                          color: AppColors.primaryColor2),
+                    ),
                   ),
                 ],
               ),
@@ -117,13 +126,12 @@ class _HomePageState extends State<HomePage> {
                       builder: (context, state) {
                         if (state is StreamStateLoading) {
                           return Container(
-                              height: 300,
+                              height: 330,
                               child:
-                              Center(child: CupertinoActivityIndicator()));
+                                  Center(child: CupertinoActivityIndicator()));
                         } else if (state is StreamStateLoadSuccess) {
-                          print("success nieee" + state.datas.toString());
                           return Container(
-                            height: 300,
+                            height: 330,
                             child: ListView.builder(
                               itemCount: state.datas.length,
                               scrollDirection: Axis.horizontal,
@@ -133,17 +141,28 @@ class _HomePageState extends State<HomePage> {
                                 if (item.images?.isNotEmpty == true) {
                                   photoUrl = item.images?.first ?? "";
                                 }
-                                return StreamCard(
-                                    streamUiModel: StreamUIModel(
-                                        description: item.contentOriginal ?? "",
-                                        name: item.title ?? "",
-                                        photoUrl: photoUrl));
+                                return InkWell(
+                                  onTap: () {
+                                    Navigator.push(context,
+                                        MaterialPageRoute(builder: (context) {
+                                      return CommonWebviewPage(
+                                        url: item.titleUrl ?? "",
+                                      );
+                                    }));
+                                  },
+                                  child: StreamCard(
+                                      streamUiModel: StreamUIModel(
+                                          description:
+                                              item.contentOriginal ?? "",
+                                          name: item.title ?? "",
+                                          photoUrl: photoUrl)),
+                                );
                                 return Text(item.title ?? "");
                               },
                             ),
                           );
                         } else {
-                          return Text("Halo Gais");
+                          return Text("-");
                         }
                       },
                     ),
@@ -157,7 +176,7 @@ class _HomePageState extends State<HomePage> {
                 "Stock Movement",
                 style: MyTheme.myStyleSecondaryTextStyle.copyWith(
                     fontSize: ScaleSize.textScaleFactor(context,
-                        maxTextScaleFactor: 55),
+                        maxTextScaleFactor: 33),
                     color: AppColors.primaryColor2),
               ),
               const SizedBox(
@@ -174,15 +193,25 @@ class _HomePageState extends State<HomePage> {
                     "Shareholder Transaction (EOD)",
                     style: MyTheme.myStyleSecondaryTextStyle.copyWith(
                         fontSize: ScaleSize.textScaleFactor(context,
-                            maxTextScaleFactor: 60),
+                            maxTextScaleFactor: 33),
                         color: AppColors.primaryColor2),
                   ),
-                  Text(
-                    "Lihat Semua",
-                    style: MyTheme.myStyleSecondaryTextStyle.copyWith(
-                        fontSize: ScaleSize.textScaleFactor(context,
-                            maxTextScaleFactor: 40),
-                        color: AppColors.primaryColor2),
+                  InkWell(
+                    onTap: () {
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) {
+                        return const MDLNShareholderAllPage(
+                          title: "Shareholder Transaction",
+                        );
+                      }));
+                    },
+                    child: Text(
+                      "Lihat Semua",
+                      style: MyTheme.myStyleSecondaryTextStyle.copyWith(
+                          fontSize: ScaleSize.textScaleFactor(context,
+                              maxTextScaleFactor: 28),
+                          color: AppColors.primaryColor2),
+                    ),
                   ),
                 ],
               ),
@@ -255,13 +284,13 @@ class _HomePageState extends State<HomePage> {
                     TipsAndTrickWidget(
                       uimodel: TipsAndTrickUIModel(
                           name: "Pedoman Aplikasi",
-                          description: "Terakhir diupdate : 12 Mei 2022",
+                          description: "Terakhir diupdate : 12 Mei 2023",
                           photoAsset: "asset/img/dummy/guideline_1.png"),
                     ),
                     TipsAndTrickWidget(
                       uimodel: TipsAndTrickUIModel(
                           name: "Pedoman Penggunaan",
-                          description: "Terakhir diupdate : 12 Januari 2022",
+                          description: "Terakhir diupdate : 12 Mei 2023",
                           photoAsset: "asset/img/dummy/guideline_2.png"),
                     ),
                   ],
@@ -327,9 +356,9 @@ class _HomePageState extends State<HomePage> {
                                   "MDLN",
                                   style:
                                       MyTheme.myStylePrimaryTextStyle.copyWith(
-                                    fontWeight: FontWeight.w600,
+                                        fontWeight: FontWeight.w600,
                                     fontSize: ScaleSize.textScaleFactor(context,
-                                        maxTextScaleFactor: 60),
+                                        maxTextScaleFactor: 33),
                                   ),
                                 ),
                                 RichText(
@@ -338,11 +367,11 @@ class _HomePageState extends State<HomePage> {
                                       color: Colors.black,
                                       fontSize: ScaleSize.textScaleFactor(
                                           context,
-                                          maxTextScaleFactor: 45),
+                                          maxTextScaleFactor: 29),
                                     ),
                                     children: <TextSpan>[
                                       TextSpan(
-                                        text: "PT Modernland Realty Tbk.",
+                                        text: "PT Modernland Realty Tbk",
                                       ),
                                     ],
                                   ),
@@ -387,7 +416,7 @@ class _HomePageState extends State<HomePage> {
                                               fontSize:
                                                   ScaleSize.textScaleFactor(
                                                       context,
-                                                      maxTextScaleFactor: 60),
+                                                      maxTextScaleFactor: 33),
                                               fontWeight: FontWeight.w700,
                                             ),
                                           ),
@@ -402,7 +431,7 @@ class _HomePageState extends State<HomePage> {
                                               fontSize:
                                                   ScaleSize.textScaleFactor(
                                                       context,
-                                                      maxTextScaleFactor: 50),
+                                                      maxTextScaleFactor: 33),
                                               color: pointChangeValue < 0
                                                   ? Colors.red
                                                   : Colors.green,

@@ -191,7 +191,13 @@ class _DetailPBJPageState extends State<DetailPBJPage> {
                           builder: (context, state) {
                             var status = "";
                             Widget dataList = Text("");
-                            if (state is ApprovalMainPageStateLoading) {}
+                            if (state is ApprovalMainPageStateLoading) {
+                              return SizedBox(
+                                height: MediaQuery.sizeOf(context).height - 300,
+                                child: const Center(
+                                    child: CupertinoActivityIndicator()),
+                              );
+                            }
                             if (state is ApprovalMainPageStateFailure) {}
 
                             if (state is ApprovalDetailPBJSuccess) {

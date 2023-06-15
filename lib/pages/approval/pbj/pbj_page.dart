@@ -133,9 +133,9 @@ class _ApprovalPBJMainPageState extends State<ApprovalPBJMainPage> {
                                                 return MenuItemApprovalWidget(
                                                   unreadBadgeCount: count,
                                                   titleLeft:
-                                                      "Menunggu Approval",
+                                                      "Menunggu\nApproval",
                                                   titleRight:
-                                                      "History Approval",
+                                                      "History\nApproval",
                                                   onLeftTapFunction: () {
                                                     Navigator.push(
                                                       context,
