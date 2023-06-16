@@ -198,6 +198,11 @@ class _RealisasiDetailPageState extends State<RealisasiDetailPage> {
                               if (data.status != "Y") {
                                 isApproved = true;
                               }
+
+                              if (widget.isFromHistory) {
+                                isApproved = true;
+                              }
+
                               return Container(
                                 child: Column(
                                   children: [

@@ -208,6 +208,11 @@ class _KasbonDetailPageState extends State<KasbonDetailPage> {
                               if (data.status != "Y") {
                                 isApproved = true;
                               }
+
+                              if (widget.isFromHistory) {
+                                isApproved = true;
+                              }
+
                               return Container(
                                 child: Column(
                                   children: [

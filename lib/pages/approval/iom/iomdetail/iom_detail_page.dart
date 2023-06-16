@@ -577,6 +577,10 @@ class _IomDetailPageState extends State<IomDetailPage> {
                               if (pbjItem.status != "T") {
                                 isApproved = true;
                               }
+                              if (widget.isFromHistory) {
+                                isApproved = true;
+                              }
+
                               return UserCommentWidget(
                                 comment: pbjItem.komen ?? "",
                                 userName: pbjItem.approve ?? "",

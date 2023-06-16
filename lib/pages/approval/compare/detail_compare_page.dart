@@ -201,6 +201,11 @@ class _DetailComparePageState extends State<DetailComparePage> {
                               if (data.status != "Y") {
                                 isApproved = true;
                               }
+
+                              if (widget.isFromHistory) {
+                                isApproved = true;
+                              }
+
                               return Container(
                                 child: Column(
                                   children: [

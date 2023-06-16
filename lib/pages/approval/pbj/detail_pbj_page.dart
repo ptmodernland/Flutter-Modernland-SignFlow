@@ -384,6 +384,11 @@ class _DetailPBJPageState extends State<DetailPBJPage> {
                                       if (pbjItem.status != "Y") {
                                         isApproved = true;
                                       }
+
+                                      if (widget.isFromHistory) {
+                                        isApproved = true;
+                                      }
+
                                       return UserCommentWidget(
                                         comment: pbjItem.komentar,
                                         userName: pbjItem.approve,

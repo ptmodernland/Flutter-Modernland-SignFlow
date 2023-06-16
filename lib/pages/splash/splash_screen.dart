@@ -1,9 +1,7 @@
 import 'dart:ui';
-import 'package:bwa_cozy/bloc/login/login_bloc.dart';
+
 import 'package:bwa_cozy/bloc/login/login_response.dart';
-import 'package:bwa_cozy/bloc/login/login_state.dart';
 import 'package:bwa_cozy/pages/container_home.dart';
-import 'package:bwa_cozy/pages/home/home_page.dart';
 import 'package:bwa_cozy/pages/login_new_page.dart';
 import 'package:bwa_cozy/pages/splash/login_sheet.dart';
 import 'package:bwa_cozy/util/model/device_information_model.dart';
@@ -12,9 +10,7 @@ import 'package:bwa_cozy/util/my_theme.dart';
 import 'package:bwa_cozy/util/storage/sessionmanager/session_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:quickalert/quickalert.dart';
-import 'package:bwa_cozy/repos/login_repository.dart';
 
 class SplashScreenPage extends StatefulWidget {
   const SplashScreenPage({Key? key}) : super(key: key);
@@ -414,7 +410,7 @@ class _SplashScreenPageState extends State<SplashScreenPage> {
                     ),
                     GestureDetector(
                       onTap: () {
-                        openwhatsapp(context, "+6282113530950");
+                        openwhatsapp(context, "+6285780258444");
                       },
                       child: Card(
                         color: Colors.green,
@@ -422,11 +418,11 @@ class _SplashScreenPageState extends State<SplashScreenPage> {
                         margin: EdgeInsets.all(10),
                         child: ListTile(
                           title: Text(
-                            "Henry Augusta",
+                            "Ardi Dzariat (Untuk Website)",
                             style: MyTheme.myStyleSecondaryTextStyle
                                 .copyWith(color: Colors.white),
                           ),
-                          subtitle: Text("082113530950"),
+                          subtitle: Text("0857-8025-8444"),
                           trailing: CircleAvatar(
                             backgroundImage: NetworkImage(
                                 "https://www.kindpng.com/picc/m/19-195256_whatsapp-icon-whatsapp-logo-jpg-download-hd-png.png"),
