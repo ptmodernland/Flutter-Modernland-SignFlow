@@ -4,7 +4,7 @@ import 'package:get_it/get_it.dart';
 
 final getIt = GetIt.instance;
 
-Future<void> setup() async {
+Future<void> setupGetIt() async {
   getIt.registerLazySingleton<DioClient>(() => DioClient(getIt.get<Dio>()));
   // Register any other dependencies here
   getIt.registerSingleton(Dio());

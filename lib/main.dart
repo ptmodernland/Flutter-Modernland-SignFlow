@@ -1,3 +1,4 @@
+import 'package:bwa_cozy/di/service_locator.dart';
 import 'package:bwa_cozy/pages/approval/compare/detail_compare_page.dart';
 import 'package:bwa_cozy/pages/approval/iom/iomdetail/iom_detail_page.dart';
 import 'package:bwa_cozy/pages/approval/kasbon/kasbon_detail_page.dart';
@@ -16,6 +17,7 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   // Initialize Firebase from Firebase Core plugin
   await Firebase.initializeApp();
+  setupGetIt();
   runApp(const MyApp());
 }
 
@@ -25,8 +27,6 @@ class MyApp extends StatefulWidget {
   @override
   State<MyApp> createState() => _MyAppState();
 }
-
-void initGetIt() {}
 
 class _MyAppState extends State<MyApp> {
   @override
@@ -70,19 +70,19 @@ class _MyAppState extends State<MyApp> {
         navigatorKey.currentState!.push(
           MaterialPageRoute(
               builder: (context) => DetailPBJPage(
-                    noPermintaan: noPermintaan ?? "",
-                    isFromHistory: false,
-                  )),
+                noPermintaan: noPermintaan ?? "",
+                isFromHistory: false,
+              )),
         );
       }
       if (target == 'kasbon') {
         navigatorKey.currentState!.push(
           MaterialPageRoute(
               builder: (context) => KasbonDetailPage(
-                    noKasbon: noKasbon ?? "",
-                    idKasbon: idKasbon ?? "",
-                    isFromHistory: false,
-                  )),
+                noKasbon: noKasbon ?? "",
+                idKasbon: idKasbon ?? "",
+                isFromHistory: false,
+              )),
         );
       }
       if (target == 'comparasion') {
@@ -90,10 +90,10 @@ class _MyAppState extends State<MyApp> {
         navigatorKey.currentState!.push(
           MaterialPageRoute(
               builder: (context) => DetailComparePage(
-                    noCompare: noCompare ?? "",
-                    idCompare: idCompare ?? "",
-                    isFromHistory: false,
-                  )),
+                noCompare: noCompare ?? "",
+                idCompare: idCompare ?? "",
+                isFromHistory: false,
+              )),
         );
       }
       if (target == 'realisasi') {
@@ -101,9 +101,9 @@ class _MyAppState extends State<MyApp> {
         navigatorKey.currentState!.push(
           MaterialPageRoute(
               builder: (context) => RealisasiDetailPage(
-                    noRealisasi: noRealisasi ?? "",
-                    isFromHistory: false,
-                  )),
+                noRealisasi: noRealisasi ?? "",
+                isFromHistory: false,
+              )),
         );
       }
 
@@ -111,10 +111,10 @@ class _MyAppState extends State<MyApp> {
         navigatorKey.currentState!.push(
           MaterialPageRoute(
               builder: (context) => IomDetailPage(
-                    noIom: noIOM ?? "",
-                    idIom: idIOM ?? "",
-                    isFromHistory: false,
-                  )),
+                noIom: noIOM ?? "",
+                idIom: idIOM ?? "",
+                isFromHistory: false,
+              )),
         );
       }
 
@@ -122,12 +122,12 @@ class _MyAppState extends State<MyApp> {
         navigatorKey.currentState!.push(
           MaterialPageRoute(
               builder: (context) => IomDetailPage(
-                    noIom: noIOM ?? "",
-                    idIom: idIOM ?? "",
-                    idKoordinasi: idKoordinasi ?? "",
-                    isFromRekomendasi: true,
-                    isFromHistory: false,
-                  )),
+                noIom: noIOM ?? "",
+                idIom: idIOM ?? "",
+                idKoordinasi: idKoordinasi ?? "",
+                isFromRekomendasi: true,
+                isFromHistory: false,
+              )),
         );
       }
 

@@ -6,6 +6,7 @@ import 'package:bwa_cozy/bloc/login/login_response.dart';
 import 'package:bwa_cozy/data/dio_client.dart';
 import 'package:bwa_cozy/util/pref/fcm_token_helper.dart';
 import 'package:bwa_cozy/util/storage/sessionmanager/session_manager.dart';
+import 'package:dio/dio.dart';
 import 'package:http/http.dart' as http;
 
 class LoginRepository {
@@ -16,8 +17,8 @@ class LoginRepository {
   Future<ResponseWrapper<UserDTO>> login(LoginPayload payload) async {
     try {
       var token = await getDeviceFCMToken();
-      var dioResponse =
-          await dioClient.post("androidiom/proses_login.jsp", data: {
+
+      var formData = FormData.fromMap({
         'username': payload.username,
         'password': payload.password,
         'token': token,
@@ -28,38 +29,29 @@ class LoginRepository {
         'phonetype': payload.phonetype,
         'proses': 'cek_login'
       });
-      // Prepare the request
-      var url = Uri.parse(
-          'https://approval.modernland.co.id/androidiom/proses_login.jsp');
-      // Set the form data
 
-      var body = {};
+      var dioResponse =
+          await dioClient.post("androidiom/proses_login.jsp", data: formData);
 
       print("loginLog Username " + payload.username);
       print("loginLog Password " + payload.password);
-      // Send the request
-      var response = await dioResponse;
-      // Get the response body as a string
-      var responseBody = response.data;
-      print("168_login_code: " + response.statusCode.toString());
-      print("168_login_response: $responseBody");
-      var jsonResponse = jsonDecode(responseBody);
-      // Extract the code and message fields
+      print("168_login_code: " + dioResponse.statusCode.toString());
+      print("168_login_response: ${dioResponse.data}");
+
+      var jsonResponse = dioResponse.data;
       bool resStatus = jsonResponse['status'];
       var resMessage = jsonResponse['pesan'];
 
-      final result = jsonDecode(response.data);
-
-      if (response.statusCode == 200) {
+      if (dioResponse.statusCode == 200) {
         print("resStatus : " + resStatus.toString());
         if (resStatus) {
-          var user = UserDTO.fromJson(result);
+          var user = UserDTO.fromJson(jsonResponse);
           print("userDTO : " + user.toString());
           SessionManager.saveUser(user);
           return ResponseWrapper(
               user, ResourceStatus.Success, "Login Berhasil");
         } else {
-          print("userDTOError : " + responseBody);
+          print("userDTOError : " + dioResponse.data);
           return ResponseWrapper(null, ResourceStatus.Error, resMessage);
         }
       } else {
