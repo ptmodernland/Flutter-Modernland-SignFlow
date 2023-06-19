@@ -3,20 +3,21 @@ import 'dart:convert';
 import 'package:bwa_cozy/bloc/_wrapper/response_wrapper.dart';
 import 'package:bwa_cozy/bloc/login/login_payload.dart';
 import 'package:bwa_cozy/bloc/login/login_response.dart';
+import 'package:bwa_cozy/data/dio_client.dart';
 import 'package:bwa_cozy/util/pref/fcm_token_helper.dart';
 import 'package:bwa_cozy/util/storage/sessionmanager/session_manager.dart';
 import 'package:http/http.dart' as http;
 
 class LoginRepository {
+  final DioClient dioClient;
+
+  LoginRepository({required this.dioClient});
+
   Future<ResponseWrapper<UserDTO>> login(LoginPayload payload) async {
     try {
-      // Prepare the request
-      var url = Uri.parse(
-          'https://approval.modernland.co.id/androidiom/proses_login.jsp');
-      // Set the form data
-
       var token = await getDeviceFCMToken();
-      var body = {
+      var dioResponse =
+          await dioClient.post("androidiom/proses_login.jsp", data: {
         'username': payload.username,
         'password': payload.password,
         'token': token,
@@ -26,13 +27,20 @@ class LoginRepository {
         'model': payload.model,
         'phonetype': payload.phonetype,
         'proses': 'cek_login'
-      };
+      });
+      // Prepare the request
+      var url = Uri.parse(
+          'https://approval.modernland.co.id/androidiom/proses_login.jsp');
+      // Set the form data
+
+      var body = {};
+
       print("loginLog Username " + payload.username);
       print("loginLog Password " + payload.password);
       // Send the request
-      var response = await http.post(url, body: body);
+      var response = await dioResponse;
       // Get the response body as a string
-      var responseBody = response.body;
+      var responseBody = response.data;
       print("168_login_code: " + response.statusCode.toString());
       print("168_login_response: $responseBody");
       var jsonResponse = jsonDecode(responseBody);
@@ -40,7 +48,7 @@ class LoginRepository {
       bool resStatus = jsonResponse['status'];
       var resMessage = jsonResponse['pesan'];
 
-      final result = jsonDecode(response.body);
+      final result = jsonDecode(response.data);
 
       if (response.statusCode == 200) {
         print("resStatus : " + resStatus.toString());
@@ -104,8 +112,7 @@ class LoginRepository {
     }
   }
 
-  Future<ResponseWrapper<bool>> changePinPassword(
-      {String? password, String? newPassword, String? pin}) async {
+  Future<ResponseWrapper<bool>> changePinPassword({String? password, String? newPassword, String? pin}) async {
     try {
       var url = Uri.parse('https://approval.modernland.co.id/androidiom/proses_change_password.php');
       var user = await SessionManager.getUser();

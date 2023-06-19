@@ -26,6 +26,8 @@ class MyApp extends StatefulWidget {
   State<MyApp> createState() => _MyAppState();
 }
 
+void initGetIt() {}
+
 class _MyAppState extends State<MyApp> {
   @override
   void initState() {
