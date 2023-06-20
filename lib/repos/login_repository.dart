@@ -27,23 +27,20 @@ class LoginRepository {
         'proses': 'cek_login'
       });
 
-      var dioResponse = await dioClient
-          .post("androidiom/flutter_proses_login.jsp", data: formData);
+      var dioResponse = await dioClient.post(
+        "androidiom/flutter_proses_login.jsp",
+        data: formData,
+      );
 
-      print("loginLog Username " + payload.username);
-      print("loginLog Password " + payload.password);
-      print("168_login_code: " + dioResponse.statusCode.toString());
-      print("168_login_response: ${dioResponse.data}");
+      printLog(payload.username, payload.password, dioResponse);
 
       var jsonResponse = dioResponse.data;
       bool resStatus = jsonResponse['status'];
       var resMessage = jsonResponse['pesan'];
 
       if (dioResponse.statusCode == 200) {
-        print("resStatus : " + resStatus.toString());
         if (resStatus) {
           var user = UserDTO.fromJson(jsonResponse);
-          print("userDTO : " + user.toString());
           SessionManager.saveUser(user);
           return ResponseWrapper(
               user, ResourceStatus.Success, "Login Berhasil");
@@ -72,16 +69,13 @@ class LoginRepository {
         data: formData,
       );
 
-      print("logoutLog Username " + username);
-      print("168_login_code: " + dioResponse.statusCode.toString());
-      print("168_login_response: ${dioResponse.data}");
+      printLogoutLog(username, dioResponse);
 
       var jsonResponse = dioResponse.data;
       bool resStatus = jsonResponse['status'];
       var resMessage = jsonResponse['pesan'];
 
       if (dioResponse.statusCode == 200) {
-        print("resStatus : " + resStatus.toString());
         if (resStatus) {
           SessionManager.removeUser();
           return ResponseWrapper(
@@ -97,10 +91,12 @@ class LoginRepository {
     }
   }
 
-  Future<ResponseWrapper<bool>> changePinPassword({String? password, String? newPassword, String? pin}) async {
+  Future<ResponseWrapper<bool>> changePinPassword(
+      {String? password, String? newPassword, String? pin}) async {
     try {
       var user = await SessionManager.getUser();
-      print("bloc reset password for " + user.toString());
+      printBlocResetPassword(user);
+
       if (user != null) {
         var formData = FormData.fromMap({
           'id_user': user.idUser,
@@ -114,21 +110,18 @@ class LoginRepository {
           data: formData,
         );
 
-        print(
-            "bloc 168_change_pass_code: " + dioResponse.statusCode.toString());
-        print("bloc 168_change_pass_response: ${dioResponse.data}");
+        printBlocChangePasswordLog(dioResponse);
 
         var jsonResponse = dioResponse.data;
         bool resStatus = jsonResponse['status'];
         var resMessage = jsonResponse['pesan'];
 
         if (dioResponse.statusCode == 200) {
-          print("bloc resStatus: $resStatus");
           if (resStatus) {
             return ResponseWrapper(
                 true, ResourceStatus.Success, "Berhasil Mengganti Password");
           } else {
-            print("bloc userDTOError: $jsonResponse");
+            printBlocUserDTOError(jsonResponse);
             return ResponseWrapper(null, ResourceStatus.Error, resMessage);
           }
         } else {
@@ -136,10 +129,40 @@ class LoginRepository {
         }
       }
     } catch (error) {
-      print("bloc change password error: " + error.toString());
+      printBlocChangePasswordError(error);
       return ResponseWrapper(null, ResourceStatus.Error, error.toString());
     }
-    print("change password error?: ");
+    printBlocChangePasswordError(null);
     return ResponseWrapper(null, ResourceStatus.Error, "Terjadi Kesalahan");
+  }
+
+  void printLog(String username, String password, Response dioResponse) {
+    print("loginLog Username $username");
+    print("loginLog Password $password");
+    print("168_login_code: ${dioResponse.statusCode}");
+    print("168_login_response: ${dioResponse.data}");
+  }
+
+  void printLogoutLog(String username, Response dioResponse) {
+    print("logoutLog Username $username");
+    print("168_login_code: ${dioResponse.statusCode}");
+    print("168_login_response: ${dioResponse.data}");
+  }
+
+  void printBlocResetPassword(UserDTO? user) {
+    print("bloc reset password for ${user.toString()}");
+  }
+
+  void printBlocChangePasswordLog(Response dioResponse) {
+    print("bloc 168_change_pass_code: ${dioResponse.statusCode}");
+    print("bloc 168_change_pass_response: ${dioResponse.data}");
+  }
+
+  void printBlocUserDTOError(dynamic jsonResponse) {
+    print("bloc userDTOError: $jsonResponse");
+  }
+
+  void printBlocChangePasswordError(dynamic error) {
+    print("bloc change password error: $error");
   }
 }
