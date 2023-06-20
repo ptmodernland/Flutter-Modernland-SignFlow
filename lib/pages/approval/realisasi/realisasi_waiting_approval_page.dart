@@ -26,7 +26,7 @@ class _RealisasiWaitingApprovalPageState
     double screenHeight = MediaQuery.of(context).size.height;
     double screenWidth = MediaQuery.of(context).size.width;
 
-    ApprovalMainPageRepository approvalRepo =
+    final approvalRepo =
         ApprovalMainPageRepository(dioClient: getIt<DioClient>());
     ApprovalMainPageBloc approvalBloc = ApprovalMainPageBloc(approvalRepo);
 

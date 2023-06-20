@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:bwa_cozy/bloc/_wrapper/response_wrapper.dart';
 import 'package:bwa_cozy/bloc/pbj/dto/ListPBJDTO.dart';
 import 'package:bwa_cozy/bloc/pbj/dto/list_komen_pbj.dart';
@@ -113,15 +111,14 @@ class PBJRepository {
     }
   }
 
-  Future<ResponseWrapper<List<ListPbjdto>>> getHistoryPBJ(
-      {String? startDate = null,
-      String? endDate = null,
-      String? year = null,
-      String? noPermintaan = null,
-      bool isAll = true}) async {
-    var logTag = "Getting PBJ";
+  Future<ResponseWrapper<List<ListPbjdto>>> getHistoryPBJ({
+    String? startDate = null,
+    String? endDate = null,
+    String? year = null,
+    String? noPermintaan = null,
+    bool isAll = true,
+  }) async {
     try {
-      print("trying getting PBJ");
       var username = "";
       var usersession = await SessionManager.getUserFromSession();
 
@@ -129,19 +126,17 @@ class PBJRepository {
         username = usersession.username;
       }
       // Prepare the request URL
-      var url =
-          'https://approval.modernland.co.id/androidiom/list_pbj_new.php?username=$username';
+      var url = 'androidiom/list_pbj_new.php?username=$username';
 
       // Send the request using Dio
       var dioResponse = await dioClient.post(url);
 
       var jsonResponse = dioResponse.data;
-      print(jsonResponse.toString());
 
       if (dioResponse.statusCode == 200) {
         print("168 result 200");
-        final jsonData = jsonDecode(jsonResponse);
-        final dataList = List<Map<String, dynamic>>.from(jsonData);
+        print("json dataaa : $jsonResponse");
+        final dataList = List<Map<String, dynamic>>.from(jsonResponse);
         final datas =
             dataList.map((data) => ListPbjdto.fromJson(data)).toList();
         print("168 success siii");
@@ -149,8 +144,9 @@ class PBJRepository {
       } else {
         return ResponseWrapper(null, ResourceStatus.Error, "Terjadi Kesalahan");
       }
-    } catch (error) {
-      print("error on ApprovalMainPageRepository " + error.toString());
+    } catch (error, stackTrace) {
+      print("Error on ApprovalMainPageRepository: " + error.toString());
+      print(stackTrace.toString());
       return ResponseWrapper(null, ResourceStatus.Error, error.toString());
     }
   }
@@ -172,13 +168,11 @@ class PBJRepository {
 
       if (dioResponse.statusCode == 200) {
         print("result komentar 200");
-        final jsonData = jsonDecode(jsonResponse);
         final List<Map<String, dynamic>> dataList =
-            List<Map<String, dynamic>>.from(jsonData);
+            List<Map<String, dynamic>>.from(jsonResponse);
         final List<ListPBJCommentDTO> datas =
             dataList.map((data) => ListPBJCommentDTO.fromJson(data)).toList();
         // Now you have the list of `Bottle` objects
-        print("komentar success $jsonData");
         return ResponseWrapper(datas, ResourceStatus.Success, "Success");
       } else {
         return ResponseWrapper(null, ResourceStatus.Error, "Terjadi Kesalahan");

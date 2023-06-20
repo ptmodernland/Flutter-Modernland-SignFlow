@@ -153,15 +153,11 @@ class CompareRepository {
 
       // Get the response body as a string
       var responseBody = response.data;
-      var jsonResponse = jsonDecode(responseBody);
-      final result = jsonDecode(response.data);
-      print(result.toString());
 
       if (response.statusCode == 200) {
         print("result 200");
-        final jsonData = json.decode(response.data);
         final List<Map<String, dynamic>> dataList =
-            List<Map<String, dynamic>>.from(jsonData);
+            List<Map<String, dynamic>>.from(responseBody);
         final List<ListAllCompareDTO> datas =
             dataList.map((data) => ListAllCompareDTO.fromJson(data)).toList();
         // Now you have the list of `Bottle` objects
@@ -190,15 +186,11 @@ class CompareRepository {
 
       // Get the response body as a string
       var responseBody = response.data;
-      var jsonResponse = jsonDecode(responseBody);
-      final result = jsonDecode(response.data);
-      print(result.toString());
 
       if (response.statusCode == 200) {
         print("result 200");
-        final jsonData = json.decode(response.data);
         final List<Map<String, dynamic>> dataList =
-            List<Map<String, dynamic>>.from(jsonData);
+            List<Map<String, dynamic>>.from(responseBody);
         final List<ListPBJCommentDTO> datas =
             dataList.map((data) => ListPBJCommentDTO.fromJson(data)).toList();
         // Now you have the list of `ListPBJCommentDTO` objects
@@ -218,19 +210,17 @@ class CompareRepository {
     try {
       print("trying to get Compare detail");
       // Prepare the request
-      var url = 'androidiom/get_compare.php?idcompare=$idPermintaan';
-
+      var url =
+          Uri.parse('androidiom/get_compare.php?idcompare=' + idPermintaan);
       // Send the request
-      var response = await dioClient.post(url);
+      var response = await dioClient.post(url.toString());
 
       // Get the response body as a string
       var responseBody = response.data;
-      print("$logTag : $responseBody");
-      var jsonResponse = jsonDecode(responseBody);
 
       if (response.statusCode == 200) {
         print("result $logTag 200");
-        final DetailCompareDTO data = DetailCompareDTO.fromJson(jsonResponse);
+        final DetailCompareDTO data = DetailCompareDTO.fromJson(responseBody);
 
         print("result $logTag success");
         return ResponseWrapper(data, ResourceStatus.Success, "Success");

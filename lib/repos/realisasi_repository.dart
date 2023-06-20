@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:bwa_cozy/bloc/_wrapper/response_wrapper.dart';
 import 'package:bwa_cozy/bloc/pbj/dto/list_komen_pbj.dart';
 import 'package:bwa_cozy/bloc/realisasi/dto/RealisasiDetailDTO.dart';
@@ -12,7 +10,6 @@ class RealisasiRepository {
 
   RealisasiRepository({required this.dioClient});
 
-  // Use this to approve a Realisasi
   Future<ResponseWrapper<String>> approveRealisasi({
     String idRealisasi = "",
     String noKasbon = "",
@@ -43,11 +40,8 @@ class RealisasiRepository {
       print("$logTag SS");
       var response = await dioClient.post(url, data: body);
       var responseBody = response.data;
-      var jsonResponse = jsonDecode(responseBody);
-      bool resStatus = jsonResponse['status'];
-      var resMessage = jsonResponse['pesan'];
-      final result = jsonDecode(response.data);
-      print(result.toString());
+      bool resStatus = responseBody['status'];
+      var resMessage = responseBody['pesan'];
 
       if (response.statusCode == 200) {
         print("result $logTag 200");
@@ -105,11 +99,8 @@ class RealisasiRepository {
       print("$logTag SS");
       var response = await dioClient.post(url, data: body);
       var responseBody = response.data;
-      var jsonResponse = jsonDecode(responseBody);
-      bool resStatus = jsonResponse['status'];
-      var resMessage = jsonResponse['pesan'];
-      final result = jsonDecode(response.data);
-      print(result.toString());
+      bool resStatus = responseBody['status'];
+      var resMessage = responseBody['pesan'];
 
       if (response.statusCode == 200) {
         print("result $logTag 200");
@@ -158,15 +149,11 @@ class RealisasiRepository {
       print("URL History PBJ");
       var response = await dioClient.post(url);
       var responseBody = response.data;
-      var jsonResponse = jsonDecode(responseBody);
-      final result = jsonDecode(response.data);
-      print(result.toString());
 
       if (response.statusCode == 200) {
         print("result 200");
-        final jsonData = json.decode(response.data);
         final List<Map<String, dynamic>> dataList =
-            List<Map<String, dynamic>>.from(jsonData);
+            List<Map<String, dynamic>>.from(responseBody);
         final datas =
             dataList.map((data) => RealisasiListDto.fromJson(data)).toList();
 
@@ -193,15 +180,11 @@ class RealisasiRepository {
 
       var response = await dioClient.get(url);
       var responseBody = response.data;
-      var jsonResponse = jsonDecode(responseBody);
-      final result = jsonDecode(response.data);
-      print(result.toString());
 
       if (response.statusCode == 200) {
         print("result 200");
-        final jsonData = json.decode(response.data);
         final List<Map<String, dynamic>> dataList =
-            List<Map<String, dynamic>>.from(jsonData);
+            List<Map<String, dynamic>>.from(responseBody);
         final List<ListPBJCommentDTO> datas =
             dataList.map((data) => ListPBJCommentDTO.fromJson(data)).toList();
 
@@ -226,11 +209,10 @@ class RealisasiRepository {
       var response = await dioClient.post(url);
       var responseBody = response.data;
       print("$logTag : $responseBody");
-      var jsonResponse = jsonDecode(responseBody);
 
       if (response.statusCode == 200) {
         print("result $logTag 200");
-        final data = RealisasiDetailDto.fromJson(jsonResponse);
+        final data = RealisasiDetailDto.fromJson(responseBody);
 
         print("result $logTag success");
         return ResponseWrapper(data, ResourceStatus.Success, "Success");
