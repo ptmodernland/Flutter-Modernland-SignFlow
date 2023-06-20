@@ -3,11 +3,14 @@ import 'dart:convert';
 import 'package:bwa_cozy/bloc/_wrapper/response_wrapper.dart';
 import 'package:bwa_cozy/bloc/pbj/dto/ListPBJDTO.dart';
 import 'package:bwa_cozy/bloc/pbj/dto/list_komen_pbj.dart';
+import 'package:bwa_cozy/data/dio_client.dart';
 import 'package:bwa_cozy/util/storage/sessionmanager/session_manager.dart';
-import 'package:http/http.dart' as http;
 
 class PBJRepository {
-  //use this to approve a PBJ
+  DioClient dioClient;
+
+  PBJRepository({required this.dioClient});
+
   Future<ResponseWrapper<String>> approvePBJ({
     String noPermintaan = "",
     String comment = "",
@@ -21,28 +24,26 @@ class PBJRepository {
       if (usersession != null) {
         userID = usersession.idUser;
       }
-      // Prepare the request
-      var url = Uri.parse(
-          'https://approval.modernland.co.id/androidiom/proses_approve_pbj.jsp?' +
-              userID);
+      // Prepare the request URL
+      var url =
+          'https://approval.modernland.co.id/androidiom/proses_approve_pbj.jsp?$userID';
 
-      var body = {
+      var data = {
         'no_permintaan': noPermintaan,
         'id_user': userID ?? '',
         'komenad': comment ?? null,
         'passwordUser': pin ?? '',
       };
 
-      // Set the form data
-      print("$logTag" + "SS");
-      var response = await http.post(url, body: body);
-      var responseBody = response.body;
-      var jsonResponse = jsonDecode(responseBody);
+      // Send the request using Dio
+      var dioResponse = await dioClient.post(url, data: data);
+
+      var jsonResponse = dioResponse.data;
       bool resStatus = jsonResponse['status'];
       var resMessage = jsonResponse['pesan'];
-      final result = jsonDecode(response.body);
-      print(result.toString());
-      if (response.statusCode == 200) {
+      print(jsonResponse.toString());
+
+      if (dioResponse.statusCode == 200) {
         print("result $logTag 200");
         if (resStatus) {
           return ResponseWrapper(
@@ -61,7 +62,6 @@ class PBJRepository {
     }
   }
 
-  //use this to REJECT a PBJ
   Future<ResponseWrapper<String>> rejectPBJ({
     String noPermintaan = "",
     String comment = "",
@@ -75,28 +75,26 @@ class PBJRepository {
       if (usersession != null) {
         userID = usersession.idUser;
       }
-      // Prepare the request
-      var url = Uri.parse(
-          'https://approval.modernland.co.id/androidiom/proses_cancel_pbj.jsp?' +
-              userID);
+      // Prepare the request URL
+      var url =
+          'https://approval.modernland.co.id/androidiom/proses_cancel_pbj.jsp?$userID';
 
-      var body = {
+      var data = {
         'no_permintaan': noPermintaan,
         'id_user': userID ?? '',
         'komenad': comment ?? null,
         'passwordUser': pin ?? '',
       };
 
-      // Set the form data
-      print("$logTag" + "SS");
-      var response = await http.post(url, body: body);
-      var responseBody = response.body;
-      var jsonResponse = jsonDecode(responseBody);
+      // Send the request using Dio
+      var dioResponse = await dioClient.post(url, data: data);
+
+      var jsonResponse = dioResponse.data;
       bool resStatus = jsonResponse['status'];
       var resMessage = jsonResponse['pesan'];
-      final result = jsonDecode(response.body);
-      print(result.toString());
-      if (response.statusCode == 200) {
+      print(jsonResponse.toString());
+
+      if (dioResponse.statusCode == 200) {
         print("result $logTag 200");
         if (resStatus) {
           return ResponseWrapper(
@@ -130,26 +128,19 @@ class PBJRepository {
       if (usersession != null) {
         username = usersession.username;
       }
-      // Prepare the request
-      var url = Uri.parse(
-          'https://approval.modernland.co.id/androidiom/list_pbj_new.php?username=' +
-              username);
-      // Set the form data
-      print("URL History PBJ");
+      // Prepare the request URL
+      var url =
+          'https://approval.modernland.co.id/androidiom/list_pbj_new.php?username=$username';
 
-      print("$logTag" + "SS");
-      // Send the request
-      var response = await http.post(url);
-      // Get the response body as a string
-      var responseBody = response.body;
-      // print("$logTag : $responseBody");
-      var jsonResponse = jsonDecode(responseBody);
-      // Extract the code and message fields
-      final result = jsonDecode(response.body);
-      print(result.toString());
-      if (response.statusCode == 200) {
+      // Send the request using Dio
+      var dioResponse = await dioClient.post(url);
+
+      var jsonResponse = dioResponse.data;
+      print(jsonResponse.toString());
+
+      if (dioResponse.statusCode == 200) {
         print("168 result 200");
-        final jsonData = json.decode(response.body);
+        final jsonData = jsonDecode(jsonResponse);
         final dataList = List<Map<String, dynamic>>.from(jsonData);
         final datas =
             dataList.map((data) => ListPbjdto.fromJson(data)).toList();
@@ -162,7 +153,6 @@ class PBJRepository {
       print("error on ApprovalMainPageRepository " + error.toString());
       return ResponseWrapper(null, ResourceStatus.Error, error.toString());
     }
-    return ResponseWrapper(null, ResourceStatus.Success, "Login Berhasil");
   }
 
   Future<ResponseWrapper<List<ListPBJCommentDTO>>> getKomentarPBJ(
@@ -170,22 +160,19 @@ class PBJRepository {
     var logTag = "Getting PBJ Komentar";
     try {
       print("trying getting PBJ Komentar $noPermintaan");
-      // Prepare the request
-      var url = Uri.parse(
-          'https://approval.modernland.co.id/androidiom/get_komen_pbj.php?no_permintaan=' +
-              noPermintaan.toString());
-      // Set the form data
-      var response = await http.get(url);
-      // Get the response body as a string
-      var responseBody = response.body;
-      // print("$logTag : $responseBody");
-      var jsonResponse = jsonDecode(responseBody);
-      // Extract the code and message fields
-      final result = jsonDecode(response.body);
-      print(result.toString());
-      if (response.statusCode == 200) {
+      // Prepare the request URL
+      var url =
+          'https://approval.modernland.co.id/androidiom/get_komen_pbj.php?no_permintaan=$noPermintaan';
+
+      // Send the request using Dio
+      var dioResponse = await dioClient.get(url);
+
+      var jsonResponse = dioResponse.data;
+      print(jsonResponse.toString());
+
+      if (dioResponse.statusCode == 200) {
         print("result komentar 200");
-        final jsonData = json.decode(response.body);
+        final jsonData = jsonDecode(jsonResponse);
         final List<Map<String, dynamic>> dataList =
             List<Map<String, dynamic>>.from(jsonData);
         final List<ListPBJCommentDTO> datas =
@@ -200,6 +187,5 @@ class PBJRepository {
       print("error on PBJRepository " + error.toString());
       return ResponseWrapper(null, ResourceStatus.Error, error.toString());
     }
-    return ResponseWrapper(null, ResourceStatus.Success, "Login Berhasil");
   }
 }

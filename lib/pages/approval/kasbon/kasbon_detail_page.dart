@@ -1,9 +1,3 @@
-import 'package:bwa_cozy/bloc/compare/compare_action_bloc.dart';
-import 'package:bwa_cozy/bloc/compare/compare_action_event.dart';
-import 'package:bwa_cozy/bloc/compare/compare_bloc.dart';
-import 'package:bwa_cozy/bloc/compare/compare_comment_bloc.dart';
-import 'package:bwa_cozy/bloc/compare/compare_comment_event.dart';
-import 'package:bwa_cozy/bloc/compare/compare_event.dart';
 import 'package:bwa_cozy/bloc/compare/compare_state.dart';
 import 'package:bwa_cozy/bloc/kasbon/kasbon_action_bloc.dart';
 import 'package:bwa_cozy/bloc/kasbon/kasbon_action_event.dart';
@@ -12,11 +6,11 @@ import 'package:bwa_cozy/bloc/kasbon/kasbon_comment_bloc.dart';
 import 'package:bwa_cozy/bloc/kasbon/kasbon_comment_event.dart';
 import 'package:bwa_cozy/bloc/kasbon/kasbon_event.dart';
 import 'package:bwa_cozy/bloc/kasbon/kasbon_state.dart';
-import 'package:bwa_cozy/repos/compare_repository.dart';
+import 'package:bwa_cozy/data/dio_client.dart';
+import 'package:bwa_cozy/di/service_locator.dart';
 import 'package:bwa_cozy/repos/kasbon_repository.dart';
 import 'package:bwa_cozy/util/core/string/html_util.dart';
 import 'package:bwa_cozy/util/core/url/base_url.dart';
-import 'package:bwa_cozy/util/enum/action_type.dart';
 import 'package:bwa_cozy/util/my_theme.dart';
 import 'package:bwa_cozy/widget/approval/document_detail_widget.dart';
 import 'package:bwa_cozy/widget/approval/item_approval_widget.dart';
@@ -57,7 +51,7 @@ class _KasbonDetailPageState extends State<KasbonDetailPage> {
   @override
   void initState() {
     super.initState();
-    kasbonRepository = KasbonRepository();
+    kasbonRepository = KasbonRepository(dioClient: getIt<DioClient>());
     kasbonBloc = KasbonBloc(kasbonRepository);
     kasbonCommentBloc = KasbonCommentBloc(kasbonRepository);
     kasbonActionBloc = KasbonActionBloc(kasbonRepository);

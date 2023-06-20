@@ -37,10 +37,10 @@ class _PBJFilterTempPageState extends State<PBJFilterTempPage> {
   void initState() {
     super.initState();
     notifRepository = NotifRepository(dioClient: getIt<DioClient>());
+    pbjRepo = PBJRepository(dioClient: getIt<DioClient>());
     notifBloc = NotifCoreBloc(notifRepository);
-    approvalRepo = ApprovalMainPageRepository();
+    approvalRepo = ApprovalMainPageRepository(dioClient: getIt<DioClient>());
     approvalBloc = ApprovalMainPageBloc(approvalRepo);
-    pbjRepo = PBJRepository();
     pbjBloc = PBJBloc(pbjRepo);
   }
 

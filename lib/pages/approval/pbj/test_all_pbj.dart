@@ -4,6 +4,8 @@ import 'package:bwa_cozy/bloc/all_approval/approval_main_page_state.dart';
 import 'package:bwa_cozy/bloc/notif/notif_bloc.dart';
 import 'package:bwa_cozy/bloc/notif/notif_event.dart';
 import 'package:bwa_cozy/bloc/notif/notif_state.dart';
+import 'package:bwa_cozy/data/dio_client.dart';
+import 'package:bwa_cozy/di/service_locator.dart';
 import 'package:bwa_cozy/repos/approval_main_page_repository.dart';
 import 'package:bwa_cozy/repos/notif_repository.dart';
 import 'package:bwa_cozy/util/enum/menu_type.dart';
@@ -13,8 +15,6 @@ import 'package:bwa_cozy/widget/menus/menu_item_approval_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:bwa_cozy/data/dio_client.dart';
-import 'package:bwa_cozy/di/service_locator.dart';
 
 class TestAllPBJPage extends StatefulWidget {
   const TestAllPBJPage({Key? key}) : super(key: key);
@@ -32,7 +32,8 @@ class _TestAllPBJPageState extends State<TestAllPBJPage> {
     var notifRepository = NotifRepository(dioClient: getIt<DioClient>());
     NotifCoreBloc notifBloc = NotifCoreBloc(notifRepository);
 
-    ApprovalMainPageRepository approvalRepo = ApprovalMainPageRepository();
+    ApprovalMainPageRepository approvalRepo =
+        ApprovalMainPageRepository(dioClient: getIt<DioClient>());
     ApprovalMainPageBloc approvalBloc = ApprovalMainPageBloc(approvalRepo);
 
     return SafeArea(

@@ -1,6 +1,8 @@
 import 'package:bwa_cozy/bloc/pbj/pbj_event.dart';
 import 'package:bwa_cozy/bloc/pbj/pbj_main_bloc.dart';
 import 'package:bwa_cozy/bloc/pbj/pbj_state.dart';
+import 'package:bwa_cozy/data/dio_client.dart';
+import 'package:bwa_cozy/di/service_locator.dart';
 import 'package:bwa_cozy/pages/approval/pbj/detail_pbj_page.dart';
 import 'package:bwa_cozy/repos/pbj_repository.dart';
 import 'package:bwa_cozy/util/my_theme.dart';
@@ -22,7 +24,7 @@ class _PBJAllApprovedPageState extends State<PBJAllApprovedPage> {
     double screenHeight = MediaQuery.of(context).size.height;
     double screenWidth = MediaQuery.of(context).size.width;
 
-    PBJRepository pbjRepository = PBJRepository();
+    var pbjRepository = PBJRepository(dioClient: getIt<DioClient>());
     PBJBloc pbjBloc = PBJBloc(pbjRepository);
 
     return SafeArea(

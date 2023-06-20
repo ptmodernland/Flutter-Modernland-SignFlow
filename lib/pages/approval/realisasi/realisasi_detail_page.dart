@@ -6,6 +6,8 @@ import 'package:bwa_cozy/bloc/realisasi/realisasi_comment_event.dart';
 import 'package:bwa_cozy/bloc/realisasi/realisasi_detail_bloc.dart';
 import 'package:bwa_cozy/bloc/realisasi/realisasi_event.dart';
 import 'package:bwa_cozy/bloc/realisasi/realisasi_state.dart';
+import 'package:bwa_cozy/data/dio_client.dart';
+import 'package:bwa_cozy/di/service_locator.dart';
 import 'package:bwa_cozy/repos/approval_main_page_repository.dart';
 import 'package:bwa_cozy/repos/notif_repository.dart';
 import 'package:bwa_cozy/repos/realisasi_repository.dart';
@@ -50,9 +52,9 @@ class _RealisasiDetailPageState extends State<RealisasiDetailPage> {
   @override
   void initState() {
     super.initState();
-    approvalRepo = ApprovalMainPageRepository();
+    approvalRepo = ApprovalMainPageRepository(dioClient: getIt<DioClient>());
     approvalBloc = ApprovalMainPageBloc(approvalRepo);
-    realisasiRepo = RealisasiRepository();
+    realisasiRepo = RealisasiRepository(dioClient: getIt<DioClient>());
     realisasActionBloc = RealisasiActionBloc(realisasiRepo);
     realisasiDetailBloc = RealisasiDetailBloc(realisasiRepo);
     realisasiCommentBloc = RealisasiCommentBloc(realisasiRepo);

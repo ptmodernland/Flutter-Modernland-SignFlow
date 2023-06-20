@@ -35,7 +35,8 @@ class _ApprovalPBJMainPageState extends State<ApprovalPBJMainPage> {
     var notifRepository = NotifRepository(dioClient: getIt<DioClient>());
     NotifCoreBloc notifBloc = NotifCoreBloc(notifRepository);
 
-    ApprovalMainPageRepository approvalRepo = ApprovalMainPageRepository();
+    ApprovalMainPageRepository approvalRepo =
+        ApprovalMainPageRepository(dioClient: getIt<DioClient>());
     ApprovalMainPageBloc approvalBloc = ApprovalMainPageBloc(approvalRepo);
 
     return SafeArea(
