@@ -57,12 +57,10 @@ class _ApprovalListState extends State<ApprovalList> {
   final messageController = TextEditingController();
   late GiveKoordinasiCubit koordinasiActionCubit;
   late ApprovalHeadDeptCubit approvalHeadListCubit;
-  late StreamCubit streamCubit;
 
   @override
   void initState() {
     super.initState();
-    streamCubit = StreamCubit(StreamRepository());
     koordinasiActionCubit = GiveKoordinasiCubit(RekomendasiRepository());
     approvalHeadListCubit = ApprovalHeadDeptCubit(ApprovalRepository());
   }

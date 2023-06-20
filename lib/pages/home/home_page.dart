@@ -5,6 +5,8 @@ import 'package:bwa_cozy/bloc/stream/orderbook_cubit.dart';
 import 'package:bwa_cozy/bloc/stream/shareholder_movement_cubit.dart';
 import 'package:bwa_cozy/bloc/stream/stream_cubit.dart';
 import 'package:bwa_cozy/bloc/stream/stream_state.dart';
+import 'package:bwa_cozy/data/dio_client.dart';
+import 'package:bwa_cozy/di/service_locator.dart';
 import 'package:bwa_cozy/pages/common/webview_page.dart';
 import 'package:bwa_cozy/pages/stock/mdln_news_all_page.dart';
 import 'package:bwa_cozy/pages/stock/mdln_shareholder_all_page.dart';
@@ -39,9 +41,11 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    streamCubit = StreamCubit(StreamRepository());
-    orderbookCubit = OrderbookCubit(StreamRepository());
-    shareholderCubit = ShareholderMovementCubit(StreamRepository());
+    final streamRepository = StreamRepository(dioClient: getIt<DioClient>());
+
+    streamCubit = StreamCubit(streamRepository);
+    orderbookCubit = OrderbookCubit(streamRepository);
+    shareholderCubit = ShareholderMovementCubit(streamRepository);
   }
 
   @override

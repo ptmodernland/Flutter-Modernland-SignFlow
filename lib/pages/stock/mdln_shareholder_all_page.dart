@@ -2,6 +2,8 @@ import 'package:bwa_cozy/bloc/stream/orderbook_cubit.dart';
 import 'package:bwa_cozy/bloc/stream/shareholder_movement_cubit.dart';
 import 'package:bwa_cozy/bloc/stream/stream_cubit.dart';
 import 'package:bwa_cozy/bloc/stream/stream_state.dart';
+import 'package:bwa_cozy/data/dio_client.dart';
+import 'package:bwa_cozy/di/service_locator.dart';
 import 'package:bwa_cozy/repos/stream/stream_repository.dart';
 import 'package:bwa_cozy/widget/common/shareholder_transaction_widget.dart';
 import 'package:flutter/cupertino.dart';
@@ -25,9 +27,10 @@ class _MDLNShareholderAllPageState extends State<MDLNShareholderAllPage> {
   @override
   void initState() {
     super.initState();
-    streamCubit = StreamCubit(StreamRepository());
-    orderbookCubit = OrderbookCubit(StreamRepository());
-    shareholderCubit = ShareholderMovementCubit(StreamRepository());
+    final streamRepository = StreamRepository(dioClient: getIt<DioClient>());
+    streamCubit = StreamCubit(streamRepository);
+    orderbookCubit = OrderbookCubit(streamRepository);
+    shareholderCubit = ShareholderMovementCubit(streamRepository);
   }
 
   @override
