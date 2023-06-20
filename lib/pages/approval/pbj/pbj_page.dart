@@ -4,6 +4,8 @@ import 'package:bwa_cozy/bloc/all_approval/approval_main_page_state.dart';
 import 'package:bwa_cozy/bloc/notif/notif_bloc.dart';
 import 'package:bwa_cozy/bloc/notif/notif_event.dart';
 import 'package:bwa_cozy/bloc/notif/notif_state.dart';
+import 'package:bwa_cozy/data/dio_client.dart';
+import 'package:bwa_cozy/di/service_locator.dart';
 import 'package:bwa_cozy/pages/approval/pbj/detail_pbj_page.dart';
 import 'package:bwa_cozy/pages/approval/pbj/filter/pbj_approved_all.dart';
 import 'package:bwa_cozy/pages/approval/pbj/pbj_waiting_approval.dart';
@@ -30,7 +32,7 @@ class _ApprovalPBJMainPageState extends State<ApprovalPBJMainPage> {
     double screenHeight = MediaQuery.of(context).size.height;
     double screenWidth = MediaQuery.of(context).size.width;
 
-    NotifRepository notifRepository = NotifRepository();
+    var notifRepository = NotifRepository(dioClient: getIt<DioClient>());
     NotifCoreBloc notifBloc = NotifCoreBloc(notifRepository);
 
     ApprovalMainPageRepository approvalRepo = ApprovalMainPageRepository();

@@ -21,8 +21,7 @@ class _LoginNewPageState extends State<LoginNewPage> {
 
   @override
   Widget build(BuildContext context) {
-    LoginRepository loginRepository =
-        LoginRepository(dioClient: getIt<DioClient>());
+    var loginRepository = LoginRepository(dioClient: getIt<DioClient>());
     final loginBloc = LoginBloc(loginRepository);
 
     return Scaffold(

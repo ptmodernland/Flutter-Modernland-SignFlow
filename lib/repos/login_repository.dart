@@ -65,7 +65,7 @@ class LoginRepository {
       });
 
       var dioResponse = await dioClient.post(
-        'https://approval.modernland.co.id/androidiom/proses_logout.php',
+        'androidiom/proses_logout.php',
         data: formData,
       );
 
@@ -106,7 +106,7 @@ class LoginRepository {
         });
 
         var dioResponse = await dioClient.post(
-          'https://approval.modernland.co.id/androidiom/proses_change_password.php',
+          'androidiom/flutter_proses_change_password.php',
           data: formData,
         );
 
@@ -125,7 +125,7 @@ class LoginRepository {
             return ResponseWrapper(null, ResourceStatus.Error, resMessage);
           }
         } else {
-          return ResponseWrapper(null, ResourceStatus.Error, "okeoke");
+          return ResponseWrapper(null, ResourceStatus.Error, "");
         }
       }
     } catch (error) {

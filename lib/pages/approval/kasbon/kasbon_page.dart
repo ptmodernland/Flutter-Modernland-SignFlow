@@ -4,9 +4,6 @@ import 'package:bwa_cozy/bloc/all_approval/approval_main_page_state.dart';
 import 'package:bwa_cozy/bloc/notif/notif_bloc.dart';
 import 'package:bwa_cozy/bloc/notif/notif_event.dart';
 import 'package:bwa_cozy/bloc/notif/notif_state.dart';
-import 'package:bwa_cozy/pages/approval/compare/compare_approved_all_page.dart';
-import 'package:bwa_cozy/pages/approval/compare/compare_waiting_approval_page.dart';
-import 'package:bwa_cozy/pages/approval/compare/detail_compare_page.dart';
 import 'package:bwa_cozy/pages/approval/kasbon/kasbon_approved_all_page.dart';
 import 'package:bwa_cozy/pages/approval/kasbon/kasbon_detail_page.dart';
 import 'package:bwa_cozy/pages/approval/kasbon/kasbon_waiting_approval_page.dart';
@@ -19,6 +16,8 @@ import 'package:bwa_cozy/widget/approval/item_approval_widget.dart';
 import 'package:bwa_cozy/widget/menus/menu_item_approval_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:bwa_cozy/data/dio_client.dart';
+import 'package:bwa_cozy/di/service_locator.dart';
 
 class ApprovalKasbonMainPage extends StatefulWidget {
   const ApprovalKasbonMainPage({Key? key}) : super(key: key);
@@ -33,7 +32,7 @@ class _ApprovalKasbonMainPageState extends State<ApprovalKasbonMainPage> {
     double screenHeight = MediaQuery.of(context).size.height;
     double screenWidth = MediaQuery.of(context).size.width;
 
-    NotifRepository notifRepository = NotifRepository();
+    var notifRepository = NotifRepository(dioClient: getIt<DioClient>());
     NotifCoreBloc notifBloc = NotifCoreBloc(notifRepository);
 
     ApprovalMainPageRepository approvalRepo = ApprovalMainPageRepository();

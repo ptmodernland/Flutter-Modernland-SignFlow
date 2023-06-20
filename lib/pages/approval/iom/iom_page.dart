@@ -20,6 +20,8 @@ import 'package:bwa_cozy/widget/menus/menu_item_approval_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:bwa_cozy/data/dio_client.dart';
+import 'package:bwa_cozy/di/service_locator.dart';
 
 class ApprovalIomMainPage extends StatefulWidget {
   const ApprovalIomMainPage({Key? key}) : super(key: key);
@@ -34,7 +36,7 @@ class _ApprovalIomMainPageState extends State<ApprovalIomMainPage> {
     double screenHeight = MediaQuery.of(context).size.height;
     double screenWidth = MediaQuery.of(context).size.width;
 
-    NotifRepository notifRepository = NotifRepository();
+    var notifRepository = NotifRepository(dioClient: getIt<DioClient>());
     NotifCoreBloc notifBloc = NotifCoreBloc(notifRepository);
 
     ApprovalMainPageRepository approvalRepo = ApprovalMainPageRepository();

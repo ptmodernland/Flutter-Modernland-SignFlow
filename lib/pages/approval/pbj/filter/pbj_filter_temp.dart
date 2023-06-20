@@ -4,6 +4,8 @@ import 'package:bwa_cozy/bloc/common_approval_filter/common_approval_filter_stat
 import 'package:bwa_cozy/bloc/notif/notif_bloc.dart';
 import 'package:bwa_cozy/bloc/notif/notif_event.dart';
 import 'package:bwa_cozy/bloc/pbj/pbj_main_bloc.dart';
+import 'package:bwa_cozy/data/dio_client.dart';
+import 'package:bwa_cozy/di/service_locator.dart';
 import 'package:bwa_cozy/repos/approval_main_page_repository.dart';
 import 'package:bwa_cozy/repos/notif_repository.dart';
 import 'package:bwa_cozy/repos/pbj_repository.dart';
@@ -34,7 +36,7 @@ class _PBJFilterTempPageState extends State<PBJFilterTempPage> {
   @override
   void initState() {
     super.initState();
-    notifRepository = NotifRepository();
+    notifRepository = NotifRepository(dioClient: getIt<DioClient>());
     notifBloc = NotifCoreBloc(notifRepository);
     approvalRepo = ApprovalMainPageRepository();
     approvalBloc = ApprovalMainPageBloc(approvalRepo);

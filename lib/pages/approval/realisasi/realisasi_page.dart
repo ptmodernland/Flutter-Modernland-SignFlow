@@ -4,6 +4,8 @@ import 'package:bwa_cozy/bloc/all_approval/approval_main_page_state.dart';
 import 'package:bwa_cozy/bloc/notif/notif_bloc.dart';
 import 'package:bwa_cozy/bloc/notif/notif_event.dart';
 import 'package:bwa_cozy/bloc/notif/notif_state.dart';
+import 'package:bwa_cozy/data/dio_client.dart';
+import 'package:bwa_cozy/di/service_locator.dart';
 import 'package:bwa_cozy/pages/approval/kasbon/kasbon_waiting_approval_page.dart';
 import 'package:bwa_cozy/pages/approval/realisasi/realisasi_approved_all_page.dart';
 import 'package:bwa_cozy/pages/approval/realisasi/realisasi_detail_page.dart';
@@ -31,7 +33,7 @@ class _ApprovalRealisasiMainPageState extends State<ApprovalRealisasiMainPage> {
     double screenHeight = MediaQuery.of(context).size.height;
     double screenWidth = MediaQuery.of(context).size.width;
 
-    NotifRepository notifRepository = NotifRepository();
+    var notifRepository = NotifRepository(dioClient: getIt<DioClient>());
     NotifCoreBloc notifBloc = NotifCoreBloc(notifRepository);
 
     ApprovalMainPageRepository approvalRepo = ApprovalMainPageRepository();
