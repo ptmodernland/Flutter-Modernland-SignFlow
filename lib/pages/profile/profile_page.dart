@@ -107,24 +107,9 @@ class _ProfilePageState extends State<ProfilePage> {
                                 context: context,
                                 type: QuickAlertType.success,
                                 text: state.message.toString(),
-                                onConfirmBtnTap: (){
-                                  SessionManager.removeUserFromSession();
-                                  Navigator.pushAndRemoveUntil(
-                                    context,
-                                    PageRouteBuilder(
-                                      pageBuilder: (context, animation, secondaryAnimation) => SplashScreenPage(),
-                                      transitionsBuilder: (context, animation, secondaryAnimation, child) {
-                                        return FadeTransition(
-                                          opacity: animation,
-                                          child: child,
-                                        );
-                                      },
-                                      transitionDuration: Duration(milliseconds: 1500),
-                                    ),
-                                        (route) => false,
-                                  );
-                                }
-                            );
+                                onConfirmBtnTap: () {
+                                  proceedLogoutLocally(context);
+                                });
                           }
                           if (state is AuthStateFailure) {
                             QuickAlert.show(
@@ -151,7 +136,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         transform: Matrix4.translationValues(0.0, -20.0, 0.0),
                         decoration: BoxDecoration(
                           borderRadius:
-                          BorderRadius.vertical(top: Radius.circular(30.0)),
+                              BorderRadius.vertical(top: Radius.circular(30.0)),
                         ),
                         child: Container(
                           child: Column(
@@ -163,14 +148,14 @@ class _ProfilePageState extends State<ProfilePage> {
                                 onClick: () {
                                   Navigator.push(context,
                                       MaterialPageRoute(builder: (context) {
-                                        return ChangePasswordPage();
-                                      }));
+                                    return ChangePasswordPage();
+                                  }));
                                 },
                                 title: "Ganti Password",
                                 description:
-                                "Ganti Password Yang Digunakan Untuk Login",
+                                    "Ganti Password Yang Digunakan Untuk Login",
                                 imageAsset:
-                                "asset/img/icons/icon_security_shield.svg",
+                                    "asset/img/icons/icon_security_shield.svg",
                               ),
                               ProfileMenuItemWidget(
                                 onClick: () {
@@ -282,30 +267,30 @@ class _ProfilePageState extends State<ProfilePage> {
                                       builder: (BuildContext context) =>
                                           CupertinoAlertDialog(
                                         title: Text("Logout"),
-                                            content: Text(
-                                                "Anda akan keluar dari aplikasi ini. Apakah Anda yakin?"),
-                                            actions: <Widget>[
-                                              CupertinoDialogAction(
-                                                child: Text("Kembali ke Aplikasi"),
-                                                onPressed: () {
-                                                  // Perform any action here
-                                                  // Dismiss the dialog
-                                                  Navigator.of(context).pop();
-                                                },
-                                              ),
-                                              CupertinoDialogAction(
-                                                isDefaultAction: true,
-                                                child: Text("Ya"),
-                                                onPressed: () {
-                                                  loginBloc.add(LogoutButtonPressed(
-                                                      username));
-                                                  // Perform any action here
-                                                  // Dismiss the dialog
-                                                  Navigator.of(context).pop();
-                                                },
-                                              ),
-                                            ],
+                                        content: Text(
+                                            "Anda akan keluar dari aplikasi ini. Apakah Anda yakin?"),
+                                        actions: <Widget>[
+                                          CupertinoDialogAction(
+                                            child: Text("Kembali ke Aplikasi"),
+                                            onPressed: () {
+                                              // Perform any action here
+                                              // Dismiss the dialog
+                                              Navigator.of(context).pop();
+                                            },
                                           ),
+                                          CupertinoDialogAction(
+                                            isDefaultAction: true,
+                                            child: Text("Ya"),
+                                            onPressed: () {
+                                              loginBloc.add(LogoutButtonPressed(
+                                                  username));
+                                              // Perform any action here
+                                              // Dismiss the dialog
+                                              Navigator.of(context).pop();
+                                            },
+                                          ),
+                                        ],
+                                      ),
                                     );
                                   },
                                   style: ButtonStyle(
@@ -313,14 +298,14 @@ class _ProfilePageState extends State<ProfilePage> {
                                         RoundedRectangleBorder>(
                                       RoundedRectangleBorder(
                                         borderRadius:
-                                        BorderRadius.circular(18.0),
+                                            BorderRadius.circular(18.0),
                                         side: BorderSide(
                                             color: Colors.black, width: 1),
                                       ),
                                     ),
                                     backgroundColor:
-                                    MaterialStateProperty.all<Color>(
-                                        Colors.black),
+                                        MaterialStateProperty.all<Color>(
+                                            Colors.black),
                                   ),
                                   child: Container(
                                     child: Row(
@@ -354,7 +339,7 @@ class _ProfilePageState extends State<ProfilePage> {
                             children: [
                               ClipRRect(
                                 borderRadius:
-                                BorderRadius.all(Radius.circular(10)),
+                                    BorderRadius.all(Radius.circular(10)),
                                 child: Container(
                                   decoration: BoxDecoration(
                                     boxShadow: [
@@ -392,23 +377,28 @@ class _ProfilePageState extends State<ProfilePage> {
                                     username = user.username;
                                     return Container(
                                       margin:
-                                      EdgeInsets.only(left: 20, right: 20),
+                                          EdgeInsets.only(left: 20, right: 20),
                                       child: Column(
                                         crossAxisAlignment:
-                                        CrossAxisAlignment.stretch,
+                                            CrossAxisAlignment.stretch,
                                         children: [
                                           SizedBox(
                                             height: 20,
                                           ),
-                                          Text(
-                                            user.nama,
-                                            textAlign: TextAlign.center,
-                                            style: MyTheme
-                                                .myStylePrimaryTextStyle
-                                                .copyWith(
-                                                fontSize: 20,
-                                                fontWeight:
-                                                FontWeight.w900),
+                                          GestureDetector(
+                                            onTap: () {
+                                              proceedLogoutLocally(context);
+                                            },
+                                            child: Text(
+                                              user.nama,
+                                              textAlign: TextAlign.center,
+                                              style: MyTheme
+                                                  .myStylePrimaryTextStyle
+                                                  .copyWith(
+                                                      fontSize: 20,
+                                                      fontWeight:
+                                                          FontWeight.w900),
+                                            ),
                                           ),
                                           Text(
                                             '(${getUserRole(user.level)})',
@@ -447,6 +437,25 @@ class _ProfilePageState extends State<ProfilePage> {
           ),
         ),
       ),
+    );
+  }
+
+  void proceedLogoutLocally(BuildContext context) {
+    SessionManager.removeUserFromSession();
+    Navigator.pushAndRemoveUntil(
+      context,
+      PageRouteBuilder(
+        pageBuilder: (context, animation, secondaryAnimation) =>
+            SplashScreenPage(),
+        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+          return FadeTransition(
+            opacity: animation,
+            child: child,
+          );
+        },
+        transitionDuration: Duration(milliseconds: 1500),
+      ),
+      (route) => false,
     );
   }
 
@@ -519,7 +528,7 @@ class ProfileMenuItemWidget extends StatelessWidget {
                   borderRadius: BorderRadius.all(Radius.circular(20)),
                 ),
                 padding:
-                EdgeInsets.only(left: 10, right: 10, top: 20, bottom: 20),
+                    EdgeInsets.only(left: 10, right: 10, top: 20, bottom: 20),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.start,

@@ -3,11 +3,6 @@ import 'package:bwa_cozy/bloc/notif/notif_event.dart';
 import 'package:bwa_cozy/bloc/notif/notif_state.dart';
 import 'package:bwa_cozy/data/dio_client.dart';
 import 'package:bwa_cozy/di/service_locator.dart';
-import 'package:bwa_cozy/pages/approval/compare/compare_page.dart';
-import 'package:bwa_cozy/pages/approval/iom/iom_page.dart';
-import 'package:bwa_cozy/pages/approval/kasbon/kasbon_page.dart';
-import 'package:bwa_cozy/pages/approval/pbj/pbj_page.dart';
-import 'package:bwa_cozy/pages/approval/realisasi/realisasi_page.dart';
 import 'package:bwa_cozy/pages/home/home_page.dart';
 import 'package:bwa_cozy/pages/profile/profile_page.dart';
 import 'package:bwa_cozy/repos/notif_repository.dart';
@@ -65,21 +60,6 @@ class _ContainerHomePageState extends State<ContainerHomePage>
         child: HomePage(notifBloc),
       ),
       Center(
-        child: ApprovalIomMainPage(),
-      ),
-      Center(
-        child: ApprovalPBJMainPage(),
-      ),
-      Center(
-        child: ApprovalCompareMainPage(),
-      ),
-      Center(
-        child: ApprovalKasbonMainPage(),
-      ),
-      Center(
-        child: ApprovalRealisasiMainPage(),
-      ),
-      Center(
         child: ProfilePage(notifBloc: notifBloc,),
       ),
     ];
@@ -133,41 +113,6 @@ class _ContainerHomePageState extends State<ContainerHomePage>
             mNotifBloc: notifBloc,
           ),
           label: 'Home',
-        ),
-        BottomNavigationBarItem(
-          icon: BottomIconWithBadge(
-            menuType: BottomMenuType.IOM,
-            mNotifBloc: notifBloc,
-          ),
-          label: 'IOM',
-        ),
-        BottomNavigationBarItem(
-          icon: BottomIconWithBadge(
-            menuType: BottomMenuType.PBJ,
-            mNotifBloc: notifBloc,
-          ),
-          label: 'PBJ',
-        ),
-        BottomNavigationBarItem(
-          icon: BottomIconWithBadge(
-            menuType: BottomMenuType.COMPARE,
-            mNotifBloc: notifBloc,
-          ),
-          label: 'Compare',
-        ),
-        BottomNavigationBarItem(
-          icon: BottomIconWithBadge(
-            menuType: BottomMenuType.KASBON,
-            mNotifBloc: notifBloc,
-          ),
-          label: 'Kasbon',
-        ),
-        BottomNavigationBarItem(
-          icon: BottomIconWithBadge(
-            menuType: BottomMenuType.REALISASI,
-            mNotifBloc: notifBloc,
-          ),
-          label: 'Realisasi',
         ),
         BottomNavigationBarItem(
           icon: BottomIconWithBadge(

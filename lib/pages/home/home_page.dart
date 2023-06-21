@@ -2,15 +2,24 @@ import 'dart:math';
 
 import 'package:bwa_cozy/bloc/login/login_response.dart';
 import 'package:bwa_cozy/bloc/notif/notif_bloc.dart';
+import 'package:bwa_cozy/bloc/notif/notif_event.dart';
+import 'package:bwa_cozy/bloc/notif/notif_state.dart';
 import 'package:bwa_cozy/bloc/stream/orderbook_cubit.dart';
 import 'package:bwa_cozy/bloc/stream/shareholder_movement_cubit.dart';
 import 'package:bwa_cozy/bloc/stream/stream_cubit.dart';
 import 'package:bwa_cozy/bloc/stream/stream_state.dart';
 import 'package:bwa_cozy/data/dio_client.dart';
 import 'package:bwa_cozy/di/service_locator.dart';
+import 'package:bwa_cozy/pages/approval/compare/compare_page.dart';
+import 'package:bwa_cozy/pages/approval/iom/iom_page.dart';
+import 'package:bwa_cozy/pages/approval/kasbon/kasbon_page.dart';
+import 'package:bwa_cozy/pages/approval/koordinasi/koordinasi_waiting_all_page.dart';
+import 'package:bwa_cozy/pages/approval/pbj/pbj_page.dart';
+import 'package:bwa_cozy/pages/approval/realisasi/realisasi_page.dart';
 import 'package:bwa_cozy/pages/common/webview_page.dart';
 import 'package:bwa_cozy/pages/stock/mdln_news_all_page.dart';
 import 'package:bwa_cozy/pages/stock/mdln_shareholder_all_page.dart';
+import 'package:bwa_cozy/repos/notif_repository.dart';
 import 'package:bwa_cozy/repos/stream/stream_repository.dart';
 import 'package:bwa_cozy/util/core/string/currency_util.dart';
 import 'package:bwa_cozy/util/my_colors.dart';
@@ -41,6 +50,9 @@ class _HomePageState extends State<HomePage> {
   late OrderbookCubit orderbookCubit;
   late ShareholderMovementCubit shareholderCubit;
 
+  late NotifRepository notifRepository;
+  late NotifCoreBloc notifBloc;
+
   @override
   void initState() {
     super.initState();
@@ -49,6 +61,9 @@ class _HomePageState extends State<HomePage> {
     streamCubit = StreamCubit(streamRepository);
     orderbookCubit = OrderbookCubit(streamRepository);
     shareholderCubit = ShareholderMovementCubit(streamRepository);
+    notifRepository = NotifRepository(dioClient: getIt<DioClient>());
+    notifBloc = NotifCoreBloc(notifRepository);
+    notifBloc..add(NotifEventCount());
   }
 
   String getGreeting() {
@@ -202,10 +217,10 @@ class _HomePageState extends State<HomePage> {
                     onTap: () {
                       Navigator.push(context,
                           MaterialPageRoute(builder: (context) {
-                            return MDLNNewsAllPage(
-                              title: "MDLN Snips",
-                            );
-                          }));
+                        return MDLNNewsAllPage(
+                          title: "MDLN Snips",
+                        );
+                      }));
                     },
                     child: Text(
                       "Lihat Semua",
@@ -226,7 +241,7 @@ class _HomePageState extends State<HomePage> {
                       builder: (context, state) {
                         if (state is StreamStateLoading) {
                           return Container(
-                              height: 30,
+                              height: 320,
                               child:
                                   Center(child: CupertinoActivityIndicator()));
                         } else if (state is StreamStateLoadSuccess) {
@@ -277,49 +292,122 @@ class _HomePageState extends State<HomePage> {
               SizedBox(
                 height: 20,
               ),
-              Container(
-                width: double.infinity,
-                child: Text(
-                  "Menu",
-                  style: MyTheme.myStyleSecondaryTextStyle.copyWith(
-                      fontSize: ScaleSize.textScaleFactor(context,
-                          maxTextScaleFactor: 32),
-                      color: AppColors.primaryColor2),
+              InkWell(
+                onDoubleTap: () {
+                  notifBloc..add(NotifEventCount());
+                },
+                child: Container(
+                  width: double.infinity,
+                  child: Text(
+                    "Menu",
+                    style: MyTheme.myStyleSecondaryTextStyle.copyWith(
+                        fontSize: ScaleSize.textScaleFactor(context,
+                            maxTextScaleFactor: 32),
+                        color: AppColors.primaryColor2),
+                  ),
                 ),
               ),
-              Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10.0),
-                ),
-                padding: EdgeInsets.all(10.0),
-                child: Column(
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        _buildMenuItem(CupertinoIcons.square_list_fill,
-                            'Inter Office Memo'),
-                        _buildMenuItem(CupertinoIcons.cart_fill_badge_plus,
-                            'Pengadaan Barang Jasa'),
-                        _buildMenuItem(
-                            CupertinoIcons.checkmark_seal_fill, 'Comparison'),
-                      ],
-                    ),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        _buildMenuItem(CupertinoIcons.money_dollar_circle_fill,
-                            'Realisasi'),
-                        _buildMenuItem(
-                            CupertinoIcons.creditcard_fill, 'Kasbon'),
-                        _buildMenuItem(CupertinoIcons.person_fill, 'Profile',
-                            badgeCount: 0),
-                      ],
-                    ),
-                  ],
+              BlocProvider(
+                create: (BuildContext context) =>
+                    notifBloc..add(NotifEventCount()),
+                child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10.0),
+                  ),
+                  padding: EdgeInsets.all(10.0),
+                  child: BlocBuilder<NotifCoreBloc, NotifCoreState>(
+                    builder: (context, state) {
+                      return Column(
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              _buildMenuItem(CupertinoIcons.square_list_fill,
+                                  'Inter Office Memo',
+                                  badgeCount: state is NotifStateSuccess
+                                      ? state.totalIom
+                                      : "", onPressed: () {
+                                Navigator.push(context,
+                                    MaterialPageRoute(builder: (context) {
+                                  return const ApprovalIomMainPage();
+                                })).then((value) {
+                                  notifBloc.add(NotifEventCount());
+                                });
+                              }),
+                              _buildMenuItem(
+                                  CupertinoIcons.shuffle_thick, 'Koordinasi',
+                                  badgeCount: state is NotifStateSuccess
+                                      ? state.totalKoordinasi
+                                      : "", onPressed: () {
+                                Navigator.push(context,
+                                    MaterialPageRoute(builder: (context) {
+                                  return const KoordinasiWaitingAllPage();
+                                })).then((value) {
+                                  notifBloc.add(NotifEventCount());
+                                });
+                              }),
+                              _buildMenuItem(
+                                  CupertinoIcons.cart_fill_badge_plus,
+                                  'Pengadaan Barang Jasa',
+                                  badgeCount: state is NotifStateSuccess
+                                      ? state.totalPermohonan
+                                      : "", onPressed: () {
+                                Navigator.push(context,
+                                    MaterialPageRoute(builder: (context) {
+                                  return const ApprovalPBJMainPage();
+                                })).then((value) {
+                                  notifBloc.add(NotifEventCount());
+                                });
+                              }),
+                            ],
+                          ),
+                          SizedBox(height: 20),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              _buildMenuItem(CupertinoIcons.checkmark_seal_fill,
+                                  'Comparison',
+                                  badgeCount: state is NotifStateSuccess
+                                      ? state.totalCompare
+                                      : "", onPressed: () {
+                                Navigator.push(context,
+                                    MaterialPageRoute(builder: (context) {
+                                  return const ApprovalCompareMainPage();
+                                })).then((value) {
+                                  notifBloc.add(NotifEventCount());
+                                });
+                              }),
+                              _buildMenuItem(
+                                  CupertinoIcons.creditcard_fill, 'Kasbon',
+                                  badgeCount: state is NotifStateSuccess
+                                      ? state.totalKasbon
+                                      : "", onPressed: () {
+                                Navigator.push(context,
+                                    MaterialPageRoute(builder: (context) {
+                                  return const ApprovalKasbonMainPage();
+                                })).then((value) {
+                                  notifBloc.add(NotifEventCount());
+                                });
+                              }),
+                              _buildMenuItem(
+                                  CupertinoIcons.money_dollar_circle_fill,
+                                  'Realisasi',
+                                  badgeCount: state is NotifStateSuccess
+                                      ? state.totalRealisasi
+                                      : "", onPressed: () {
+                                Navigator.push(context,
+                                    MaterialPageRoute(builder: (context) {
+                                  return const ApprovalRealisasiMainPage();
+                                })).then((value) {
+                                  notifBloc.add(NotifEventCount());
+                                });
+                              }),
+                            ],
+                          ),
+                        ],
+                      );
+                    },
+                  ),
                 ),
               ),
               buildStockMovementCard(context, rowSpacer),
@@ -798,27 +886,33 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget _buildMenuItem(IconData icon, String text, {int badgeCount = 8}) {
+  Widget _buildMenuItem(IconData icon, String text,
+      {String badgeCount = "", VoidCallback? onPressed}) {
     return Expanded(
       child: Column(
         children: [
           Stack(
             children: [
-              Container(
-                width: 60.0,
-                height: 60.0,
-                decoration: BoxDecoration(
-                  color: Color(0xffEFF1F3),
-                  borderRadius: BorderRadius.circular(20.0),
+              InkWell(
+                onTap: () {
+                  onPressed?.call();
+                },
+                child: Container(
+                  width: 70.0,
+                  height: 70.0,
+                  decoration: BoxDecoration(
+                    color: Color(0xffEFF1F3),
+                    borderRadius: BorderRadius.circular(20.0),
+                  ),
+                  child: Icon(icon, size: 30.0),
                 ),
-                child: Icon(icon, size: 30.0),
               ),
-              if (badgeCount > 0)
+              if (badgeCount != "" && badgeCount != "0")
                 Positioned(
                   top: 0,
                   right: 0,
                   child: Container(
-                    padding: EdgeInsets.all(2.0),
+                    padding: EdgeInsets.all(3.0),
                     decoration: BoxDecoration(
                       color: Colors.red,
                       shape: BoxShape.circle,
