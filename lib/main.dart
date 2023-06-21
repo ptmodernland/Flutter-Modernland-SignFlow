@@ -8,7 +8,6 @@ import 'package:bwa_cozy/pages/modernland_init.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
@@ -48,9 +47,6 @@ class _MyAppState extends State<MyApp> {
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage remoteMessage) {
       String? title = remoteMessage.notification!.title;
       String? description = remoteMessage.notification!.body;
-      print("168888");
-      Fluttertoast.showToast(msg: "assalamualaikum");
-      print("168999");
 
       // Read the target value from the data payload
       String? target = remoteMessage.data['target'];
