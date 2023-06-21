@@ -1,6 +1,8 @@
 import 'package:bwa_cozy/bloc/login/login_bloc.dart';
 import 'package:bwa_cozy/bloc/login/login_event.dart';
 import 'package:bwa_cozy/bloc/login/login_state.dart';
+import 'package:bwa_cozy/data/dio_client.dart';
+import 'package:bwa_cozy/di/service_locator.dart';
 import 'package:bwa_cozy/repos/login_repository.dart';
 import 'package:bwa_cozy/util/my_theme.dart';
 import 'package:bwa_cozy/widget/core/blurred_dialog.dart';
@@ -25,7 +27,8 @@ class _ChangePinPageState extends State<ChangePinPage> {
   @override
   void initState() {
     super.initState();
-    LoginRepository loginRepository = LoginRepository();
+    LoginRepository loginRepository =
+        LoginRepository(dioClient: getIt<DioClient>());
     loginBloc = LoginBloc(loginRepository);
   }
 
@@ -36,7 +39,6 @@ class _ChangePinPageState extends State<ChangePinPage> {
     double screenHeight = MediaQuery.of(context).size.height;
     double screenWidth = MediaQuery.of(context).size.width;
 
-    LoginRepository loginRepository = LoginRepository();
 
     String getUserRole(String role) {
       if (role == 'head') {

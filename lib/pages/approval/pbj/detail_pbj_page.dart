@@ -6,6 +6,8 @@ import 'package:bwa_cozy/bloc/pbj/pbj_comment_event.dart';
 import 'package:bwa_cozy/bloc/pbj/pbj_event.dart';
 import 'package:bwa_cozy/bloc/pbj/pbj_main_bloc.dart';
 import 'package:bwa_cozy/bloc/pbj/pbj_state.dart';
+import 'package:bwa_cozy/data/dio_client.dart';
+import 'package:bwa_cozy/di/service_locator.dart';
 import 'package:bwa_cozy/repos/approval_main_page_repository.dart';
 import 'package:bwa_cozy/repos/notif_repository.dart';
 import 'package:bwa_cozy/repos/pbj_repository.dart';
@@ -53,9 +55,9 @@ class _DetailPBJPageState extends State<DetailPBJPage> {
   @override
   void initState() {
     super.initState();
-    approvalRepo = ApprovalMainPageRepository();
+    approvalRepo = ApprovalMainPageRepository(dioClient: getIt<DioClient>());
     approvalBloc = ApprovalMainPageBloc(approvalRepo);
-    pbjRepo = PBJRepository();
+    pbjRepo = PBJRepository(dioClient: getIt<DioClient>());
     pbjBloc = PBJBloc(pbjRepo);
     pbjCommentBloc = PBJCommentBloc(pbjRepo);
   }

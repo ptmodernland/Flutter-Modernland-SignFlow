@@ -2,6 +2,8 @@ import 'package:bwa_cozy/bloc/login/login_bloc.dart';
 import 'package:bwa_cozy/bloc/login/login_event.dart';
 import 'package:bwa_cozy/bloc/login/login_payload.dart';
 import 'package:bwa_cozy/bloc/login/login_state.dart';
+import 'package:bwa_cozy/data/dio_client.dart';
+import 'package:bwa_cozy/di/service_locator.dart';
 import 'package:bwa_cozy/repos/login_repository.dart';
 import 'package:bwa_cozy/widget/core/custom_text_input.dart';
 import 'package:flutter/material.dart';
@@ -19,7 +21,7 @@ class _LoginNewPageState extends State<LoginNewPage> {
 
   @override
   Widget build(BuildContext context) {
-    LoginRepository loginRepository = LoginRepository();
+    var loginRepository = LoginRepository(dioClient: getIt<DioClient>());
     final loginBloc = LoginBloc(loginRepository);
 
     return Scaffold(

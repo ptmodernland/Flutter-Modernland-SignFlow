@@ -9,6 +9,8 @@ import 'package:bwa_cozy/widget/stream/stream_ui_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:bwa_cozy/data/dio_client.dart';
+import 'package:bwa_cozy/di/service_locator.dart';
 
 class MDLNNewsAllPage extends StatefulWidget {
   final String title;
@@ -27,9 +29,10 @@ class _MDLNNewsAllPageState extends State<MDLNNewsAllPage> {
   @override
   void initState() {
     super.initState();
-    streamCubit = StreamCubit(StreamRepository());
-    orderbookCubit = OrderbookCubit(StreamRepository());
-    shareholderCubit = ShareholderMovementCubit(StreamRepository());
+    final streamRepository = StreamRepository(dioClient: getIt<DioClient>());
+    streamCubit = StreamCubit(streamRepository);
+    orderbookCubit = OrderbookCubit(streamRepository);
+    shareholderCubit = ShareholderMovementCubit(streamRepository);
   }
 
   @override

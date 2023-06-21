@@ -5,6 +5,8 @@ import 'package:bwa_cozy/bloc/iomcategorycounter/badge_counter_state.dart';
 import 'package:bwa_cozy/bloc/notif/notif_bloc.dart';
 import 'package:bwa_cozy/bloc/notif/notif_event.dart';
 import 'package:bwa_cozy/bloc/notif/notif_state.dart';
+import 'package:bwa_cozy/data/dio_client.dart';
+import 'package:bwa_cozy/di/service_locator.dart';
 import 'package:bwa_cozy/pages/approval/iom/iom_approved_all_page.dart';
 import 'package:bwa_cozy/pages/approval/iom/iom_list_by_category_page.dart';
 import 'package:bwa_cozy/pages/approval/iom/iom_waiting_approval_page.dart';
@@ -34,13 +36,15 @@ class _ApprovalIomMainPageState extends State<ApprovalIomMainPage> {
     double screenHeight = MediaQuery.of(context).size.height;
     double screenWidth = MediaQuery.of(context).size.width;
 
-    NotifRepository notifRepository = NotifRepository();
-    NotifCoreBloc notifBloc = NotifCoreBloc(notifRepository);
+    var notifRepository = NotifRepository(dioClient: getIt<DioClient>());
+    var badgeCounterRepository =
+        BadgeCounterRepository(dioClient: getIt<DioClient>());
 
-    ApprovalMainPageRepository approvalRepo = ApprovalMainPageRepository();
+    NotifCoreBloc notifBloc = NotifCoreBloc(notifRepository);
+    ApprovalMainPageRepository approvalRepo =
+        ApprovalMainPageRepository(dioClient: getIt<DioClient>());
     ApprovalMainPageBloc approvalBloc = ApprovalMainPageBloc(approvalRepo);
 
-    final badgeCounterRepository = BadgeCounterRepository();
     final badgeCounterCubit = BadgeCounterCubit(badgeCounterRepository);
     badgeCounterCubit.fetchBadgeCounter();
 

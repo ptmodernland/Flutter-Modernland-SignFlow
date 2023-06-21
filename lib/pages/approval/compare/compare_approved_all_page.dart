@@ -2,6 +2,8 @@ import 'package:bwa_cozy/bloc/compare/compare_bloc.dart';
 import 'package:bwa_cozy/bloc/compare/compare_event.dart';
 import 'package:bwa_cozy/bloc/compare/compare_state.dart';
 import 'package:bwa_cozy/bloc/compare/filter/filter_compare_cubit.dart';
+import 'package:bwa_cozy/data/dio_client.dart';
+import 'package:bwa_cozy/di/service_locator.dart';
 import 'package:bwa_cozy/pages/approval/compare/detail_compare_page.dart';
 import 'package:bwa_cozy/pages/approval/compare/filter_compare_util.dart';
 import 'package:bwa_cozy/repos/compare_repository.dart';
@@ -27,7 +29,8 @@ class _CompareAllApprovedPageState extends State<CompareAllApprovedPage> {
     double screenHeight = MediaQuery.of(context).size.height;
     double screenWidth = MediaQuery.of(context).size.width;
 
-    CompareRepository compareRepository = CompareRepository();
+    var compareRepository = CompareRepository(dioClient: getIt<DioClient>());
+
     CompareBloc compareBloc = CompareBloc(compareRepository);
     FilterCompareCubit filterCompareCubit = FilterCompareCubit();
     return SafeArea(

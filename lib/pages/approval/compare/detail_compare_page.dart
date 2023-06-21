@@ -5,6 +5,8 @@ import 'package:bwa_cozy/bloc/compare/compare_comment_bloc.dart';
 import 'package:bwa_cozy/bloc/compare/compare_comment_event.dart';
 import 'package:bwa_cozy/bloc/compare/compare_event.dart';
 import 'package:bwa_cozy/bloc/compare/compare_state.dart';
+import 'package:bwa_cozy/data/dio_client.dart';
+import 'package:bwa_cozy/di/service_locator.dart';
 import 'package:bwa_cozy/repos/compare_repository.dart';
 import 'package:bwa_cozy/util/core/string/html_util.dart';
 import 'package:bwa_cozy/util/core/url/base_url.dart';
@@ -49,7 +51,7 @@ class _DetailComparePageState extends State<DetailComparePage> {
   @override
   void initState() {
     super.initState();
-    compareRepo = CompareRepository();
+    compareRepo = CompareRepository(dioClient: getIt<DioClient>());
     compareBloc = CompareBloc(compareRepo);
     compareCommentBloc = CompareCommentBloc(compareRepo);
     compareActionBloc = CompareActionBloc(compareRepo);

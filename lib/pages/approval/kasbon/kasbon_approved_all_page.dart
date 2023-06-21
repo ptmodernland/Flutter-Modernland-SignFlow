@@ -1,6 +1,8 @@
 import 'package:bwa_cozy/bloc/kasbon/kasbon_bloc.dart';
 import 'package:bwa_cozy/bloc/kasbon/kasbon_event.dart';
 import 'package:bwa_cozy/bloc/kasbon/kasbon_state.dart';
+import 'package:bwa_cozy/data/dio_client.dart';
+import 'package:bwa_cozy/di/service_locator.dart';
 import 'package:bwa_cozy/pages/approval/kasbon/kasbon_detail_page.dart';
 import 'package:bwa_cozy/repos/kasbon_repository.dart';
 import 'package:bwa_cozy/util/core/string/html_util.dart';
@@ -23,8 +25,9 @@ class _KasbonAllApprovedPageState extends State<KasbonAllApprovedPage> {
     double screenHeight = MediaQuery.of(context).size.height;
     double screenWidth = MediaQuery.of(context).size.width;
 
-    KasbonRepository compareRepository = KasbonRepository();
-    KasbonBloc compareBloc = KasbonBloc(compareRepository);
+    var kasbonRepository = KasbonRepository(dioClient: getIt<DioClient>());
+
+    KasbonBloc compareBloc = KasbonBloc(kasbonRepository);
 
     return SafeArea(
       bottom: false,

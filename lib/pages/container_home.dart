@@ -1,6 +1,8 @@
 import 'package:bwa_cozy/bloc/notif/notif_bloc.dart';
 import 'package:bwa_cozy/bloc/notif/notif_event.dart';
 import 'package:bwa_cozy/bloc/notif/notif_state.dart';
+import 'package:bwa_cozy/data/dio_client.dart';
+import 'package:bwa_cozy/di/service_locator.dart';
 import 'package:bwa_cozy/pages/approval/compare/compare_page.dart';
 import 'package:bwa_cozy/pages/approval/iom/iom_page.dart';
 import 'package:bwa_cozy/pages/approval/kasbon/kasbon_page.dart';
@@ -55,7 +57,7 @@ class _ContainerHomePageState extends State<ContainerHomePage>
   void initState() {
     super.initState();
     WidgetsBinding.instance?.addObserver(this);
-    notifRepository = NotifRepository();
+    notifRepository = NotifRepository(dioClient: getIt<DioClient>());
     notifBloc = NotifCoreBloc(notifRepository);
 
     _pages = [
@@ -114,7 +116,7 @@ class _ContainerHomePageState extends State<ContainerHomePage>
   }
 
   BottomNavigationBar buildBottomNavigationBar(NotifCoreBloc notifBloc) {
-    NotifRepository notifRepository = NotifRepository();
+    var notifRepository = NotifRepository(dioClient: getIt<DioClient>());
     final notifBloc = NotifCoreBloc(notifRepository);
 
     return BottomNavigationBar(

@@ -5,6 +5,8 @@ import 'package:bwa_cozy/bloc/login/login_event.dart';
 import 'package:bwa_cozy/bloc/login/login_response.dart';
 import 'package:bwa_cozy/bloc/login/login_state.dart';
 import 'package:bwa_cozy/bloc/notif/notif_bloc.dart';
+import 'package:bwa_cozy/data/dio_client.dart';
+import 'package:bwa_cozy/di/service_locator.dart';
 import 'package:bwa_cozy/pages/profile/changepin/change_password_page.dart';
 import 'package:bwa_cozy/pages/profile/changepin/change_pin_page.dart';
 import 'package:bwa_cozy/pages/splash/splash_screen.dart';
@@ -41,7 +43,8 @@ class _ProfilePageState extends State<ProfilePage> {
     double screenHeight = MediaQuery.of(context).size.height;
     double screenWidth = MediaQuery.of(context).size.width;
 
-    LoginRepository loginRepository = LoginRepository();
+    LoginRepository loginRepository =
+        LoginRepository(dioClient: getIt<DioClient>());
     final loginBloc = LoginBloc(loginRepository);
 
     String getUserRole(String role) {

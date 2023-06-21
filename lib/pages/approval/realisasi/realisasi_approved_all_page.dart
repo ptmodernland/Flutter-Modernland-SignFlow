@@ -1,6 +1,8 @@
 import 'package:bwa_cozy/bloc/realisasi/realisasi_bloc.dart';
 import 'package:bwa_cozy/bloc/realisasi/realisasi_event.dart';
 import 'package:bwa_cozy/bloc/realisasi/realisasi_state.dart';
+import 'package:bwa_cozy/data/dio_client.dart';
+import 'package:bwa_cozy/di/service_locator.dart';
 import 'package:bwa_cozy/pages/approval/realisasi/realisasi_detail_page.dart';
 import 'package:bwa_cozy/repos/realisasi_repository.dart';
 import 'package:bwa_cozy/util/core/string/html_util.dart';
@@ -24,7 +26,7 @@ class _RealisasiAllApprovedPageState extends State<RealisasiAllApprovedPage> {
     double screenHeight = MediaQuery.of(context).size.height;
     double screenWidth = MediaQuery.of(context).size.width;
 
-    RealisasiRepository compareRepository = RealisasiRepository();
+    var compareRepository = RealisasiRepository(dioClient: getIt<DioClient>());
     RealisasiBloc compareBloc = RealisasiBloc(compareRepository);
 
     return SafeArea(

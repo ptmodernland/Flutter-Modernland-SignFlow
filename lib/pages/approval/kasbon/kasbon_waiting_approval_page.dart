@@ -1,6 +1,8 @@
 import 'package:bwa_cozy/bloc/all_approval/approval_main_page_bloc.dart';
 import 'package:bwa_cozy/bloc/all_approval/approval_main_page_event.dart';
 import 'package:bwa_cozy/bloc/all_approval/approval_main_page_state.dart';
+import 'package:bwa_cozy/data/dio_client.dart';
+import 'package:bwa_cozy/di/service_locator.dart';
 import 'package:bwa_cozy/pages/approval/compare/detail_compare_page.dart';
 import 'package:bwa_cozy/repos/approval_main_page_repository.dart';
 import 'package:bwa_cozy/util/enum/menu_type.dart';
@@ -23,7 +25,8 @@ class _KasbonWaitingApprovalPageState extends State<KasbonWaitingApprovalPage> {
     double screenHeight = MediaQuery.of(context).size.height;
     double screenWidth = MediaQuery.of(context).size.width;
 
-    ApprovalMainPageRepository approvalRepo = ApprovalMainPageRepository();
+    ApprovalMainPageRepository approvalRepo =
+        ApprovalMainPageRepository(dioClient: getIt<DioClient>());
     ApprovalMainPageBloc approvalBloc = ApprovalMainPageBloc(approvalRepo);
 
     return SafeArea(
