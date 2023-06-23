@@ -203,6 +203,8 @@ class _RealisasiDetailPageState extends State<RealisasiDetailPage> {
 
                               if (widget.isFromHistory) {
                                 isApproved = true;
+                              } else {
+                                isApproved = false;
                               }
 
                               return Container(
