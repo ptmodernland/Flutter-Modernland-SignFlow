@@ -387,7 +387,7 @@ Future<DeviceInformationModel> getDeviceInfo() async {
 
     while (ipAddress.isEmpty) {
       try {
-        ipAddress = await getIpAddress();
+        ipAddress = DateTime.now().millisecondsSinceEpoch.toString();
       } catch (e) {
         // Ignore the exception and continue the loop
       }

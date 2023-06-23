@@ -88,55 +88,17 @@ class _IomDetailPageState extends State<IomDetailPage> {
               return Container();
             },
           ),
-          BlocProvider<RekomendasiActionCubit>(
-            create: (context) => rekomendasictionCubit,
+          BlocProvider<ApprovalActionCubit>(
+            create: (context) => iomActionCubit,
             // Replace with your actual cubit instantiation
-            child: BlocListener<RekomendasiActionCubit, RekomendasiState>(
-              listener: (context, state) {
-                // Navigate to next screen
-                if (state is RekomendasiStateSuccess) {
-                  showDialog(
-                    context: context,
-                    useSafeArea: false,
-                    builder: (BuildContext context) {
-                      var text = state.message;
-                      return WillPopScope(
-                        onWillPop: () async {
-                          Navigator.of(context)
-                              .pop(); // Handle back button press
-                          return false; // Prevent dialog from being dismissed by back button
-                        },
-                        child: CupertinoAlertDialog(
-                          title: Text(
-                            'Success',
-                            style: TextStyle(fontWeight: FontWeight.bold),
-                          ),
-                          content: Text(text),
-                          actions: <Widget>[
-                            CupertinoDialogAction(
-                              onPressed: () {
-                                Navigator.of(context).pop(); // Close the dialog
-                                Navigator.of(context)
-                                    .pop(); // Go back to the previous page
-                              },
-                              child: Text('OK'),
-                            ),
-                          ],
-                        ),
-                      );
-                    },
-                  );
+            child: BlocBuilder<ApprovalActionCubit, ApprovalState>(
+              bloc: iomActionCubit,
+              builder: (context, state) {
+                if (state is ApprovalLoading) {
+                  return BlurredDialog(loadingText: "Mengirim Update IOM");
                 }
-
-                if (state is RekomendasiStateError) {
-                  QuickAlert.show(
-                    context: context,
-                    type: QuickAlertType.error,
-                    text: state.message.toString(),
-                  );
-                }
+                return Container();
               },
-              child: Container(),
             ),
           ),
         ],
@@ -249,6 +211,10 @@ class _IomDetailPageState extends State<IomDetailPage> {
                           if (data.status != "Y" && data.status != "T") {
                             isApproved = true;
                           }
+                          if (widget.isFromHistory) {
+                            isApproved = true;
+                          }
+
                           return Container(
                             child: Column(
                               children: [
@@ -379,7 +345,7 @@ class _IomDetailPageState extends State<IomDetailPage> {
                                         children: [
                                           Expanded(
                                               child: DocumentDetailWidget(
-                                            title: "View Detail",
+                                                title: "View Detail",
                                             content: "Klik Disini",
                                             fileURL: DOC_VIEW_IOM +
                                                 (widget.idIom ?? ""),

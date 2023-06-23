@@ -401,7 +401,8 @@ class _DetailPBJPageState extends State<DetailPBJPage> {
                                     },
                                   );
                                   var emptyState = Container();
-                                  if (state.datas.isEmpty) {
+                                  if (state.datas.isEmpty &&
+                                      widget.isFromHistory) {
                                     emptyState = Container(
                                       alignment: Alignment.center,
                                       child: Column(

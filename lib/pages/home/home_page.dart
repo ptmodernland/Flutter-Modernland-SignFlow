@@ -17,6 +17,7 @@ import 'package:bwa_cozy/pages/approval/koordinasi/koordinasi_waiting_all_page.d
 import 'package:bwa_cozy/pages/approval/pbj/pbj_page.dart';
 import 'package:bwa_cozy/pages/approval/realisasi/realisasi_page.dart';
 import 'package:bwa_cozy/pages/common/webview_page.dart';
+import 'package:bwa_cozy/pages/profile/profile_page.dart';
 import 'package:bwa_cozy/pages/stock/mdln_news_all_page.dart';
 import 'package:bwa_cozy/pages/stock/mdln_shareholder_all_page.dart';
 import 'package:bwa_cozy/repos/notif_repository.dart';
@@ -35,11 +36,12 @@ import 'package:bwa_cozy/widget/tips_and_trick/tips_and_trick_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_app_badger/flutter_app_badger.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage(NotifCoreBloc notifBloc, {Key? key}) : super(key: key);
+  const HomePage({Key? key}) : super(key: key);
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -179,12 +181,19 @@ class _HomePageState extends State<HomePage> {
             ),
           ),
           actions: [
-            CircleAvatar(
-              radius: MediaQuery.of(context).size.width * 0.03,
-              backgroundImage: NetworkImage(
-                'http://feylabs.my.id/fm/mdln_asset/profile.png',
+            GestureDetector(
+              onTap: () {
+                Navigator.push(context, MaterialPageRoute(builder: (context) {
+                  return ProfilePage();
+                }));
+              },
+              child: CircleAvatar(
+                radius: MediaQuery.of(context).size.width * 0.03,
+                backgroundImage: NetworkImage(
+                  'http://feylabs.my.id/fm/mdln_asset/profile.png',
+                ),
+                backgroundColor: Colors.transparent,
               ),
-              backgroundColor: Colors.transparent,
             ),
             SizedBox(width: 10),
             // Add spacing between the profile avatar and the edge of the appbar
@@ -289,6 +298,7 @@ class _HomePageState extends State<HomePage> {
                   ],
                 ),
               ),
+              buildStockMovementCard(context, rowSpacer),
               SizedBox(
                 height: 20,
               ),
@@ -317,6 +327,15 @@ class _HomePageState extends State<HomePage> {
                   padding: EdgeInsets.all(10.0),
                   child: BlocBuilder<NotifCoreBloc, NotifCoreState>(
                     builder: (context, state) {
+                      if (state is NotifStateSuccess) {
+                        FlutterAppBadger.removeBadge();
+                        int totalSemua = 0;
+                        if (int.tryParse(state.totalSemua) != null) {
+                          totalSemua = int.parse(state.totalSemua);
+                        }
+                        FlutterAppBadger.updateBadgeCount(totalSemua);
+                      }
+
                       return Column(
                         children: [
                           Row(
@@ -410,7 +429,6 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ),
               ),
-              buildStockMovementCard(context, rowSpacer),
               const SizedBox(
                 height: 20,
               ),
@@ -422,17 +440,39 @@ class _HomePageState extends State<HomePage> {
                   primary: false,
                   scrollDirection: Axis.vertical,
                   children: [
-                    TipsAndTrickWidget(
-                      uimodel: TipsAndTrickUIModel(
-                          name: "Pedoman Aplikasi",
-                          description: "Terakhir diupdate : 12 Mei 2023",
-                          photoAsset: "asset/img/dummy/guideline_1.png"),
+                    InkWell(
+                      onTap: () {
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (context) {
+                          return CommonWebviewPage(
+                            url:
+                                "https://approval.modernland.co.id/androidiom/embed_pedoman_aplikasi.php",
+                          );
+                        }));
+                      },
+                      child: TipsAndTrickWidget(
+                        uimodel: TipsAndTrickUIModel(
+                            name: "Pedoman Aplikasi",
+                            description: "Terakhir diupdate : 12 Mei 2023",
+                            photoAsset: "asset/img/dummy/guideline_1.png"),
+                      ),
                     ),
-                    TipsAndTrickWidget(
-                      uimodel: TipsAndTrickUIModel(
-                          name: "Pedoman Penggunaan",
-                          description: "Terakhir diupdate : 12 Mei 2023",
-                          photoAsset: "asset/img/dummy/guideline_2.png"),
+                    InkWell(
+                      onTap: () {
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (context) {
+                          return CommonWebviewPage(
+                            url:
+                                "https://approval.modernland.co.id/androidiom/embed_pedoman_penggunaan.php",
+                          );
+                        }));
+                      },
+                      child: TipsAndTrickWidget(
+                        uimodel: TipsAndTrickUIModel(
+                            name: "Pedoman Penggunaan",
+                            description: "Terakhir diupdate : 12 Mei 2023",
+                            photoAsset: "asset/img/dummy/guideline_2.png"),
+                      ),
                     ),
                   ],
                 ),
@@ -543,6 +583,180 @@ class _HomePageState extends State<HomePage> {
         ),
         Container(
           width: double.infinity,
+          child: GestureDetector(
+            onTap: () {
+              // FlutterAppBadger.removeBadge();
+              // FlutterAppBadger.updateBadgeCount(Random().nextInt(1000) + 1);
+            },
+            child: Text(
+              "Market Snips",
+              style: MyTheme.myStyleSecondaryTextStyle.copyWith(
+                  fontSize: ScaleSize.textScaleFactor(context,
+                      maxTextScaleFactor: 30),
+                  color: AppColors.primaryColor2),
+            ),
+          ),
+        ),
+        BlocProvider(
+          create: (_) => orderbookCubit,
+          child: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(
+                    left: 10, right: 10, bottom: 10, top: 10),
+                child: Column(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Row(
+                          children: [
+                            Container(
+                              margin: EdgeInsets.only(left: 10, right: 10),
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black.withOpacity(0.3),
+                                    blurRadius: 4.0,
+                                    spreadRadius: 2.0,
+                                    offset: Offset(0, 2),
+                                  ),
+                                ],
+                              ),
+                              child: CircleAvatar(
+                                radius:
+                                    MediaQuery.of(context).size.width * 0.04,
+                                backgroundImage: NetworkImage(
+                                  'http://feylabs.my.id/fm/mdln_asset/modern.png',
+                                ),
+                                backgroundColor: Colors.transparent,
+                              ),
+                            ),
+                            SizedBox(
+                              width: 10,
+                            ),
+                            Container(
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    "Modernland Realty (IDX:MDLN)",
+                                    style: MyTheme.myStylePrimaryTextStyle
+                                        .copyWith(
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: ScaleSize.textScaleFactor(
+                                          context,
+                                          maxTextScaleFactor: 28),
+                                    ),
+                                  ),
+                                  RichText(
+                                    text: TextSpan(
+                                      style: TextStyle(
+                                        color: Colors.black,
+                                        fontSize: ScaleSize.textScaleFactor(
+                                            context,
+                                            maxTextScaleFactor: 28),
+                                      ),
+                                      children: <TextSpan>[
+                                        TextSpan(
+                                          text: "PT Modernland Realty Tbk",
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                        Expanded(
+                          child: Container(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              children: [
+                                BlocBuilder<OrderbookCubit, StreamState>(
+                                  bloc: orderbookCubit..fetchPrice(),
+                                  builder: (context, state) {
+                                    if (state is StreamStateLoading) {
+                                      return CupertinoActivityIndicator();
+                                    } else if (state
+                                        is StreamStateOrderbookSuccess) {
+                                      var data = state.datas;
+                                      var percentageString = state
+                                              .datas.data?.percentageChange
+                                              .toString() ??
+                                          "";
+                                      var pointChange =
+                                          state.datas.data?.change.toString() ??
+                                              "";
+                                      final double pointChangeValue =
+                                          double.tryParse(pointChange) ?? 0;
+                                      return Column(
+                                        children: [
+                                          Align(
+                                            alignment: Alignment.centerRight,
+                                            child: Text(
+                                              data.data?.lastprice.toString() ??
+                                                  "0",
+                                              style: MyTheme
+                                                  .myStylePrimaryTextStyle
+                                                  .copyWith(
+                                                fontSize:
+                                                    ScaleSize.textScaleFactor(
+                                                        context,
+                                                        maxTextScaleFactor: 25),
+                                                fontWeight: FontWeight.w700,
+                                              ),
+                                            ),
+                                          ),
+                                          Align(
+                                            alignment: Alignment.centerRight,
+                                            child: Text(
+                                              '$percentageString% (${pointChangeValue >= 0 ? '+' : ''}$pointChange)',
+                                              style: MyTheme
+                                                  .myStyleSecondaryTextStyle
+                                                  .copyWith(
+                                                fontSize:
+                                                    ScaleSize.textScaleFactor(
+                                                        context,
+                                                        maxTextScaleFactor: 26),
+                                                color: pointChangeValue < 0
+                                                    ? Colors.red
+                                                    : Colors.green,
+                                                fontWeight: FontWeight.w600,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      );
+                                    } else {
+                                      return Text("...");
+                                    }
+                                  },
+                                ),
+                              ],
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+    return Column(
+      children: [
+        const SizedBox(
+          height: 20,
+        ),
+        Container(
+          width: double.infinity,
           child: Text(
             "Stock Movement",
             style: MyTheme.myStyleSecondaryTextStyle.copyWith(
@@ -588,7 +802,7 @@ class _HomePageState extends State<HomePage> {
                                 ),
                                 child: CircleAvatar(
                                   radius:
-                                      MediaQuery.of(context).size.width * 0.07,
+                                  MediaQuery.of(context).size.width * 0.07,
                                   backgroundImage: NetworkImage(
                                     'http://feylabs.my.id/fm/mdln_asset/mdln_circle_placeholder.png',
                                   ),
@@ -644,15 +858,15 @@ class _HomePageState extends State<HomePage> {
                                       if (state is StreamStateLoading) {
                                         return CupertinoActivityIndicator();
                                       } else if (state
-                                          is StreamStateOrderbookSuccess) {
+                                      is StreamStateOrderbookSuccess) {
                                         var data = state.datas;
                                         var percentageString = state
-                                                .datas.data?.percentageChange
-                                                .toString() ??
+                                            .datas.data?.percentageChange
+                                            .toString() ??
                                             "";
                                         var pointChange = state
-                                                .datas.data?.change
-                                                .toString() ??
+                                            .datas.data?.change
+                                            .toString() ??
                                             "";
                                         final double pointChangeValue =
                                             double.tryParse(pointChange) ?? 0;
@@ -662,16 +876,16 @@ class _HomePageState extends State<HomePage> {
                                               alignment: Alignment.centerRight,
                                               child: Text(
                                                 data.data?.lastprice
-                                                        .toString() ??
+                                                    .toString() ??
                                                     "0",
                                                 style: MyTheme
                                                     .myStylePrimaryTextStyle
                                                     .copyWith(
                                                   fontSize:
-                                                      ScaleSize.textScaleFactor(
-                                                          context,
-                                                          maxTextScaleFactor:
-                                                              33),
+                                                  ScaleSize.textScaleFactor(
+                                                      context,
+                                                      maxTextScaleFactor:
+                                                      33),
                                                   fontWeight: FontWeight.w700,
                                                 ),
                                               ),
@@ -684,10 +898,10 @@ class _HomePageState extends State<HomePage> {
                                                     .myStyleSecondaryTextStyle
                                                     .copyWith(
                                                   fontSize:
-                                                      ScaleSize.textScaleFactor(
-                                                          context,
-                                                          maxTextScaleFactor:
-                                                              33),
+                                                  ScaleSize.textScaleFactor(
+                                                      context,
+                                                      maxTextScaleFactor:
+                                                      33),
                                                   color: pointChangeValue < 0
                                                       ? Colors.red
                                                       : Colors.green,
@@ -730,7 +944,7 @@ class _HomePageState extends State<HomePage> {
                                 if (state is StreamStateLoading) {
                                   return buildLoadingIndicator();
                                 } else if (state
-                                    is StreamStateOrderbookSuccess) {
+                                is StreamStateOrderbookSuccess) {
                                   return Text(
                                     state.datas.data?.open.toString() ?? "-",
                                     style: TextStyle(
@@ -753,7 +967,7 @@ class _HomePageState extends State<HomePage> {
                                 if (state is StreamStateLoading) {
                                   return buildLoadingIndicator();
                                 } else if (state
-                                    is StreamStateOrderbookSuccess) {
+                                is StreamStateOrderbookSuccess) {
                                   return Text(
                                     toAbbreviatedNumberString(
                                         (state.datas.data?.volume ?? 0) / 100),
@@ -782,14 +996,14 @@ class _HomePageState extends State<HomePage> {
                                 if (state is StreamStateLoading) {
                                   return buildLoadingIndicator();
                                 } else if (state
-                                    is StreamStateOrderbookSuccess) {
+                                is StreamStateOrderbookSuccess) {
                                   return Text(
                                       state.datas.data?.high.toString() ?? "-",
                                       style: TextStyle(
                                         color:
-                                            (state.datas.data?.change ?? 0) < 0
-                                                ? Colors.red
-                                                : Colors.green,
+                                        (state.datas.data?.change ?? 0) < 0
+                                            ? Colors.red
+                                            : Colors.green,
                                       ));
                                 } else {
                                   return Text("-");
@@ -805,15 +1019,15 @@ class _HomePageState extends State<HomePage> {
                                 if (state is StreamStateLoading) {
                                   return buildLoadingIndicator();
                                 } else if (state
-                                    is StreamStateOrderbookSuccess) {
+                                is StreamStateOrderbookSuccess) {
                                   return Text(
                                       toAbbreviatedNumberString(
                                           state.datas.data?.value),
                                       style: TextStyle(
                                         color:
-                                            (state.datas.data?.change ?? 0) < 0
-                                                ? Colors.red
-                                                : Colors.green,
+                                        (state.datas.data?.change ?? 0) < 0
+                                            ? Colors.red
+                                            : Colors.green,
                                       ));
                                 } else {
                                   return Text("-");
@@ -834,14 +1048,14 @@ class _HomePageState extends State<HomePage> {
                                 if (state is StreamStateLoading) {
                                   return buildLoadingIndicator();
                                 } else if (state
-                                    is StreamStateOrderbookSuccess) {
+                                is StreamStateOrderbookSuccess) {
                                   return Text(
                                       state.datas.data?.low.toString() ?? "-",
                                       style: TextStyle(
                                         color:
-                                            (state.datas.data?.change ?? 0) < 0
-                                                ? Colors.red
-                                                : Colors.green,
+                                        (state.datas.data?.change ?? 0) < 0
+                                            ? Colors.red
+                                            : Colors.green,
                                       ));
                                 } else {
                                   return Text("-");
@@ -857,15 +1071,15 @@ class _HomePageState extends State<HomePage> {
                                 if (state is StreamStateLoading) {
                                   return buildLoadingIndicator();
                                 } else if (state
-                                    is StreamStateOrderbookSuccess) {
+                                is StreamStateOrderbookSuccess) {
                                   return Text(
                                       state.datas.data?.average.toString() ??
                                           "-",
                                       style: TextStyle(
                                         color:
-                                            (state.datas.data?.change ?? 0) < 0
-                                                ? Colors.red
-                                                : Colors.green,
+                                        (state.datas.data?.change ?? 0) < 0
+                                            ? Colors.red
+                                            : Colors.green,
                                       ));
                                 } else {
                                   return Text("-");

@@ -189,8 +189,7 @@ class _PBJWaitingApprovalState extends State<PBJWaitingApproval> {
                                     itemCode: pbjItem.noPermintaan,
                                     date: pbjItem.tglPermintaan,
                                     departmentTitle: pbjItem.departemen ?? "",
-                                    personName: (pbjItem.status ?? "") +
-                                        (pbjItem.namaUser ?? ""),
+                                    personName: (pbjItem.namaUser ?? ""),
                                     personImage: "",
                                     onPressed: (String requiredId) {
                                       Navigator.push(

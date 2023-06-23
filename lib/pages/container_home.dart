@@ -7,8 +7,10 @@ import 'package:bwa_cozy/pages/home/home_page.dart';
 import 'package:bwa_cozy/pages/profile/profile_page.dart';
 import 'package:bwa_cozy/repos/notif_repository.dart';
 import 'package:bwa_cozy/util/enum/menu_type.dart';
+import 'package:bwa_cozy/widget/common/my_speed_dial_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_app_badger/flutter_app_badger.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -57,10 +59,12 @@ class _ContainerHomePageState extends State<ContainerHomePage>
 
     _pages = [
       Center(
-        child: HomePage(notifBloc),
+        child: HomePage(),
       ),
       Center(
-        child: ProfilePage(notifBloc: notifBloc,),
+        child: ProfilePage(
+          notifBloc: notifBloc,
+        ),
       ),
     ];
   }
@@ -74,7 +78,6 @@ class _ContainerHomePageState extends State<ContainerHomePage>
 
   @override
   Widget build(BuildContext context) {
-
     @override
     void initState() {
       super.initState();
@@ -89,7 +92,11 @@ class _ContainerHomePageState extends State<ContainerHomePage>
         child: Scaffold(
           // appBar: AppBar(),
           body: _pages[_selectedTab],
-          bottomNavigationBar: buildBottomNavigationBar(notifBloc),
+          // bottomNavigationBar: buildBottomNavigationBar(notifBloc),
+          floatingActionButton: _selectedTab ==
+                  99 // Replace 2 with the index where you want to hide the FAB
+              ? null
+              : mySpeedDialWidget(),
         ),
       ),
     );
@@ -217,6 +224,9 @@ class _BottomIconWithBadgeState extends State<BottomIconWithBadge> {
         }
 
         if (state is NotifStateSuccess) {
+          FlutterAppBadger.removeBadge();
+          FlutterAppBadger.updateBadgeCount(999);
+
           if (widget.menuType == BottomMenuType.HOME) {
             title = "Comparison";
             icon = Icon(CupertinoIcons.home);

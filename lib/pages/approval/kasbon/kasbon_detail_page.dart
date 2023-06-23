@@ -434,10 +434,6 @@ class _KasbonDetailPageState extends State<KasbonDetailPage> {
                                     crossAxisAlignment:
                                         CrossAxisAlignment.stretch,
                                     children: [
-                                      Container(
-                                        height: 1,
-                                        color: Colors.grey[300],
-                                      ),
                                       SizedBox(
                                         height: 20,
                                       ),

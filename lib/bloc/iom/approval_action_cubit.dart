@@ -14,6 +14,8 @@ class ApprovalActionCubit extends Cubit<ApprovalState> {
       String comment = '',
       required String pin}) async {
     try {
+      emit(ApprovalLoading());
+      await Future.delayed(Duration(seconds: 2));
       final approvals = await repository.approveIom(
         noIom: noIom,
         pin: pin,
@@ -38,6 +40,8 @@ class ApprovalActionCubit extends Cubit<ApprovalState> {
       String comment = '',
       required String pin}) async {
     try {
+      emit(ApprovalLoading());
+      await Future.delayed(Duration(seconds: 2));
       final approvals = await repository.rejectIom(
         noIom: noIom,
         pin: pin,

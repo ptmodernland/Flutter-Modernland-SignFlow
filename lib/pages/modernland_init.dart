@@ -18,7 +18,7 @@ class _ModernlandInitialPageState extends State<ModernlandInitialPage>
     super.initState();
     _animationController = AnimationController(
       vsync: this,
-      duration: const Duration(seconds: 5),
+      duration: const Duration(seconds: 2),
     );
     _animation = CurvedAnimation(
       parent: _animationController,
@@ -56,9 +56,12 @@ class _ModernlandInitialPageState extends State<ModernlandInitialPage>
             flex: MediaQuery.of(context).size.width > 600 ? 3 : 10,
             child: LayoutBuilder(
               builder: (context, constraints) {
-                return Image.asset(
-                  "asset/img/icons/logo_modernland.png",
-                  width: constraints.maxWidth,
+                return Container(
+                  margin: EdgeInsets.all(250),
+                  child: Image.asset(
+                    "asset/img/icons/logo_modernland.png",
+                    width: constraints.maxWidth,
+                  ),
                 );
               },
             ),

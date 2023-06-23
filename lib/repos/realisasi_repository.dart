@@ -4,6 +4,7 @@ import 'package:bwa_cozy/bloc/realisasi/dto/RealisasiDetailDTO.dart';
 import 'package:bwa_cozy/bloc/realisasi/dto/RealisasiListDTO.dart';
 import 'package:bwa_cozy/data/dio_client.dart';
 import 'package:bwa_cozy/util/storage/sessionmanager/session_manager.dart';
+import 'package:dio/dio.dart';
 
 class RealisasiRepository {
   final DioClient dioClient;
@@ -28,14 +29,14 @@ class RealisasiRepository {
 
       var url = 'androidiom/proses_approve_realisasi.jsp?' + userID;
 
-      var body = {
+      var body = FormData.fromMap({
         'noRealisasi': noRealisasi,
         'idRealisasi': idRealisasi,
         'noKasbon': noKasbon,
         'id_user': userID ?? '',
         'komen': comment ?? null,
         'passwordUser': pin ?? '',
-      };
+      });
 
       print("$logTag SS");
       var response = await dioClient.post(url, data: body);
@@ -87,14 +88,14 @@ class RealisasiRepository {
 
       var url = 'androidiom/proses_cancel_realisasi.jsp?' + userID;
 
-      var body = {
+      var body = FormData.fromMap({
         'noRealisasi': noRealisasi,
         'idRealisasi': idRealisasi,
         'noKasbon': noKasbon,
         'id_user': userID ?? '',
         'komen': comment ?? null,
         'passwordUser': pin ?? '',
-      };
+      });
 
       print("$logTag SS");
       var response = await dioClient.post(url, data: body);

@@ -228,6 +228,9 @@ class _DetailComparePageState extends State<DetailComparePage> {
                                         crossAxisAlignment:
                                             CrossAxisAlignment.stretch,
                                         children: [
+                                          SizedBox(
+                                            height: 20,
+                                          ),
                                           Text(
                                             "Detail Dokumen",
                                             textAlign: TextAlign.start,
@@ -368,17 +371,15 @@ class _DetailComparePageState extends State<DetailComparePage> {
                                           SizedBox(
                                             height: 20,
                                           ),
-                                          if (widget.isFromHistory == false)
-                                            Text(
-                                              "Komentar",
-                                              textAlign: TextAlign.start,
-                                              style: MyTheme
-                                                  .myStylePrimaryTextStyle
-                                                  .copyWith(
-                                                fontWeight: FontWeight.w600,
-                                                fontSize: 18,
-                                              ),
+                                          Text(
+                                            "Komentar",
+                                            textAlign: TextAlign.start,
+                                            style: MyTheme
+                                                .myStylePrimaryTextStyle
+                                                .copyWith(
+                                              fontSize: 18,
                                             ),
+                                          ),
                                           if (!widget.isFromHistory)
                                             Form(
                                               key: _formKey,
@@ -478,10 +479,6 @@ class _DetailComparePageState extends State<DetailComparePage> {
                                     crossAxisAlignment:
                                         CrossAxisAlignment.stretch,
                                     children: [
-                                      Container(
-                                        height: 1,
-                                        color: Colors.grey[300],
-                                      ),
                                       SizedBox(
                                         height: 20,
                                       ),

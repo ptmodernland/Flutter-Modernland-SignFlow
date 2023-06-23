@@ -72,14 +72,21 @@ class _ApprovalKasbonMainPageState extends State<ApprovalKasbonMainPage> {
                                     left: 30, right: 30, top: 10),
                                 child: Row(
                                   children: [
+                                    IconButton(
+                                      icon: Icon(Icons.arrow_back),
+                                      color: Colors.white,
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                      },
+                                    ),
                                     Align(
                                       alignment: Alignment.center,
                                       child: Text(
                                         "Kasbon",
                                         style: MyTheme.myStylePrimaryTextStyle
                                             .copyWith(
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.w800),
+                                                color: Colors.white,
+                                                fontWeight: FontWeight.w800),
                                       ),
                                     ),
                                     Spacer(),

@@ -80,6 +80,13 @@ class _ApprovalIomMainPageState extends State<ApprovalIomMainPage> {
                                   EdgeInsets.only(left: 30, right: 30, top: 10),
                               child: Row(
                                 children: [
+                                  IconButton(
+                                    icon: Icon(Icons.arrow_back),
+                                    color: Colors.white,
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                  ),
                                   Align(
                                     alignment: Alignment.center,
                                     child: Text(

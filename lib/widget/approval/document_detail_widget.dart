@@ -5,12 +5,13 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class DocumentDetailWidget extends StatelessWidget {
-  DocumentDetailWidget({super.key,
-    this.title = "Nama Calon",
-    this.content = "Yossy Gheasanta",
-    this.icon = const Icon(CupertinoIcons.info_circle),
-    this.fileURL = null,
-    this.isForDownload = false});
+  DocumentDetailWidget(
+      {super.key,
+      this.title = "Nama Calon",
+      this.content = "Yossy Gheasanta",
+      this.icon = const Icon(CupertinoIcons.info_circle),
+      this.fileURL = null,
+      this.isForDownload = false});
 
   final String? fileURL;
   final String title;
@@ -56,32 +57,36 @@ class DocumentDetailWidget extends StatelessWidget {
                 onTap: () {
                   if (fileURL != null && fileURL!.startsWith('http')) {
                     if (this.isForDownload) {
-                      showCupertinoDialog(
-                        context: context,
-                        builder: (BuildContext context) {
-                          return CupertinoAlertDialog(
-                            title: Text('Download File'),
-                            content: Text(
-                                'This action will open your browser and downloading the file. Do you want to continue?'),
-                            actions: [
-                              CupertinoDialogAction(
-                                child: Text('Cancel'),
-                                onPressed: () {
-                                  Navigator.of(context).pop();
-                                },
-                              ),
-                              CupertinoDialogAction(
-                                child: Text('Open Browser'),
-                                onPressed: () {
-                                  Navigator.of(context).pop();
-                                  var uri = this.splitUrl(fileURL ?? "");
-                                  _launchInBrowser(uri);
-                                },
-                              ),
-                            ],
-                          );
-                        },
-                      );
+                      if (this.fileURL != "-") {
+                        showCupertinoDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return CupertinoAlertDialog(
+                              title: Text('Download File'),
+                              content: Text(
+                                  'This action will open your browser and downloading the file. Do you want to continue?'),
+                              actions: [
+                                CupertinoDialogAction(
+                                  child: Text('Cancel'),
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                ),
+                                CupertinoDialogAction(
+                                  child: const Text('Open Browser',
+                                      style:
+                                          TextStyle(color: Colors.blueAccent)),
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                    var uri = this.splitUrl(fileURL ?? "");
+                                    _launchInBrowser(uri);
+                                  },
+                                ),
+                              ],
+                            );
+                          },
+                        );
+                      } else {}
                     } else {
                       Navigator.push(context,
                           MaterialPageRoute(builder: (context) {
@@ -98,13 +103,13 @@ class DocumentDetailWidget extends StatelessWidget {
                     textAlign: TextAlign.start,
                     style: GoogleFonts.lato().copyWith(
                       fontSize: 13,
-                      color: fileURL != null
+                      color: fileURL != null && content.isNotEmpty
                           ? Colors
                               .blue // Set the color to a link color if it's a link
                           : Colors.black,
                       // Set a default color if it's not a link or null
                       fontWeight: FontWeight.w100,
-                      decoration: fileURL != null
+                      decoration: fileURL != null && content.isNotEmpty
                           ? TextDecoration
                               .underline // Underline the text if it's a link
                           : TextDecoration

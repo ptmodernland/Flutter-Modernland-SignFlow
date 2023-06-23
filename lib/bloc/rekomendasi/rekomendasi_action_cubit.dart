@@ -22,6 +22,8 @@ class RekomendasiActionCubit extends Cubit<RekomendasiState> {
       String comment = '',
       required String pin}) async {
     try {
+      emit(RekomendasiStateLoading());
+      await Future.delayed(Duration(seconds: 5));
       final approvals = await repository.approveKoordinasi(
         noIom: noIom,
         pin: pin,
@@ -48,6 +50,8 @@ class RekomendasiActionCubit extends Cubit<RekomendasiState> {
       String comment = '',
       required String pin}) async {
     try {
+      emit(RekomendasiStateLoading());
+      await Future.delayed(Duration(seconds: 5));
       final approvals = await repository.rejectKoordinasi(
         noIom: noIom,
         pin: pin,

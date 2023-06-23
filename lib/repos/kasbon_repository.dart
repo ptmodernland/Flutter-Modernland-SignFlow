@@ -4,6 +4,7 @@ import 'package:bwa_cozy/bloc/kasbon/dto/KasbonDetailDTO.dart';
 import 'package:bwa_cozy/bloc/kasbon/dto/ListAllKasbonDTO.dart';
 import 'package:bwa_cozy/data/dio_client.dart';
 import 'package:bwa_cozy/util/storage/sessionmanager/session_manager.dart';
+import 'package:dio/dio.dart';
 
 class KasbonRepository {
   final DioClient dioClient;
@@ -15,7 +16,7 @@ class KasbonRepository {
     String comment = '',
     String pin = '',
   }) async {
-    var logTag = 'Approve PBJ';
+    var logTag = 'Approve Kasbon';
     try {
       print('trying $logTag');
       var userID = '';
@@ -26,12 +27,13 @@ class KasbonRepository {
 
       var url = 'androidiom/proses_approve_kasbon.jsp?$userID';
 
-      var body = {
+      var body = FormData.fromMap({
         'noKasbon': noPermintaan,
         'id_user': userID ?? '',
         'komen': comment ?? null,
         'passwordUser': pin ?? '',
-      };
+        'isFromFlutter': true
+      });
 
       var dioResponse = await dioClient.post(url, data: body);
 
@@ -45,10 +47,10 @@ class KasbonRepository {
 
         if (resStatus) {
           return ResponseWrapper(
-              'Success', ResourceStatus.Success, 'Berhasil Mengapprove PBJ');
+              'Success', ResourceStatus.Success, 'Berhasil Mengapprove Kasbon');
         } else {
           return ResponseWrapper(resMessage, ResourceStatus.Error,
-              'Gagal Approve PBJ : ' + resMessage);
+              'Gagal Approve Kasbon : ' + resMessage);
         }
       } else {
         print('result $logTag Terjadi Kesalahan');
@@ -76,12 +78,12 @@ class KasbonRepository {
 
       var url = 'androidiom/proses_cancel_kasbon.jsp?$userID';
 
-      var body = {
+      var body = FormData.fromMap({
         'nomor': noPermintaan,
         'id_user': userID ?? '',
         'komen': comment ?? null,
-        'passwordUser': pin ?? '',
-      };
+        'passwordUser': pin ?? ''
+      });
 
       var dioResponse = await dioClient.post(url, data: body);
 
@@ -95,10 +97,10 @@ class KasbonRepository {
 
         if (resStatus) {
           return ResponseWrapper(
-              'Success', ResourceStatus.Success, 'PBJ Berhasil Direject');
+              'Success', ResourceStatus.Success, 'Kasbon Berhasil Direject');
         } else {
           return ResponseWrapper(resMessage, ResourceStatus.Error,
-              'Gagal Reject PBJ : ' + resMessage);
+              'Gagal Reject Kasbon : ' + resMessage);
         }
       } else {
         print('result $logTag Terjadi Kesalahan');
@@ -117,9 +119,9 @@ class KasbonRepository {
     String? noPermintaan,
     bool isAll = true,
   }) async {
-    var logTag = 'Getting PBJ';
+    var logTag = 'Getting Kasbon';
     try {
-      print('trying getting PBJ');
+      print('trying getting Kasbon');
       var username = '';
       var usersession = await SessionManager.getUserFromSession();
       if (usersession != null) {
@@ -153,7 +155,7 @@ class KasbonRepository {
   Future<ResponseWrapper<List<KasbonCommentDto>>> getKomentarKasbon({
     String? noPermintaan,
   }) async {
-    var logTag = 'Getting PBJ Komentar';
+    var logTag = 'Getting kasbon Komentar';
     try {
       print('trying getting $logTag $noPermintaan');
 

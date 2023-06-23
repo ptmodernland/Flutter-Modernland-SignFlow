@@ -17,7 +17,6 @@ import 'package:bwa_cozy/widget/approval/item_approval_widget.dart';
 import 'package:bwa_cozy/widget/menus/menu_item_approval_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 
 class ApprovalPBJMainPage extends StatefulWidget {
   const ApprovalPBJMainPage({Key? key}) : super(key: key);
@@ -72,6 +71,13 @@ class _ApprovalPBJMainPageState extends State<ApprovalPBJMainPage> {
                                     left: 30, right: 30, top: 10),
                                 child: Row(
                                   children: [
+                                    IconButton(
+                                      icon: Icon(Icons.arrow_back),
+                                      color: Colors.white,
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                      },
+                                    ),
                                     Align(
                                       alignment: Alignment.center,
                                       child: Text(
@@ -261,12 +267,9 @@ class _ApprovalPBJMainPageState extends State<ApprovalPBJMainPage> {
                                     itemCode: pbjItem.noPermintaan,
                                     date: pbjItem.tglPermintaan,
                                     departmentTitle: pbjItem.departemen ?? "",
-                                    personName: (pbjItem.status ?? "") +
-                                        (pbjItem.namaUser ?? ""),
+                                    personName: (pbjItem.namaUser ?? ""),
                                     personImage: "",
                                     onPressed: (String requiredId) {
-                                      Fluttertoast.showToast(
-                                          msg: requiredId.toString());
                                       Navigator.push(
                                         context,
                                         MaterialPageRoute(

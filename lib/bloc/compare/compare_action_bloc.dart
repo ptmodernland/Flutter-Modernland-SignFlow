@@ -29,6 +29,7 @@ class CompareActionBloc extends Bloc<CompareActionEvent, CompareState> {
         emit(CompareStateFailure(message: e.toString()));
       }
     });
+
     //reject PBJ
     on<SendQCompareReject>((event, emit) async {
       print("on bloc sendQRCompareReject");
