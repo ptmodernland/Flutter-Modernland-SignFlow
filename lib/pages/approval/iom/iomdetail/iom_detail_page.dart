@@ -95,7 +95,7 @@ class _IomDetailPageState extends State<IomDetailPage> {
               bloc: iomActionCubit,
               builder: (context, state) {
                 if (state is ApprovalLoading) {
-                  return BlurredDialog(loadingText: "Mengirim Update IOM");
+                  return BlurredDialog(loadingText: "Please Wait");
                 }
                 return Container();
               },

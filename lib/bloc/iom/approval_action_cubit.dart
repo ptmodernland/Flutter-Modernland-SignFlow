@@ -6,7 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 class ApprovalActionCubit extends Cubit<ApprovalState> {
   final ApprovalRepository repository;
 
-  ApprovalActionCubit(this.repository) : super(ApprovalLoading());
+  ApprovalActionCubit(this.repository) : super(ApprovalInitial());
 
   Future<void> approveIom(
       {required String noIom,
