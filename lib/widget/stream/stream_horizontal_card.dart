@@ -1,5 +1,5 @@
-import 'package:bwa_cozy/util/my_theme.dart';
-import 'package:bwa_cozy/widget/stream/stream_ui_model.dart';
+import 'package:modernland_signflow/util/my_theme.dart';
+import 'package:modernland_signflow/widget/stream/stream_ui_model.dart';
 import 'package:flutter/material.dart';
 
 class StreamHorizontalCard extends StatelessWidget {

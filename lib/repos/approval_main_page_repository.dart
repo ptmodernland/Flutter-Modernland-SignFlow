@@ -1,11 +1,11 @@
-import 'package:bwa_cozy/bloc/_wrapper/response_wrapper.dart';
-import 'package:bwa_cozy/bloc/all_approval/dto/detail_pbj_dto.dart';
-import 'package:bwa_cozy/bloc/all_approval/dto/list_all_compare_dto.dart';
-import 'package:bwa_cozy/bloc/kasbon/dto/ListAllKasbonDTO.dart';
-import 'package:bwa_cozy/bloc/pbj/dto/ListPBJDTO.dart';
-import 'package:bwa_cozy/bloc/realisasi/dto/RealisasiListDTO.dart';
-import 'package:bwa_cozy/data/dio_client.dart';
-import 'package:bwa_cozy/util/storage/sessionmanager/session_manager.dart';
+import 'package:modernland_signflow/bloc/_wrapper/response_wrapper.dart';
+import 'package:modernland_signflow/bloc/all_approval/dto/detail_pbj_dto.dart';
+import 'package:modernland_signflow/bloc/all_approval/dto/list_all_compare_dto.dart';
+import 'package:modernland_signflow/bloc/kasbon/dto/ListAllKasbonDTO.dart';
+import 'package:modernland_signflow/bloc/pbj/dto/ListPBJDTO.dart';
+import 'package:modernland_signflow/bloc/realisasi/dto/RealisasiListDTO.dart';
+import 'package:modernland_signflow/data/dio_client.dart';
+import 'package:modernland_signflow/util/storage/sessionmanager/session_manager.dart';
 
 class ApprovalMainPageRepository {
   DioClient dioClient;

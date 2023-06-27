@@ -1,8 +1,8 @@
-import 'package:bwa_cozy/bloc/all_approval/approval_main_page_event.dart';
-import 'package:bwa_cozy/bloc/all_approval/approval_main_page_state.dart';
-import 'package:bwa_cozy/repos/approval_main_page_repository.dart';
-import 'package:bwa_cozy/util/enum/menu_type.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:modernland_signflow/bloc/all_approval/approval_main_page_event.dart';
+import 'package:modernland_signflow/bloc/all_approval/approval_main_page_state.dart';
+import 'package:modernland_signflow/repos/approval_main_page_repository.dart';
+import 'package:modernland_signflow/util/enum/menu_type.dart';
 
 class ApprovalMainPageBloc
     extends Bloc<ApprovalMainPageEvent, ApprovalMainPageState> {

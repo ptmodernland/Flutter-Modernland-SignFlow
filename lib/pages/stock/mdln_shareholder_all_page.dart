@@ -1,14 +1,14 @@
-import 'package:bwa_cozy/bloc/stream/orderbook_cubit.dart';
-import 'package:bwa_cozy/bloc/stream/shareholder_movement_cubit.dart';
-import 'package:bwa_cozy/bloc/stream/stream_cubit.dart';
-import 'package:bwa_cozy/bloc/stream/stream_state.dart';
-import 'package:bwa_cozy/data/dio_client.dart';
-import 'package:bwa_cozy/di/service_locator.dart';
-import 'package:bwa_cozy/repos/stream/stream_repository.dart';
-import 'package:bwa_cozy/widget/common/shareholder_transaction_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:modernland_signflow/bloc/stream/orderbook_cubit.dart';
+import 'package:modernland_signflow/bloc/stream/shareholder_movement_cubit.dart';
+import 'package:modernland_signflow/bloc/stream/stream_cubit.dart';
+import 'package:modernland_signflow/bloc/stream/stream_state.dart';
+import 'package:modernland_signflow/data/dio_client.dart';
+import 'package:modernland_signflow/di/service_locator.dart';
+import 'package:modernland_signflow/repos/stream/stream_repository.dart';
+import 'package:modernland_signflow/widget/common/shareholder_transaction_widget.dart';
 
 class MDLNShareholderAllPage extends StatefulWidget {
   final String title;

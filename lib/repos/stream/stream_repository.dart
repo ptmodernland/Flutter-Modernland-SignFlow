@@ -1,8 +1,8 @@
-import 'package:bwa_cozy/bloc/_wrapper/response_wrapper.dart';
-import 'package:bwa_cozy/data/dio_client.dart';
-import 'package:bwa_cozy/repos/stream/Orderbook_dto.dart';
-import 'package:bwa_cozy/repos/stream/shareholder_transaction_dto.dart';
-import 'package:bwa_cozy/repos/stream/stream_paging_dto.dart';
+import 'package:modernland_signflow/bloc/_wrapper/response_wrapper.dart';
+import 'package:modernland_signflow/data/dio_client.dart';
+import 'package:modernland_signflow/repos/stream/Orderbook_dto.dart';
+import 'package:modernland_signflow/repos/stream/shareholder_transaction_dto.dart';
+import 'package:modernland_signflow/repos/stream/stream_paging_dto.dart';
 
 class StreamRepository {
   final DioClient dioClient;

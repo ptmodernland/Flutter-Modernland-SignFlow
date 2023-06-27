@@ -1,7 +1,7 @@
-import 'package:bwa_cozy/bloc/_wrapper/response_wrapper.dart';
-import 'package:bwa_cozy/bloc/notif/notif_counter_dto.dart';
-import 'package:bwa_cozy/data/dio_client.dart';
-import 'package:bwa_cozy/util/storage/sessionmanager/session_manager.dart';
+import 'package:modernland_signflow/bloc/_wrapper/response_wrapper.dart';
+import 'package:modernland_signflow/bloc/notif/notif_counter_dto.dart';
+import 'package:modernland_signflow/data/dio_client.dart';
+import 'package:modernland_signflow/util/storage/sessionmanager/session_manager.dart';
 
 class NotifRepository {
   DioClient dioClient;

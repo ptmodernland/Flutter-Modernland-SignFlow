@@ -1,5 +1,5 @@
-import 'package:bwa_cozy/pages/splash/splash_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:modernland_signflow/pages/splash/splash_screen.dart';
 
 class ModernlandInitialPage extends StatefulWidget {
   const ModernlandInitialPage({Key? key}) : super(key: key);

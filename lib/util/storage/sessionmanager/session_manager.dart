@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:bwa_cozy/bloc/login/login_response.dart';
+import 'package:modernland_signflow/bloc/login/login_response.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SessionManager {

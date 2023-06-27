@@ -1,6 +1,6 @@
-import 'package:bwa_cozy/util/my_theme.dart';
-import 'package:bwa_cozy/widget/facility_item/facility_item_widget.dart';
-import 'package:bwa_cozy/widget/rating_star/show_rating_widget.dart';
+import 'package:modernland_signflow/util/my_theme.dart';
+import 'package:modernland_signflow/widget/facility_item/facility_item_widget.dart';
+import 'package:modernland_signflow/widget/rating_star/show_rating_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';

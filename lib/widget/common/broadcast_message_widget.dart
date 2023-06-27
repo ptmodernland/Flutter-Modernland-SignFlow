@@ -1,4 +1,4 @@
-import 'package:bwa_cozy/util/my_theme.dart';
+import 'package:modernland_signflow/util/my_theme.dart';
 import 'package:flutter/material.dart';
 
 class BroadcastMessageWidget extends StatefulWidget {

@@ -1,8 +1,8 @@
-import 'package:bwa_cozy/repos/iom/dto/Iom_detail_dto.dart';
-import 'package:bwa_cozy/repos/iom/dto/Iom_log_dto.dart';
-import 'package:bwa_cozy/repos/iom/dto/approval_item_dto.dart';
-import 'package:bwa_cozy/repos/iom/dto/dept_head_dto.dart';
-import 'package:bwa_cozy/repos/iom/dto/iom_comment_dto.dart';
+import 'package:modernland_signflow/repos/iom/dto/Iom_detail_dto.dart';
+import 'package:modernland_signflow/repos/iom/dto/Iom_log_dto.dart';
+import 'package:modernland_signflow/repos/iom/dto/approval_item_dto.dart';
+import 'package:modernland_signflow/repos/iom/dto/dept_head_dto.dart';
+import 'package:modernland_signflow/repos/iom/dto/iom_comment_dto.dart';
 
 class ApprovalState {}
 

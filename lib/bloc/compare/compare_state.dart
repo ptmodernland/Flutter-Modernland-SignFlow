@@ -1,7 +1,7 @@
-import 'package:bwa_cozy/bloc/all_approval/dto/list_all_compare_dto.dart';
-import 'package:bwa_cozy/bloc/compare/dto/detail_compare_dto.dart';
-import 'package:bwa_cozy/bloc/pbj/dto/ListPBJDTO.dart';
-import 'package:bwa_cozy/bloc/pbj/dto/list_komen_pbj.dart';
+import 'package:modernland_signflow/bloc/all_approval/dto/list_all_compare_dto.dart';
+import 'package:modernland_signflow/bloc/compare/dto/detail_compare_dto.dart';
+import 'package:modernland_signflow/bloc/pbj/dto/ListPBJDTO.dart';
+import 'package:modernland_signflow/bloc/pbj/dto/list_komen_pbj.dart';
 
 abstract class CompareState {}
 

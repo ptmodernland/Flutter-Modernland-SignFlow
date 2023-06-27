@@ -1,7 +1,7 @@
-import 'package:bwa_cozy/bloc/notif/notif_event.dart';
-import 'package:bwa_cozy/bloc/notif/notif_state.dart';
-import 'package:bwa_cozy/repos/notif_repository.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:modernland_signflow/bloc/notif/notif_event.dart';
+import 'package:modernland_signflow/bloc/notif/notif_state.dart';
+import 'package:modernland_signflow/repos/notif_repository.dart';
 
 class NotifCoreBloc extends Bloc<NotifCoreEvent, NotifCoreState> {
   final NotifRepository _repo;

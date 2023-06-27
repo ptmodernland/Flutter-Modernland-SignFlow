@@ -1,4 +1,4 @@
-import 'package:bwa_cozy/repos/rekomendasi/dto/rekomendasi_waiting_dto.dart';
+import 'package:modernland_signflow/repos/rekomendasi/dto/rekomendasi_waiting_dto.dart';
 
 class RekomendasiState {}
 

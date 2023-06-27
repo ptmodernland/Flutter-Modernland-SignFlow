@@ -1,22 +1,22 @@
 import 'dart:io';
 
-import 'package:bwa_cozy/bloc/login/login_bloc.dart';
-import 'package:bwa_cozy/bloc/login/login_event.dart';
-import 'package:bwa_cozy/bloc/login/login_response.dart';
-import 'package:bwa_cozy/bloc/login/login_state.dart';
-import 'package:bwa_cozy/bloc/notif/notif_bloc.dart';
-import 'package:bwa_cozy/data/dio_client.dart';
-import 'package:bwa_cozy/di/service_locator.dart';
-import 'package:bwa_cozy/pages/profile/changepin/change_password_page.dart';
-import 'package:bwa_cozy/pages/profile/changepin/change_pin_page.dart';
-import 'package:bwa_cozy/pages/splash/splash_screen.dart';
-import 'package:bwa_cozy/repos/login_repository.dart';
-import 'package:bwa_cozy/util/my_theme.dart';
-import 'package:bwa_cozy/util/storage/sessionmanager/session_manager.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:modernland_signflow/bloc/login/login_bloc.dart';
+import 'package:modernland_signflow/bloc/login/login_event.dart';
+import 'package:modernland_signflow/bloc/login/login_response.dart';
+import 'package:modernland_signflow/bloc/login/login_state.dart';
+import 'package:modernland_signflow/bloc/notif/notif_bloc.dart';
+import 'package:modernland_signflow/data/dio_client.dart';
+import 'package:modernland_signflow/di/service_locator.dart';
+import 'package:modernland_signflow/pages/profile/changepin/change_password_page.dart';
+import 'package:modernland_signflow/pages/profile/changepin/change_pin_page.dart';
+import 'package:modernland_signflow/pages/splash/splash_screen.dart';
+import 'package:modernland_signflow/repos/login_repository.dart';
+import 'package:modernland_signflow/util/my_theme.dart';
+import 'package:modernland_signflow/util/storage/sessionmanager/session_manager.dart';
 import 'package:quickalert/quickalert.dart';
 import 'package:url_launcher/url_launcher.dart';
 

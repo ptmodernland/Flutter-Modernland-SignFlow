@@ -1,6 +1,6 @@
-import 'package:bwa_cozy/bloc/iomcategorycounter/badge_counter_state_new.dart';
-import 'package:bwa_cozy/repos/badge_counter_repository.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:modernland_signflow/bloc/iomcategorycounter/badge_counter_state_new.dart';
+import 'package:modernland_signflow/repos/badge_counter_repository.dart';
 
 class BadgeCounterCubit extends Cubit<BadgeCounterStateNew> {
   final BadgeCounterRepository repository;

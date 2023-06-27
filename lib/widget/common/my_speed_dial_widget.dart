@@ -1,13 +1,13 @@
-import 'package:bwa_cozy/pages/approval/compare/compare_page.dart';
-import 'package:bwa_cozy/pages/approval/iom/iom_page.dart';
-import 'package:bwa_cozy/pages/approval/kasbon/kasbon_page.dart';
-import 'package:bwa_cozy/pages/approval/koordinasi/koordinasi_waiting_all_page.dart';
-import 'package:bwa_cozy/pages/approval/pbj/pbj_page.dart';
-import 'package:bwa_cozy/pages/approval/realisasi/realisasi_page.dart';
-import 'package:bwa_cozy/pages/container_home.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
+import 'package:modernland_signflow/pages/approval/compare/compare_page.dart';
+import 'package:modernland_signflow/pages/approval/iom/iom_page.dart';
+import 'package:modernland_signflow/pages/approval/kasbon/kasbon_page.dart';
+import 'package:modernland_signflow/pages/approval/koordinasi/koordinasi_waiting_all_page.dart';
+import 'package:modernland_signflow/pages/approval/pbj/pbj_page.dart';
+import 'package:modernland_signflow/pages/approval/realisasi/realisasi_page.dart';
+import 'package:modernland_signflow/pages/container_home.dart';
 
 class mySpeedDialWidget extends StatelessWidget {
   const mySpeedDialWidget({

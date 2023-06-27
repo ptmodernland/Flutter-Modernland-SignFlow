@@ -1,6 +1,6 @@
-import 'package:bwa_cozy/bloc/iomcategorycounter/badge_counter_state.dart';
-import 'package:bwa_cozy/data/dio_client.dart';
-import 'package:bwa_cozy/util/storage/sessionmanager/session_manager.dart';
+import 'package:modernland_signflow/bloc/iomcategorycounter/badge_counter_state.dart';
+import 'package:modernland_signflow/data/dio_client.dart';
+import 'package:modernland_signflow/util/storage/sessionmanager/session_manager.dart';
 
 class BadgeCounterRepository {
   DioClient dioClient;

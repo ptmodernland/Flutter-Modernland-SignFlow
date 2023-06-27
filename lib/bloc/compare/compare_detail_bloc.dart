@@ -1,7 +1,7 @@
-import 'package:bwa_cozy/bloc/compare/compare_event.dart';
-import 'package:bwa_cozy/bloc/compare/compare_state.dart';
-import 'package:bwa_cozy/repos/compare_repository.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:modernland_signflow/bloc/compare/compare_event.dart';
+import 'package:modernland_signflow/bloc/compare/compare_state.dart';
+import 'package:modernland_signflow/repos/compare_repository.dart';
 
 class CompareDetailBloc extends Bloc<CompareEvent, CompareState> {
   final CompareRepository repo;

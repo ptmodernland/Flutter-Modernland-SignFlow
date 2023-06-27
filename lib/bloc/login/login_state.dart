@@ -1,4 +1,4 @@
-import 'package:bwa_cozy/bloc/login/login_response.dart';
+import 'package:modernland_signflow/bloc/login/login_response.dart';
 
 abstract class LoginState {}
 

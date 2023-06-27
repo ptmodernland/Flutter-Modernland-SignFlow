@@ -1,7 +1,7 @@
-import 'package:bwa_cozy/pages/common/webview_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:modernland_signflow/pages/common/webview_page.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class DocumentDetailWidget extends StatelessWidget {

@@ -1,13 +1,13 @@
 import 'dart:ui';
 
-import 'package:bwa_cozy/bloc/login/login_response.dart';
-import 'package:bwa_cozy/pages/container_home.dart';
-import 'package:bwa_cozy/pages/login_new_page.dart';
-import 'package:bwa_cozy/pages/splash/login_sheet.dart';
-import 'package:bwa_cozy/util/model/device_information_model.dart';
-import 'package:bwa_cozy/util/my_colors.dart';
-import 'package:bwa_cozy/util/my_theme.dart';
-import 'package:bwa_cozy/util/storage/sessionmanager/session_manager.dart';
+import 'package:modernland_signflow/bloc/login/login_response.dart';
+import 'package:modernland_signflow/pages/container_home.dart';
+import 'package:modernland_signflow/pages/login_new_page.dart';
+import 'package:modernland_signflow/pages/splash/login_sheet.dart';
+import 'package:modernland_signflow/util/model/device_information_model.dart';
+import 'package:modernland_signflow/util/my_colors.dart';
+import 'package:modernland_signflow/util/my_theme.dart';
+import 'package:modernland_signflow/util/storage/sessionmanager/session_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:quickalert/quickalert.dart';

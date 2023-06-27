@@ -1,5 +1,5 @@
-import 'package:bwa_cozy/util/enum/menu_type.dart';
 import 'package:equatable/equatable.dart';
+import 'package:modernland_signflow/util/enum/menu_type.dart';
 
 abstract class ApprovalMainPageEvent extends Equatable {}
 

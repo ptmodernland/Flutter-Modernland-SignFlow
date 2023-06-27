@@ -1,9 +1,9 @@
-import 'package:bwa_cozy/bloc/_wrapper/response_wrapper.dart';
-import 'package:bwa_cozy/bloc/kasbon/dto/KasbonCommentDTO.dart';
-import 'package:bwa_cozy/bloc/kasbon/dto/KasbonDetailDTO.dart';
-import 'package:bwa_cozy/bloc/kasbon/dto/ListAllKasbonDTO.dart';
-import 'package:bwa_cozy/data/dio_client.dart';
-import 'package:bwa_cozy/util/storage/sessionmanager/session_manager.dart';
+import 'package:modernland_signflow/bloc/_wrapper/response_wrapper.dart';
+import 'package:modernland_signflow/bloc/kasbon/dto/KasbonCommentDTO.dart';
+import 'package:modernland_signflow/bloc/kasbon/dto/KasbonDetailDTO.dart';
+import 'package:modernland_signflow/bloc/kasbon/dto/ListAllKasbonDTO.dart';
+import 'package:modernland_signflow/data/dio_client.dart';
+import 'package:modernland_signflow/util/storage/sessionmanager/session_manager.dart';
 import 'package:dio/dio.dart';
 
 class KasbonRepository {

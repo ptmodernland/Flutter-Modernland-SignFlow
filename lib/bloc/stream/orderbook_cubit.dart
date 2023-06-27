@@ -1,6 +1,6 @@
-import 'package:bwa_cozy/bloc/stream/stream_state.dart';
-import 'package:bwa_cozy/repos/stream/stream_repository.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:modernland_signflow/bloc/stream/stream_state.dart';
+import 'package:modernland_signflow/repos/stream/stream_repository.dart';
 
 class OrderbookCubit extends Cubit<StreamState> {
   final StreamRepository repository;

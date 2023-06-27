@@ -1,7 +1,7 @@
-import 'package:bwa_cozy/bloc/_wrapper/response_wrapper.dart';
-import 'package:bwa_cozy/bloc/kasbon/kasbon_action_event.dart';
-import 'package:bwa_cozy/bloc/kasbon/kasbon_state.dart';
-import 'package:bwa_cozy/repos/kasbon_repository.dart';
+import 'package:modernland_signflow/bloc/_wrapper/response_wrapper.dart';
+import 'package:modernland_signflow/bloc/kasbon/kasbon_action_event.dart';
+import 'package:modernland_signflow/bloc/kasbon/kasbon_state.dart';
+import 'package:modernland_signflow/repos/kasbon_repository.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class KasbonActionBloc extends Bloc<KasbonActionEvent, KasbonState> {

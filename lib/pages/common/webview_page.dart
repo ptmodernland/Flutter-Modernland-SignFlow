@@ -1,5 +1,5 @@
-import 'package:bwa_cozy/bloc/webview/webview_cubit.dart';
-import 'package:bwa_cozy/widget/core/draggable_back_button.dart';
+import 'package:modernland_signflow/bloc/webview/webview_cubit.dart';
+import 'package:modernland_signflow/widget/core/draggable_back_button.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

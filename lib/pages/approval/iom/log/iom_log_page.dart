@@ -1,10 +1,10 @@
-import 'package:bwa_cozy/bloc/iom/approval_log_cubit.dart';
-import 'package:bwa_cozy/bloc/iom/approval_state.dart';
-import 'package:bwa_cozy/repos/iom/approval_repository.dart';
-import 'package:bwa_cozy/widget/approval/log_list_item_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:modernland_signflow/bloc/iom/approval_log_cubit.dart';
+import 'package:modernland_signflow/bloc/iom/approval_state.dart';
+import 'package:modernland_signflow/repos/iom/approval_repository.dart';
+import 'package:modernland_signflow/widget/approval/log_list_item_widget.dart';
 
 class IomLogPage extends StatelessWidget {
   final String title;

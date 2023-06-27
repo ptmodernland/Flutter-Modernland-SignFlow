@@ -1,8 +1,7 @@
-import 'package:bwa_cozy/bloc/login/login_event.dart';
-import 'package:bwa_cozy/bloc/login/login_response.dart';
-import 'package:bwa_cozy/bloc/login/login_state.dart';
-import 'package:bwa_cozy/repos/login_repository.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:modernland_signflow/bloc/login/login_event.dart';
+import 'package:modernland_signflow/bloc/login/login_state.dart';
+import 'package:modernland_signflow/repos/login_repository.dart';
 
 class LoginBloc extends Bloc<LoginEvent, LoginState> {
   final LoginRepository _loginRepository;
