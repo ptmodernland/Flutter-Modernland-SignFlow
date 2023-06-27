@@ -7,7 +7,12 @@ class NotifCoreBloc extends Bloc<NotifCoreEvent, NotifCoreState> {
   final NotifRepository _repo;
 
   NotifCoreBloc(this._repo) : super(NotifStateInitial()) {
+    on<NotifEventInitial>((event, emit) async {
+      emit(NotifStateInitial());
+    });
+
     on<NotifEventCount>((event, emit) async {
+      emit(NotifStateInitial());
       emit(NotifStateLoading());
       print("fetching notif counter");
       try {

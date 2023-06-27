@@ -9,7 +9,7 @@ class CompareActionBloc extends Bloc<CompareActionEvent, CompareState> {
 
   CompareActionBloc(this.repo) : super(CompareStateInitial()) {
     on<SendQCompareApprove>((event, emit) async {
-      print("on bloc sendQRCompareApprove");
+      emit(CompareStateLoading());
       try {
         final request = await repo.approveCompare(
           noPermintaan: event.noPermintaan,
@@ -30,8 +30,9 @@ class CompareActionBloc extends Bloc<CompareActionEvent, CompareState> {
       }
     });
 
-    //reject PBJ
+    //reject
     on<SendQCompareReject>((event, emit) async {
+      emit(CompareStateLoading());
       print("on bloc sendQRCompareReject");
       try {
         final request = await repo.rejectCompare(

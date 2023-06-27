@@ -10,6 +10,7 @@ class RealisasiActionBloc extends Bloc<RealisasiActionEvent, RealisasiState> {
   RealisasiActionBloc(this.repo) : super(RealisasiStateInitial()) {
     on<SendQRealisasiApprove>((event, emit) async {
       print("on bloc sendQRRealisasiApprove");
+      emit(RealisasiStateLoading());
       try {
         final request = await repo.approveRealisasi(
           noRealisasi: event.noRealisasi,
@@ -33,6 +34,7 @@ class RealisasiActionBloc extends Bloc<RealisasiActionEvent, RealisasiState> {
     });
     //reject PBJ
     on<SendQRealisasiReject>((event, emit) async {
+      emit(RealisasiStateLoading());
       print("on bloc sendQRRealisasiReject");
       try {
         final request = await repo.rejectRealisasi(

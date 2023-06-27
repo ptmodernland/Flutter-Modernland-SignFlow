@@ -199,7 +199,7 @@ class _SplashScreenPageState extends State<SplashScreenPage> {
                       children: [
                         Container(
                           child: Text(
-                            "Modernland Approval revolutionizes the approval process, empowering efficient decision-making and expediting critical assessments.",
+                            "Modernland SignFlow empowering efficient decision-making and expediting critical assessments.",
                             style: MyTheme.myStyleSecondaryTextStyle.copyWith(
                               fontSize: setSubHeaderTextSize(
                                   screenWidth, screenHeight),

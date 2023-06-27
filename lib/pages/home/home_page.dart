@@ -434,7 +434,7 @@ class _HomePageState extends State<HomePage> {
               ),
               buildShareholderTransactionWidget(context),
               Container(
-                height: 275,
+                height: 0,
                 margin: EdgeInsets.only(top: 20),
                 child: ListView(
                   primary: false,
@@ -477,6 +477,7 @@ class _HomePageState extends State<HomePage> {
                   ],
                 ),
               ),
+              Container(height: 75)
             ],
           ),
         ),

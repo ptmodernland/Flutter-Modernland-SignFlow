@@ -7,7 +7,6 @@ import 'package:bwa_cozy/pages/home/home_page.dart';
 import 'package:bwa_cozy/pages/profile/profile_page.dart';
 import 'package:bwa_cozy/repos/notif_repository.dart';
 import 'package:bwa_cozy/util/enum/menu_type.dart';
-import 'package:bwa_cozy/widget/common/my_speed_dial_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app_badger/flutter_app_badger.dart';
@@ -96,7 +95,8 @@ class _ContainerHomePageState extends State<ContainerHomePage>
           floatingActionButton: _selectedTab ==
                   99 // Replace 2 with the index where you want to hide the FAB
               ? null
-              : mySpeedDialWidget(),
+              : null,
+          // : mySpeedDialWidget(),
         ),
       ),
     );

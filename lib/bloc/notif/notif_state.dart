@@ -1,4 +1,11 @@
-abstract class NotifCoreState {}
+import 'package:equatable/equatable.dart';
+
+abstract class NotifCoreState extends Equatable {
+  const NotifCoreState();
+
+  @override
+  List<Object?> get props => [];
+}
 
 class NotifStateInitial extends NotifCoreState {}
 
@@ -14,20 +21,35 @@ class NotifStateSuccess extends NotifCoreState {
   final String totalKoordinasi;
   final String totalKoordinasiAndIom;
 
-  NotifStateSuccess({
-    this.totalPermohonan = "",
-    this.totalCompare = "",
+  const NotifStateSuccess({
+    this.totalPermohonan = '',
+    this.totalCompare = '',
     this.totalKasbon = '',
-    this.totalRealisasi = "",
-    this.totalSemua = "",
-    this.totalIom = "",
-    this.totalKoordinasi = "",
-    this.totalKoordinasiAndIom = "",
+    this.totalRealisasi = '',
+    this.totalSemua = '',
+    this.totalIom = '',
+    this.totalKoordinasi = '',
+    this.totalKoordinasiAndIom = '',
   });
+
+  @override
+  List<Object?> get props => [
+        totalPermohonan,
+        totalCompare,
+        totalKasbon,
+        totalRealisasi,
+        totalSemua,
+        totalIom,
+        totalKoordinasi,
+        totalKoordinasiAndIom,
+      ];
 }
 
 class NotifStateFailure extends NotifCoreState {
   final String error;
 
-  NotifStateFailure({required this.error});
+  const NotifStateFailure({required this.error});
+
+  @override
+  List<Object?> get props => [error];
 }

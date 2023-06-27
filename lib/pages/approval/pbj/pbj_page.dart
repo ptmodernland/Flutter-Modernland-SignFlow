@@ -26,18 +26,23 @@ class ApprovalPBJMainPage extends StatefulWidget {
 }
 
 class _ApprovalPBJMainPageState extends State<ApprovalPBJMainPage> {
+  late NotifRepository notifRepository;
+  late NotifCoreBloc notifBloc;
+
+  late ApprovalMainPageRepository approvalRepo;
+  late ApprovalMainPageBloc approvalBloc;
+
+  @override
+  void initState() {
+    super.initState();
+    notifRepository = NotifRepository(dioClient: getIt<DioClient>());
+    notifBloc = NotifCoreBloc(notifRepository);
+    approvalRepo = ApprovalMainPageRepository(dioClient: getIt<DioClient>());
+    approvalBloc = ApprovalMainPageBloc(approvalRepo);
+  }
+
   @override
   Widget build(BuildContext context) {
-    double screenHeight = MediaQuery.of(context).size.height;
-    double screenWidth = MediaQuery.of(context).size.width;
-
-    var notifRepository = NotifRepository(dioClient: getIt<DioClient>());
-    NotifCoreBloc notifBloc = NotifCoreBloc(notifRepository);
-
-    ApprovalMainPageRepository approvalRepo =
-        ApprovalMainPageRepository(dioClient: getIt<DioClient>());
-    ApprovalMainPageBloc approvalBloc = ApprovalMainPageBloc(approvalRepo);
-
     return SafeArea(
       bottom: false,
       child: Scaffold(
@@ -84,8 +89,8 @@ class _ApprovalPBJMainPageState extends State<ApprovalPBJMainPage> {
                                         "Permohonan Barang dan Jasa",
                                         style: MyTheme.myStylePrimaryTextStyle
                                             .copyWith(
-                                                color: Colors.white,
-                                                fontWeight: FontWeight.w800),
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.w800),
                                       ),
                                     ),
                                     Spacer(),
@@ -110,7 +115,7 @@ class _ApprovalPBJMainPageState extends State<ApprovalPBJMainPage> {
                           children: [
                             Container(
                               margin:
-                                  EdgeInsets.only(top: 20, left: 0, right: 0),
+                              EdgeInsets.only(top: 20, left: 0, right: 0),
                               width: double.infinity,
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.vertical(
@@ -128,66 +133,66 @@ class _ApprovalPBJMainPageState extends State<ApprovalPBJMainPage> {
                                           child: Column(
                                             children: [
                                               BlocBuilder<NotifCoreBloc,
-                                                      NotifCoreState>(
+                                                  NotifCoreState>(
                                                   builder: (context, state) {
-                                                var count = "";
-                                                if (state
+                                                    var count = "";
+                                                    if (state
                                                     is NotifStateLoading) {}
-                                                if (state
+                                                    if (state
                                                     is NotifStateFailure) {}
-                                                if (state
+                                                    if (state
                                                     is NotifStateSuccess) {
-                                                  count = state.totalPermohonan;
-                                                }
-                                                return MenuItemApprovalWidget(
-                                                  unreadBadgeCount: count,
-                                                  titleLeft:
+                                                      count = state.totalPermohonan;
+                                                    }
+                                                    return MenuItemApprovalWidget(
+                                                      unreadBadgeCount: count,
+                                                      titleLeft:
                                                       "Menunggu\nApproval",
-                                                  titleRight:
+                                                      titleRight:
                                                       "History\nApproval",
-                                                  onLeftTapFunction: () {
-                                                    Navigator.push(
-                                                      context,
-                                                      MaterialPageRoute(
-                                                        builder: (context) =>
-                                                            PBJWaitingApproval(),
-                                                      ),
-                                                    ).then((value) {
-                                                      notifBloc
-                                                        ..add(
-                                                            NotifEventCount());
-                                                      approvalBloc
-                                                        ..add(RequestDataEvent(
-                                                            ApprovalListType
-                                                                .PBJ));
-                                                    });
-                                                  },
-                                                  onRightTapFunction: () {
-                                                    Navigator.push(
-                                                      context,
-                                                      MaterialPageRoute(
-                                                        builder: (context) =>
-                                                            PBJAllApprovedPage(),
-                                                      ),
-                                                    ).then((value) {
-                                                      notifBloc
-                                                        ..add(
-                                                            NotifEventCount());
-                                                      approvalBloc
-                                                        ..add(RequestDataEvent(
-                                                            ApprovalListType
-                                                                .PBJ));
-                                                    });
-                                                  },
-                                                );
-                                              }),
+                                                      onLeftTapFunction: () {
+                                                        Navigator.push(
+                                                          context,
+                                                          MaterialPageRoute(
+                                                            builder: (context) =>
+                                                                PBJWaitingApproval(),
+                                                          ),
+                                                        ).then((value) {
+                                                          notifBloc
+                                                            ..add(
+                                                                NotifEventCount());
+                                                          approvalBloc
+                                                            ..add(RequestDataEvent(
+                                                                ApprovalListType
+                                                                    .PBJ));
+                                                        });
+                                                      },
+                                                      onRightTapFunction: () {
+                                                        Navigator.push(
+                                                          context,
+                                                          MaterialPageRoute(
+                                                            builder: (context) =>
+                                                                PBJAllApprovedPage(),
+                                                          ),
+                                                        ).then((value) {
+                                                          notifBloc
+                                                            ..add(
+                                                                NotifEventCount());
+                                                          approvalBloc
+                                                            ..add(RequestDataEvent(
+                                                                ApprovalListType
+                                                                    .PBJ));
+                                                        });
+                                                      },
+                                                    );
+                                                  }),
                                             ],
                                           ),
                                         )),
                                     Container(
                                       width: double.infinity,
                                       margin:
-                                          EdgeInsets.only(left: 20, right: 20),
+                                      EdgeInsets.only(left: 20, right: 20),
                                       child: Text(
                                         "Request Terbaru",
                                         textAlign: TextAlign.start,
@@ -200,11 +205,11 @@ class _ApprovalPBJMainPageState extends State<ApprovalPBJMainPage> {
                                     ),
                                     Container(
                                       margin:
-                                          EdgeInsets.only(left: 20, right: 20),
+                                      EdgeInsets.only(left: 20, right: 20),
                                       child: Row(
                                         mainAxisSize: MainAxisSize.max,
                                         crossAxisAlignment:
-                                            CrossAxisAlignment.start,
+                                        CrossAxisAlignment.start,
                                         children: [],
                                       ),
                                     ),

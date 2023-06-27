@@ -1,34 +1,33 @@
-import 'package:bwa_cozy/bloc/iomcategorycounter/badge_counter_state.dart';
+import 'package:bwa_cozy/bloc/iomcategorycounter/badge_counter_state_new.dart';
 import 'package:bwa_cozy/repos/badge_counter_repository.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class BadgeCounterCubit extends Cubit<BadgeCounterState> {
+class BadgeCounterCubit extends Cubit<BadgeCounterStateNew> {
   final BadgeCounterRepository repository;
 
-  BadgeCounterCubit(this.repository)
-      : super(BadgeCounterState(
-          totalMarketingClub: 0,
-          totalFinance: 0,
-          totalQS: 0,
-          totalLegal: 0,
-          totalPurchasing: 0,
-          totalBDD: 0,
-          totalProject: 0,
-          totalPromosi: 0,
-          totalMarketing: 0,
-          totalHRD: 0,
-          totalLanded: 0,
-          totalTown: 0,
-          totalPermit: 0,
-          status: false,
-        ));
+  BadgeCounterCubit(this.repository) : super(BadgeNotifStateInitial());
 
   Future<void> fetchBadgeCounter() async {
     try {
+      emit(BadgeNotifStateLoading());
       final badgeCounter = await repository.fetchBadgeCounter();
-      emit(badgeCounter);
+      emit(BadgeNotifStateSuccess(
+          totalMarketingClub: badgeCounter.totalMarketingClub,
+          totalFinance: badgeCounter.totalFinance,
+          totalQS: badgeCounter.totalQS,
+          totalLegal: badgeCounter.totalLegal,
+          totalPurchasing: badgeCounter.totalPurchasing,
+          totalBDD: badgeCounter.totalBDD,
+          totalProject: badgeCounter.totalProject,
+          totalPromosi: badgeCounter.totalPromosi,
+          totalMarketing: badgeCounter.totalMarketing,
+          totalHRD: badgeCounter.totalHRD,
+          totalLanded: badgeCounter.totalLanded,
+          totalTown: badgeCounter.totalTown,
+          totalPermit: badgeCounter.totalPermit,
+          status: badgeCounter.status));
     } catch (e) {
-      // Handle error
+      emit(BadgeNotifStateFailure(error: e.toString()));
     }
   }
 }

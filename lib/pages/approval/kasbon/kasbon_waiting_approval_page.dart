@@ -8,6 +8,7 @@ import 'package:bwa_cozy/repos/approval_main_page_repository.dart';
 import 'package:bwa_cozy/util/enum/menu_type.dart';
 import 'package:bwa_cozy/util/my_theme.dart';
 import 'package:bwa_cozy/widget/approval/item_approval_widget.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -149,7 +150,9 @@ class _KasbonWaitingApprovalPageState extends State<KasbonWaitingApprovalPage> {
                           builder: (context, state) {
                             var status = "";
                             Widget dataList = Text("");
-                            if (state is ApprovalMainPageStateLoading) {}
+                            if (state is ApprovalMainPageStateLoading) {
+                              return CupertinoActivityIndicator();
+                            }
                             if (state is ApprovalMainPageStateFailure) {}
                             if (state
                                 is ApprovalMainPageStateSuccessListKasbon) {

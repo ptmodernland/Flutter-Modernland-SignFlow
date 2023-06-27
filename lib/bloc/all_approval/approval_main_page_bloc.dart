@@ -9,6 +9,10 @@ class ApprovalMainPageBloc
   final ApprovalMainPageRepository _repo;
 
   ApprovalMainPageBloc(this._repo) : super(ApprovalMainPageStateInitial()) {
+    on<ApprovalMainPageInitialEvent>((event, emit) async {
+      emit(ApprovalMainPageStateInitial());
+    });
+
     on<RequestPBJDetailEvent>((event, emit) async {
       emit(ApprovalMainPageStateLoading());
       try {
@@ -59,6 +63,8 @@ class ApprovalMainPageBloc
       }
 
       if (event.payload == ApprovalListType.KASBON) {
+        Future.delayed(Duration(seconds: 3));
+        emit(ApprovalMainPageStateLoading());
         try {
           final request = await _repo.getKasbonWaitingList();
           if (request.data != null) {

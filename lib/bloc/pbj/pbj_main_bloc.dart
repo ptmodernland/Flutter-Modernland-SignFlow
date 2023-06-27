@@ -34,6 +34,7 @@ class PBJBloc extends Bloc<PBJEvent, PBJState> {
     //reject PBJ
     on<SendQPBJReject>((event, emit) async {
       print("on bloc sendQRPBJApprove");
+      emit(PBJStateLoading());
       try {
         final request = await repo.rejectPBJ(
           noPermintaan: event.noPermintaan,
