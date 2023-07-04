@@ -8,6 +8,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:modernland_signflow/bloc/login/login_bloc.dart';
 import 'package:modernland_signflow/bloc/login/login_event.dart';
 import 'package:modernland_signflow/bloc/login/login_payload.dart';
+import 'package:modernland_signflow/bloc/login/login_response.dart';
 import 'package:modernland_signflow/bloc/login/login_state.dart';
 import 'package:modernland_signflow/data/dio_client.dart';
 import 'package:modernland_signflow/di/service_locator.dart';
@@ -15,6 +16,7 @@ import 'package:modernland_signflow/pages/container_home.dart';
 import 'package:modernland_signflow/repos/login_repository.dart';
 import 'package:modernland_signflow/util/model/device_information_model.dart';
 import 'package:modernland_signflow/util/my_theme.dart';
+import 'package:modernland_signflow/util/storage/sessionmanager/session_manager.dart';
 import 'package:modernland_signflow/widget/core/custom_text_input.dart';
 import 'package:quickalert/quickalert.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -53,7 +55,7 @@ Future<dynamic> showLoginFormDialog({
                       listener: (context, state) {
                         // Navigate to next screen
 
-                        if(state is AuthStateLogoutSuccess){
+                        if (state is AuthStateLogoutSuccess) {
                           QuickAlert.show(
                             context: context,
                             type: QuickAlertType.success,
@@ -78,7 +80,7 @@ Future<dynamic> showLoginFormDialog({
                               },
                               transitionDuration: Duration(milliseconds: 1500),
                             ),
-                                (route) => false,
+                            (route) => false,
                           );
                         }
 
@@ -96,7 +98,7 @@ Future<dynamic> showLoginFormDialog({
                       children: [
                         Expanded(
                           flex:
-                          MediaQuery.of(context).size.width > 600 ? 3 : 10,
+                              MediaQuery.of(context).size.width > 600 ? 3 : 10,
                           child: LayoutBuilder(
                             builder: (context, constraints) {
                               return Image.asset(
@@ -117,7 +119,7 @@ Future<dynamic> showLoginFormDialog({
                       style: MyTheme.myStyleSecondaryTextStyle.copyWith(
                         color: Colors.black,
                         fontSize:
-                        setSubHeaderTextSize(screenWidth, screenHeight),
+                            setSubHeaderTextSize(screenWidth, screenHeight),
                       ),
                       textAlign: TextAlign.start,
                     ),
@@ -271,64 +273,124 @@ Future<dynamic> showLoginFormDialog({
       });
 }
 
-Widget showLoginButton(BuildContext context,
+Widget showLoginButton(
+    BuildContext context,
     double screenWidth,
     double screenHeight,
     GlobalKey<FormState> _formKey,
     TextEditingController _usernameController,
     TextEditingController _passwordController,
     LoginBloc loginBloc) {
-  return ElevatedButton(
-    style: ButtonStyle(
-      padding: MaterialStateProperty.all<EdgeInsets>(
-        setButtonLoginRegisterPadding(context),
-      ),
-      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-        RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(18.0),
-          side: BorderSide(color: Colors.transparent),
+  return Container(
+    width: MediaQuery.sizeOf(context).width,
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        ElevatedButton(
+          style: ButtonStyle(
+            padding: MaterialStateProperty.all<EdgeInsets>(
+              setButtonLoginRegisterPadding(context),
+            ),
+            shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+              RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(18.0),
+                side: BorderSide(color: Colors.transparent),
+              ),
+            ),
+            backgroundColor: MaterialStateProperty.all<Color>(Colors.black),
+          ),
+          child: Text(
+            "Login",
+            style: MyTheme.myStylePrimaryTextStyle.copyWith(
+                fontSize: setButtonLoginRegisterSize(screenWidth, screenHeight),
+                color: Colors.white),
+          ),
+          onPressed: () async {
+            if (_formKey.currentState?.validate() ?? true) {
+              // Perform login or submit logic here
+              // You can access the entered username and password using
+              // _usernameController.text and _passwordController.text
+              print('Username: ${_usernameController.text}');
+              print('Password: ${_passwordController.text}');
+              // Close the bottom sheet
+              loginBloc.add(LoginButtonInit());
+              var deviceInfo = await getDeviceInfo();
+              if (deviceInfo != null) {
+                final payload = LoginPayload(
+                  username: _usernameController.text,
+                  password: _passwordController.text,
+                  address: deviceInfo.ipAddress,
+                  brand: deviceInfo.brand,
+                  ip: deviceInfo.ipAddress,
+                  model: deviceInfo.model,
+                  phonetype: deviceInfo.deviceType,
+                  // token: TODO ADD FIREBASE TOKEN
+                );
+                loginBloc.add(LoginButtonPressed(payload));
+              } else {
+                final payload = LoginPayload(
+                  username: _usernameController.text,
+                  password: _passwordController.text,
+                  // token: TODO ADD FIREBASE TOKEN
+                );
+                loginBloc.add(LoginButtonPressed(payload));
+              }
+            }
+          },
         ),
-      ),
-      backgroundColor: MaterialStateProperty.all<Color>(Colors.black),
+        OutlinedButton(
+          style: ButtonStyle(
+              padding: MaterialStateProperty.all<EdgeInsets>(
+                setButtonLoginRegisterPadding(context),
+              ),
+              shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(18.0),
+                ),
+              ),
+              side: MaterialStateProperty.all(
+                  const BorderSide(color: Colors.black))),
+          child: Text(
+            "Continue as Shareholder",
+            style: MyTheme.myStylePrimaryTextStyle.copyWith(
+                fontSize: setButtonLoginRegisterSize(screenWidth, screenHeight),
+                color: Colors.black),
+          ),
+          onPressed: () async {
+            // Save user as a guest in SessionManager
+            final user = UserDTO(
+              idUser: '-88',
+              username: 'Guest',
+              nama: 'Shareholder',
+              level: 'Investor',
+              email: '',
+              jk: '',
+              isGuest: true,
+              status: true,
+            );
+            Navigator.pushAndRemoveUntil(
+              context,
+              PageRouteBuilder(
+                pageBuilder: (context, animation, secondaryAnimation) =>
+                    const ContainerHomePage(
+                  isFromLogin: true,
+                ),
+                transitionsBuilder:
+                    (context, animation, secondaryAnimation, child) {
+                  return FadeTransition(
+                    opacity: animation,
+                    child: child,
+                  );
+                },
+                transitionDuration: Duration(milliseconds: 1500),
+              ),
+              (route) => false,
+            );
+            await SessionManager.saveUserInSession(user);
+          },
+        ),
+      ],
     ),
-    child: Text(
-      "Submit",
-      style: MyTheme.myStylePrimaryTextStyle.copyWith(
-          fontSize: setButtonLoginRegisterSize(screenWidth, screenHeight),
-          color: Colors.white),
-    ),
-    onPressed: () async {
-      if (_formKey.currentState?.validate() ?? true) {
-        // Perform login or submit logic here
-        // You can access the entered username and password using
-        // _usernameController.text and _passwordController.text
-        print('Username: ${_usernameController.text}');
-        print('Password: ${_passwordController.text}');
-        // Close the bottom sheet
-        loginBloc.add(LoginButtonInit());
-        var deviceInfo = await getDeviceInfo();
-        if (deviceInfo != null) {
-          final payload = LoginPayload(
-            username: _usernameController.text,
-            password: _passwordController.text,
-            address: deviceInfo.ipAddress,
-            brand: deviceInfo.brand,
-            ip: deviceInfo.ipAddress,
-            model: deviceInfo.model,
-            phonetype: deviceInfo.deviceType,
-            // token: TODO ADD FIREBASE TOKEN
-          );
-          loginBloc.add(LoginButtonPressed(payload));
-        } else {
-          final payload = LoginPayload(
-            username: _usernameController.text,
-            password: _passwordController.text,
-            // token: TODO ADD FIREBASE TOKEN
-          );
-          loginBloc.add(LoginButtonPressed(payload));
-        }
-      }
-    },
   );
 }
 
@@ -438,7 +500,8 @@ EdgeInsets setButtonLoginRegisterPadding(BuildContext context) {
       horizontal: MediaQuery.of(context).size.width > 500 ? 50.0 : 25.0);
 }
 
-Alignment setLoginRegisterButtonAlignment(double screenWidth, double screenHeight) {
+Alignment setLoginRegisterButtonAlignment(
+    double screenWidth, double screenHeight) {
   return screenWidth >= 500 && screenHeight >= 700
       ? Alignment.centerLeft
       : Alignment.centerLeft;

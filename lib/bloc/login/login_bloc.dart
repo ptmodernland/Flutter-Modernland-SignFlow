@@ -14,7 +14,6 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
 
     on<LogoutButtonPressed>((event, emit) async {
       emit(AuthStateLoading());
-      print("logout loading");
       try {
         final request = await _loginRepository.unbindDevice(event.username);
         if (request.data != null) {

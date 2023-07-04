@@ -1,5 +1,7 @@
 import 'dart:math';
 
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:modernland_signflow/bloc/broadcast_message/broadcast_message_bloc.dart';
 import 'package:modernland_signflow/bloc/login/login_response.dart';
 import 'package:modernland_signflow/bloc/notif/notif_bloc.dart';
 import 'package:modernland_signflow/bloc/notif/notif_event.dart';
@@ -20,6 +22,7 @@ import 'package:modernland_signflow/pages/common/webview_page.dart';
 import 'package:modernland_signflow/pages/profile/profile_page.dart';
 import 'package:modernland_signflow/pages/stock/mdln_news_all_page.dart';
 import 'package:modernland_signflow/pages/stock/mdln_shareholder_all_page.dart';
+import 'package:modernland_signflow/repos/broadcast_message/broadcast_message_repository.dart';
 import 'package:modernland_signflow/repos/notif_repository.dart';
 import 'package:modernland_signflow/repos/stream/stream_repository.dart';
 import 'package:modernland_signflow/util/core/string/currency_util.dart';
@@ -51,7 +54,9 @@ class _HomePageState extends State<HomePage> {
   late StreamCubit streamCubit;
   late OrderbookCubit orderbookCubit;
   late ShareholderMovementCubit shareholderCubit;
+  late BroadcastMessageCubit broadcastMessageCubit;
 
+  late BroadcastMessageRepository broadcastMessageRepository;
   late NotifRepository notifRepository;
   late NotifCoreBloc notifBloc;
 
@@ -59,13 +64,17 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     final streamRepository = StreamRepository(dioClient: getIt<DioClient>());
+    broadcastMessageRepository =
+        BroadcastMessageRepository(dioClient: getIt<DioClient>());
 
     streamCubit = StreamCubit(streamRepository);
     orderbookCubit = OrderbookCubit(streamRepository);
+    broadcastMessageCubit = BroadcastMessageCubit(broadcastMessageRepository);
     shareholderCubit = ShareholderMovementCubit(streamRepository);
     notifRepository = NotifRepository(dioClient: getIt<DioClient>());
     notifBloc = NotifCoreBloc(notifRepository);
-    notifBloc..add(NotifEventCount());
+    notifBloc.add(NotifEventCount());
+    broadcastMessageCubit.fetchAnnouncement();
   }
 
   String getGreeting() {
@@ -83,16 +92,16 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-      systemNavigationBarColor: Colors.white, // navigation bar color
-      statusBarColor: Colors.white, // status bar color
-      statusBarIconBrightness: Brightness.dark, // status bar icons' color
-      systemNavigationBarIconBrightness:
-          Brightness.dark, //navigation bar icons' color
-    ));
+    // SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+    //   systemNavigationBarColor: Colors.white, // navigation bar color
+    //   statusBarColor: Colors.white, // status bar color
+    //   statusBarIconBrightness: Brightness.dark, // status bar icons' color
+    //   systemNavigationBarIconBrightness:
+    //       Brightness.dark, //navigation bar icons' color
+    // ));
 
     const rowHeight = 5.0;
-    final rowSpacer = TableRow(children: [
+    final rowSpacer = const TableRow(children: [
       SizedBox(
         height: rowHeight,
       ),
@@ -134,12 +143,20 @@ class _HomePageState extends State<HomePage> {
                 ),
               ],
             ),
-            child: CircleAvatar(
-              radius: MediaQuery.of(context).size.width * 0.05,
-              backgroundImage: NetworkImage(
-                'http://feylabs.my.id/fm/mdln_asset/mdln_circle_placeholder.png',
+            child: InkWell(
+              child: Container(
+                width: MediaQuery.of(context).size.width * 0.1,
+                height: MediaQuery.of(context).size.width * 0.1,
+                decoration: const BoxDecoration(
+                  shape: BoxShape.circle,
+                  image: DecorationImage(
+                    image: NetworkImage(
+                      'http://feylabs.my.id/fm/mdln_asset/mdln_circle_placeholder.png',
+                    ),
+                    fit: BoxFit.fill,
+                  ),
+                ),
               ),
-              backgroundColor: Colors.transparent,
             ),
           ),
           title: Container(
@@ -181,19 +198,32 @@ class _HomePageState extends State<HomePage> {
             ),
           ),
           actions: [
-            GestureDetector(
-              onTap: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) {
-                  return ProfilePage();
-                }));
-              },
-              child: CircleAvatar(
-                radius: MediaQuery.of(context).size.width * 0.03,
-                backgroundImage: NetworkImage(
-                  'http://feylabs.my.id/fm/mdln_asset/profile.png',
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                GestureDetector(
+                  onTap: () {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) {
+                      return ProfilePage();
+                    }));
+                  },
+                  child: Container(
+                    margin: EdgeInsets.all(10),
+                    width: MediaQuery.of(context).size.width * 0.1,
+                    height: MediaQuery.of(context).size.width * 0.1,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      image: DecorationImage(
+                        image: NetworkImage(
+                          'http://feylabs.my.id/fm/mdln_asset/profile.png',
+                        ),
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  ),
                 ),
-                backgroundColor: Colors.transparent,
-              ),
+              ],
             ),
             SizedBox(width: 10),
             // Add spacing between the profile avatar and the edge of the appbar
@@ -208,7 +238,30 @@ class _HomePageState extends State<HomePage> {
               SizedBox(
                 height: 30,
               ),
-              BroadcastMessageWidget(),
+              BlocProvider(
+                create: (_) => broadcastMessageCubit,
+                child: Column(
+                  children: [
+                    BlocBuilder<BroadcastMessageCubit, AnnouncementState>(
+                      bloc: broadcastMessageCubit..fetchAnnouncement(),
+                      builder: (context, state) {
+                        if (state.isLoading) {
+                          return Container(
+                              height: 320,
+                              child:
+                                  Center(child: CupertinoActivityIndicator()));
+                        } else if (state.isError) {
+                          return Text('Error fetching announcement');
+                        } else {
+                          return BroadcastMessageWidget(
+                            announcement: state.announcement,
+                          );
+                        }
+                      },
+                    ),
+                  ],
+                ),
+              ),
               SizedBox(
                 height: 30,
               ),
@@ -219,7 +272,7 @@ class _HomePageState extends State<HomePage> {
                     "Kabar Modernland",
                     style: MyTheme.myStyleSecondaryTextStyle.copyWith(
                         fontSize: ScaleSize.textScaleFactor(context,
-                            maxTextScaleFactor: 32),
+                            maxTextScaleFactor: 33),
                         color: AppColors.primaryColor2),
                   ),
                   InkWell(
@@ -299,24 +352,6 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
               buildStockMovementCard(context, rowSpacer),
-              SizedBox(
-                height: 20,
-              ),
-              InkWell(
-                onDoubleTap: () {
-                  notifBloc..add(NotifEventCount());
-                },
-                child: Container(
-                  width: double.infinity,
-                  child: Text(
-                    "Menu",
-                    style: MyTheme.myStyleSecondaryTextStyle.copyWith(
-                        fontSize: ScaleSize.textScaleFactor(context,
-                            maxTextScaleFactor: 32),
-                        color: AppColors.primaryColor2),
-                  ),
-                ),
-              ),
               BlocProvider(
                 create: (BuildContext context) =>
                     notifBloc..add(NotifEventCount()),
@@ -335,95 +370,153 @@ class _HomePageState extends State<HomePage> {
                         }
                         FlutterAppBadger.updateBadgeCount(totalSemua);
                       }
-
-                      return Column(
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              _buildMenuItem(CupertinoIcons.square_list_fill,
-                                  'Inter Office Memo',
-                                  badgeCount: state is NotifStateSuccess
-                                      ? state.totalIom
-                                      : "", onPressed: () {
-                                Navigator.push(context,
-                                    MaterialPageRoute(builder: (context) {
-                                  return const ApprovalIomMainPage();
-                                })).then((value) {
-                                  notifBloc.add(NotifEventCount());
-                                });
-                              }),
-                              _buildMenuItem(
-                                  CupertinoIcons.shuffle_thick, 'Koordinasi',
-                                  badgeCount: state is NotifStateSuccess
-                                      ? state.totalKoordinasi
-                                      : "", onPressed: () {
-                                Navigator.push(context,
-                                    MaterialPageRoute(builder: (context) {
-                                  return const KoordinasiWaitingAllPage();
-                                })).then((value) {
-                                  notifBloc.add(NotifEventCount());
-                                });
-                              }),
-                              _buildMenuItem(
-                                  CupertinoIcons.cart_fill_badge_plus,
-                                  'Pengadaan Barang Jasa',
-                                  badgeCount: state is NotifStateSuccess
-                                      ? state.totalPermohonan
-                                      : "", onPressed: () {
-                                Navigator.push(context,
-                                    MaterialPageRoute(builder: (context) {
-                                  return const ApprovalPBJMainPage();
-                                })).then((value) {
-                                  notifBloc.add(NotifEventCount());
-                                });
-                              }),
-                            ],
-                          ),
-                          SizedBox(height: 20),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              _buildMenuItem(CupertinoIcons.checkmark_seal_fill,
-                                  'Comparison',
-                                  badgeCount: state is NotifStateSuccess
-                                      ? state.totalCompare
-                                      : "", onPressed: () {
-                                Navigator.push(context,
-                                    MaterialPageRoute(builder: (context) {
-                                  return const ApprovalCompareMainPage();
-                                })).then((value) {
-                                  notifBloc.add(NotifEventCount());
-                                });
-                              }),
-                              _buildMenuItem(
-                                  CupertinoIcons.creditcard_fill, 'Kasbon',
-                                  badgeCount: state is NotifStateSuccess
-                                      ? state.totalKasbon
-                                      : "", onPressed: () {
-                                Navigator.push(context,
-                                    MaterialPageRoute(builder: (context) {
-                                  return const ApprovalKasbonMainPage();
-                                })).then((value) {
-                                  notifBloc.add(NotifEventCount());
-                                });
-                              }),
-                              _buildMenuItem(
-                                  CupertinoIcons.money_dollar_circle_fill,
-                                  'Realisasi',
-                                  badgeCount: state is NotifStateSuccess
-                                      ? state.totalRealisasi
-                                      : "", onPressed: () {
-                                Navigator.push(context,
-                                    MaterialPageRoute(builder: (context) {
-                                  return const ApprovalRealisasiMainPage();
-                                })).then((value) {
-                                  notifBloc.add(NotifEventCount());
-                                });
-                              }),
-                            ],
-                          ),
-                        ],
+                      return FutureBuilder(
+                        future: SessionManager.getUser(),
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            // Show a loading indicator while fetching user data
+                            return CircularProgressIndicator();
+                          } else if (snapshot.hasError) {
+                            // Handle error case
+                            return Text('Error: ${snapshot.error}');
+                          } else {
+                            var user = snapshot.data;
+                            if (user?.idUser == "-88") {
+                              return Container();
+                            } else {
+                              return Column(
+                                children: [
+                                  SizedBox(
+                                    height: 20,
+                                  ),
+                                  Container(
+                                    width: double.infinity,
+                                    child: Text(
+                                      "Menu",
+                                      style: MyTheme.myStyleSecondaryTextStyle
+                                          .copyWith(
+                                              fontSize:
+                                                  ScaleSize.textScaleFactor(
+                                                      context,
+                                                      maxTextScaleFactor: 32),
+                                              color: AppColors.primaryColor2),
+                                    ),
+                                  ),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
+                                    children: [
+                                      _buildMenuItem(
+                                        CupertinoIcons.square_list_fill,
+                                        'Inter Office Memo',
+                                        badgeCount: state is NotifStateSuccess
+                                            ? state.totalIom
+                                            : "",
+                                        onPressed: () {
+                                          Navigator.push(context,
+                                              MaterialPageRoute(
+                                                  builder: (context) {
+                                            return const ApprovalIomMainPage();
+                                          })).then((value) {
+                                            notifBloc.add(NotifEventCount());
+                                          });
+                                        },
+                                      ),
+                                      _buildMenuItem(
+                                        CupertinoIcons.shuffle_thick,
+                                        'Koordinasi',
+                                        badgeCount: state is NotifStateSuccess
+                                            ? state.totalKoordinasi
+                                            : "",
+                                        onPressed: () {
+                                          Navigator.push(context,
+                                              MaterialPageRoute(
+                                                  builder: (context) {
+                                            return const KoordinasiWaitingAllPage();
+                                          })).then((value) {
+                                            notifBloc.add(NotifEventCount());
+                                          });
+                                        },
+                                      ),
+                                      _buildMenuItem(
+                                        CupertinoIcons.cart_fill_badge_plus,
+                                        'Pengadaan Barang Jasa',
+                                        badgeCount: state is NotifStateSuccess
+                                            ? state.totalPermohonan
+                                            : "",
+                                        onPressed: () {
+                                          Navigator.push(context,
+                                              MaterialPageRoute(
+                                                  builder: (context) {
+                                            return const ApprovalPBJMainPage();
+                                          })).then((value) {
+                                            notifBloc.add(NotifEventCount());
+                                          });
+                                        },
+                                      ),
+                                      SizedBox(height: 20),
+                                    ],
+                                  ),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
+                                    children: [
+                                      _buildMenuItem(
+                                        CupertinoIcons.checkmark_seal_fill,
+                                        'Comparison',
+                                        badgeCount: state is NotifStateSuccess
+                                            ? state.totalCompare
+                                            : "",
+                                        onPressed: () {
+                                          Navigator.push(context,
+                                              MaterialPageRoute(
+                                                  builder: (context) {
+                                            return const ApprovalCompareMainPage();
+                                          })).then((value) {
+                                            notifBloc.add(NotifEventCount());
+                                          });
+                                        },
+                                      ),
+                                      _buildMenuItem(
+                                        CupertinoIcons.creditcard_fill,
+                                        'Kasbon',
+                                        badgeCount: state is NotifStateSuccess
+                                            ? state.totalKasbon
+                                            : "",
+                                        onPressed: () {
+                                          Navigator.push(context,
+                                              MaterialPageRoute(
+                                                  builder: (context) {
+                                            return const ApprovalKasbonMainPage();
+                                          })).then((value) {
+                                            notifBloc.add(NotifEventCount());
+                                          });
+                                        },
+                                      ),
+                                      _buildMenuItem(
+                                        CupertinoIcons.money_dollar_circle_fill,
+                                        'Realisasi',
+                                        badgeCount: state is NotifStateSuccess
+                                            ? state.totalRealisasi
+                                            : "",
+                                        onPressed: () {
+                                          Navigator.push(context,
+                                              MaterialPageRoute(
+                                                  builder: (context) {
+                                            return const ApprovalRealisasiMainPage();
+                                          })).then((value) {
+                                            notifBloc.add(NotifEventCount());
+                                          });
+                                        },
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              );
+                            }
+                          }
+                        },
                       );
                     },
                   ),
@@ -492,7 +585,7 @@ class _HomePageState extends State<HomePage> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
-              "Shareholder Transaction (EOD)",
+              "Shareholder Transaction",
               style: MyTheme.myStyleSecondaryTextStyle.copyWith(
                   fontSize: ScaleSize.textScaleFactor(context,
                       maxTextScaleFactor: 32),
@@ -803,7 +896,7 @@ class _HomePageState extends State<HomePage> {
                                 ),
                                 child: CircleAvatar(
                                   radius:
-                                  MediaQuery.of(context).size.width * 0.07,
+                                      MediaQuery.of(context).size.width * 0.07,
                                   backgroundImage: NetworkImage(
                                     'http://feylabs.my.id/fm/mdln_asset/mdln_circle_placeholder.png',
                                   ),
@@ -859,15 +952,15 @@ class _HomePageState extends State<HomePage> {
                                       if (state is StreamStateLoading) {
                                         return CupertinoActivityIndicator();
                                       } else if (state
-                                      is StreamStateOrderbookSuccess) {
+                                          is StreamStateOrderbookSuccess) {
                                         var data = state.datas;
                                         var percentageString = state
-                                            .datas.data?.percentageChange
-                                            .toString() ??
+                                                .datas.data?.percentageChange
+                                                .toString() ??
                                             "";
                                         var pointChange = state
-                                            .datas.data?.change
-                                            .toString() ??
+                                                .datas.data?.change
+                                                .toString() ??
                                             "";
                                         final double pointChangeValue =
                                             double.tryParse(pointChange) ?? 0;
@@ -877,16 +970,16 @@ class _HomePageState extends State<HomePage> {
                                               alignment: Alignment.centerRight,
                                               child: Text(
                                                 data.data?.lastprice
-                                                    .toString() ??
+                                                        .toString() ??
                                                     "0",
                                                 style: MyTheme
                                                     .myStylePrimaryTextStyle
                                                     .copyWith(
                                                   fontSize:
-                                                  ScaleSize.textScaleFactor(
-                                                      context,
-                                                      maxTextScaleFactor:
-                                                      33),
+                                                      ScaleSize.textScaleFactor(
+                                                          context,
+                                                          maxTextScaleFactor:
+                                                              33),
                                                   fontWeight: FontWeight.w700,
                                                 ),
                                               ),
@@ -899,10 +992,10 @@ class _HomePageState extends State<HomePage> {
                                                     .myStyleSecondaryTextStyle
                                                     .copyWith(
                                                   fontSize:
-                                                  ScaleSize.textScaleFactor(
-                                                      context,
-                                                      maxTextScaleFactor:
-                                                      33),
+                                                      ScaleSize.textScaleFactor(
+                                                          context,
+                                                          maxTextScaleFactor:
+                                                              33),
                                                   color: pointChangeValue < 0
                                                       ? Colors.red
                                                       : Colors.green,
@@ -945,7 +1038,7 @@ class _HomePageState extends State<HomePage> {
                                 if (state is StreamStateLoading) {
                                   return buildLoadingIndicator();
                                 } else if (state
-                                is StreamStateOrderbookSuccess) {
+                                    is StreamStateOrderbookSuccess) {
                                   return Text(
                                     state.datas.data?.open.toString() ?? "-",
                                     style: TextStyle(
@@ -968,7 +1061,7 @@ class _HomePageState extends State<HomePage> {
                                 if (state is StreamStateLoading) {
                                   return buildLoadingIndicator();
                                 } else if (state
-                                is StreamStateOrderbookSuccess) {
+                                    is StreamStateOrderbookSuccess) {
                                   return Text(
                                     toAbbreviatedNumberString(
                                         (state.datas.data?.volume ?? 0) / 100),
@@ -997,14 +1090,14 @@ class _HomePageState extends State<HomePage> {
                                 if (state is StreamStateLoading) {
                                   return buildLoadingIndicator();
                                 } else if (state
-                                is StreamStateOrderbookSuccess) {
+                                    is StreamStateOrderbookSuccess) {
                                   return Text(
                                       state.datas.data?.high.toString() ?? "-",
                                       style: TextStyle(
                                         color:
-                                        (state.datas.data?.change ?? 0) < 0
-                                            ? Colors.red
-                                            : Colors.green,
+                                            (state.datas.data?.change ?? 0) < 0
+                                                ? Colors.red
+                                                : Colors.green,
                                       ));
                                 } else {
                                   return Text("-");
@@ -1020,15 +1113,15 @@ class _HomePageState extends State<HomePage> {
                                 if (state is StreamStateLoading) {
                                   return buildLoadingIndicator();
                                 } else if (state
-                                is StreamStateOrderbookSuccess) {
+                                    is StreamStateOrderbookSuccess) {
                                   return Text(
                                       toAbbreviatedNumberString(
                                           state.datas.data?.value),
                                       style: TextStyle(
                                         color:
-                                        (state.datas.data?.change ?? 0) < 0
-                                            ? Colors.red
-                                            : Colors.green,
+                                            (state.datas.data?.change ?? 0) < 0
+                                                ? Colors.red
+                                                : Colors.green,
                                       ));
                                 } else {
                                   return Text("-");
@@ -1049,14 +1142,14 @@ class _HomePageState extends State<HomePage> {
                                 if (state is StreamStateLoading) {
                                   return buildLoadingIndicator();
                                 } else if (state
-                                is StreamStateOrderbookSuccess) {
+                                    is StreamStateOrderbookSuccess) {
                                   return Text(
                                       state.datas.data?.low.toString() ?? "-",
                                       style: TextStyle(
                                         color:
-                                        (state.datas.data?.change ?? 0) < 0
-                                            ? Colors.red
-                                            : Colors.green,
+                                            (state.datas.data?.change ?? 0) < 0
+                                                ? Colors.red
+                                                : Colors.green,
                                       ));
                                 } else {
                                   return Text("-");
@@ -1072,15 +1165,15 @@ class _HomePageState extends State<HomePage> {
                                 if (state is StreamStateLoading) {
                                   return buildLoadingIndicator();
                                 } else if (state
-                                is StreamStateOrderbookSuccess) {
+                                    is StreamStateOrderbookSuccess) {
                                   return Text(
                                       state.datas.data?.average.toString() ??
                                           "-",
                                       style: TextStyle(
                                         color:
-                                        (state.datas.data?.change ?? 0) < 0
-                                            ? Colors.red
-                                            : Colors.green,
+                                            (state.datas.data?.change ?? 0) < 0
+                                                ? Colors.red
+                                                : Colors.green,
                                       ));
                                 } else {
                                   return Text("-");
@@ -1105,6 +1198,7 @@ class _HomePageState extends State<HomePage> {
       {String badgeCount = "", VoidCallback? onPressed}) {
     return Expanded(
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Stack(
             children: [
@@ -1127,17 +1221,19 @@ class _HomePageState extends State<HomePage> {
                   top: 0,
                   right: 0,
                   child: Container(
-                    padding: EdgeInsets.all(3.0),
                     decoration: BoxDecoration(
                       color: Colors.red,
                       shape: BoxShape.circle,
                     ),
-                    child: Text(
-                      badgeCount.toString(),
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 12.0,
-                        fontWeight: FontWeight.bold,
+                    child: Padding(
+                      padding: EdgeInsets.all(3),
+                      child: Text(
+                        _getFormattedBadgeCount(badgeCount),
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 12.0,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
                   ),
@@ -1154,6 +1250,14 @@ class _HomePageState extends State<HomePage> {
         ],
       ),
     );
+  }
+
+  String _getFormattedBadgeCount(String badgeCount) {
+    int count = int.tryParse(badgeCount) ?? 0;
+    if (count < 10 && count != 0) {
+      return " $count ";
+    }
+    return count.toString();
   }
 
   Container buildLoadingIndicator() {

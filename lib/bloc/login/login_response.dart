@@ -1,5 +1,3 @@
-
-
 class UserDTO {
   String idUser;
   String username;
@@ -8,6 +6,7 @@ class UserDTO {
   String email;
   String jk;
   bool status;
+  bool? isGuest;
 
   UserDTO({
     required this.idUser,
@@ -17,6 +16,7 @@ class UserDTO {
     required this.email,
     required this.jk,
     required this.status,
+    this.isGuest = false,
   });
 
   factory UserDTO.fromJson(Map<String, dynamic> json) {
@@ -28,7 +28,7 @@ class UserDTO {
       email: json['email'],
       jk: json['jk'],
       status: json['status'],
-    );
+        isGuest: false);
   }
 
   Map<String, dynamic> toJson() {
@@ -40,6 +40,7 @@ class UserDTO {
       'email': email,
       'jk': jk,
       'status': status,
+      'isGuest': isGuest
     };
   }
 }

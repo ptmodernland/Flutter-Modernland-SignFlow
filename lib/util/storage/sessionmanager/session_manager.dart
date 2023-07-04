@@ -5,6 +5,12 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class SessionManager {
   static const String _userKey = 'user';
+  static const String _isGuestKey = 'guest';
+
+  static Future<void> saveIsGuest(bool isGuest) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setBool(_isGuestKey, isGuest);
+  }
 
   static Future<void> saveUser(UserDTO user) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
