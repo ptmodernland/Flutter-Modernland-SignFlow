@@ -359,7 +359,6 @@ class _HomePageState extends State<HomePage> {
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10.0),
                   ),
-                  padding: EdgeInsets.all(10.0),
                   child: BlocBuilder<NotifCoreBloc, NotifCoreState>(
                     builder: (context, state) {
                       if (state is NotifStateSuccess) {
@@ -399,10 +398,11 @@ class _HomePageState extends State<HomePage> {
                                               fontSize:
                                                   ScaleSize.textScaleFactor(
                                                       context,
-                                                      maxTextScaleFactor: 32),
+                                                      maxTextScaleFactor: 33),
                                               color: AppColors.primaryColor2),
                                     ),
                                   ),
+                                  SizedBox(height: 10),
                                   Row(
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceEvenly,
@@ -458,6 +458,7 @@ class _HomePageState extends State<HomePage> {
                                       SizedBox(height: 20),
                                     ],
                                   ),
+                                  SizedBox(height: 20),
                                   Row(
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceEvenly,
@@ -588,7 +589,7 @@ class _HomePageState extends State<HomePage> {
               "Shareholder Transaction",
               style: MyTheme.myStyleSecondaryTextStyle.copyWith(
                   fontSize: ScaleSize.textScaleFactor(context,
-                      maxTextScaleFactor: 32),
+                      maxTextScaleFactor: 33),
                   color: AppColors.primaryColor2),
             ),
             InkWell(
@@ -686,7 +687,7 @@ class _HomePageState extends State<HomePage> {
               "Market Snips",
               style: MyTheme.myStyleSecondaryTextStyle.copyWith(
                   fontSize: ScaleSize.textScaleFactor(context,
-                      maxTextScaleFactor: 30),
+                      maxTextScaleFactor: 33),
                   color: AppColors.primaryColor2),
             ),
           ),
