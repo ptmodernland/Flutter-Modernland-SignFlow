@@ -1,11 +1,10 @@
-import 'dart:convert';
-
-import 'package:bwa_cozy/bloc/_wrapper/response_wrapper.dart';
-import 'package:bwa_cozy/bloc/all_approval/dto/list_all_compare_dto.dart';
-import 'package:bwa_cozy/bloc/compare/dto/detail_compare_dto.dart';
-import 'package:bwa_cozy/bloc/pbj/dto/list_komen_pbj.dart';
-import 'package:bwa_cozy/data/dio_client.dart';
-import 'package:bwa_cozy/util/storage/sessionmanager/session_manager.dart';
+import 'package:dio/dio.dart';
+import 'package:modernland_signflow/bloc/_wrapper/response_wrapper.dart';
+import 'package:modernland_signflow/bloc/all_approval/dto/list_all_compare_dto.dart';
+import 'package:modernland_signflow/bloc/compare/dto/detail_compare_dto.dart';
+import 'package:modernland_signflow/bloc/pbj/dto/list_komen_pbj.dart';
+import 'package:modernland_signflow/data/dio_client.dart';
+import 'package:modernland_signflow/util/storage/sessionmanager/session_manager.dart';
 
 class CompareRepository {
   DioClient dioClient;
@@ -18,7 +17,7 @@ class CompareRepository {
     String comment = "",
     String pin = "",
   }) async {
-    var logTag = "Approve PBJ";
+    var logTag = "Approve Compare";
     try {
       print("trying $logTag");
       var userID = "";
@@ -29,21 +28,20 @@ class CompareRepository {
       // Prepare the request
       var url = 'androidiom/proses_approve_compare.jsp?$userID';
 
-      var body = {
+      var formData = FormData.fromMap({
         'nomor': noPermintaan,
         'id_user': userID ?? '',
         'komen': comment ?? null,
         'passwordUser': pin ?? '',
-      };
+      });
 
       // Set the form data
       print("$logTag" + "SS");
-      var response = await dioClient.post(url, data: body);
+      var response = await dioClient.post(url, data: formData);
       var responseBody = response.data;
-      var jsonResponse = jsonDecode(responseBody);
-      bool resStatus = jsonResponse['status'];
-      var resMessage = jsonResponse['pesan'];
-      final result = jsonDecode(response.data);
+      bool resStatus = responseBody['status'];
+      var resMessage = responseBody['pesan'];
+      final result = (response.data);
       print(result.toString());
       if (response.statusCode == 200) {
         print("result $logTag 200");
@@ -87,22 +85,22 @@ class CompareRepository {
       // Prepare the request
       var url = 'androidiom/proses_cancel_compare.jsp?$userID';
 
-      var body = {
+      var body = FormData.fromMap({
         'nomor': noPermintaan,
         'id_user': userID ?? '',
         'komen': comment ?? null,
         'passwordUser': pin ?? '',
-      };
+        'isFromFlutter': true
+      });
 
       // Set the form data
       print("$logTag" + "SS");
       var response = await dioClient.post(url, data: body);
+
       var responseBody = response.data;
-      var jsonResponse = jsonDecode(responseBody);
-      bool resStatus = jsonResponse['status'];
-      var resMessage = jsonResponse['pesan'];
-      final result = jsonDecode(response.data);
-      print(result.toString());
+      bool resStatus = responseBody['status'];
+      var resMessage = responseBody['pesan'];
+
       if (response.statusCode == 200) {
         print("result $logTag 200");
         if (resStatus) {
@@ -122,8 +120,9 @@ class CompareRepository {
         print("result $logTag Terjadi Kesalahan");
         return ResponseWrapper(null, ResourceStatus.Error, resMessage);
       }
-    } catch (error) {
+    } catch (error, stackTrace) {
       print("error on $logTag " + error.toString());
+      print(stackTrace);
       return ResponseWrapper(null, ResourceStatus.Error, error.toString());
     }
   }

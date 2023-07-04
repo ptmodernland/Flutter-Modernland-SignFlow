@@ -1,7 +1,7 @@
-import 'package:bwa_cozy/bloc/realisasi/realisasi_comment_event.dart';
-import 'package:bwa_cozy/bloc/realisasi/realisasi_state.dart';
-import 'package:bwa_cozy/repos/realisasi_repository.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:modernland_signflow/bloc/realisasi/realisasi_comment_event.dart';
+import 'package:modernland_signflow/bloc/realisasi/realisasi_state.dart';
+import 'package:modernland_signflow/repos/realisasi_repository.dart';
 
 class RealisasiCommentBloc extends Bloc<RealisasiCommentEvent, RealisasiState> {
   final RealisasiRepository repo;

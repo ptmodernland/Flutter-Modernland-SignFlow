@@ -1,16 +1,13 @@
-import 'package:bwa_cozy/util/my_theme.dart';
-import 'package:bwa_cozy/widget/tips_and_trick/tips_and_trick_ui_model.dart';
+import 'package:modernland_signflow/util/my_theme.dart';
+import 'package:modernland_signflow/widget/tips_and_trick/tips_and_trick_ui_model.dart';
 import 'package:flutter/material.dart';
 
-
 class TipsAndTrickWidget extends StatelessWidget {
-  const TipsAndTrickWidget({Key? key, required this.uimodel})
-      : super(key: key);
+  const TipsAndTrickWidget({Key? key, required this.uimodel}) : super(key: key);
   final TipsAndTrickUIModel uimodel;
 
   @override
   Widget build(BuildContext context) {
-
     var cardHeight = 75.0;
 
     return Container(

@@ -1,20 +1,16 @@
-import 'package:bwa_cozy/bloc/notif/notif_bloc.dart';
-import 'package:bwa_cozy/bloc/notif/notif_event.dart';
-import 'package:bwa_cozy/bloc/notif/notif_state.dart';
-import 'package:bwa_cozy/data/dio_client.dart';
-import 'package:bwa_cozy/di/service_locator.dart';
-import 'package:bwa_cozy/pages/approval/compare/compare_page.dart';
-import 'package:bwa_cozy/pages/approval/iom/iom_page.dart';
-import 'package:bwa_cozy/pages/approval/kasbon/kasbon_page.dart';
-import 'package:bwa_cozy/pages/approval/pbj/pbj_page.dart';
-import 'package:bwa_cozy/pages/approval/realisasi/realisasi_page.dart';
-import 'package:bwa_cozy/pages/home/home_page.dart';
-import 'package:bwa_cozy/pages/profile/profile_page.dart';
-import 'package:bwa_cozy/repos/notif_repository.dart';
-import 'package:bwa_cozy/util/enum/menu_type.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_app_badger/flutter_app_badger.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:modernland_signflow/bloc/notif/notif_bloc.dart';
+import 'package:modernland_signflow/bloc/notif/notif_event.dart';
+import 'package:modernland_signflow/bloc/notif/notif_state.dart';
+import 'package:modernland_signflow/data/dio_client.dart';
+import 'package:modernland_signflow/di/service_locator.dart';
+import 'package:modernland_signflow/pages/home/home_page.dart';
+import 'package:modernland_signflow/pages/profile/profile_page.dart';
+import 'package:modernland_signflow/repos/notif_repository.dart';
+import 'package:modernland_signflow/util/enum/menu_type.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ContainerHomePage extends StatefulWidget {
@@ -62,25 +58,12 @@ class _ContainerHomePageState extends State<ContainerHomePage>
 
     _pages = [
       Center(
-        child: HomePage(notifBloc),
+        child: HomePage(),
       ),
       Center(
-        child: ApprovalIomMainPage(),
-      ),
-      Center(
-        child: ApprovalPBJMainPage(),
-      ),
-      Center(
-        child: ApprovalCompareMainPage(),
-      ),
-      Center(
-        child: ApprovalKasbonMainPage(),
-      ),
-      Center(
-        child: ApprovalRealisasiMainPage(),
-      ),
-      Center(
-        child: ProfilePage(notifBloc: notifBloc,),
+        child: ProfilePage(
+          notifBloc: notifBloc,
+        ),
       ),
     ];
   }
@@ -94,7 +77,6 @@ class _ContainerHomePageState extends State<ContainerHomePage>
 
   @override
   Widget build(BuildContext context) {
-
     @override
     void initState() {
       super.initState();
@@ -109,7 +91,12 @@ class _ContainerHomePageState extends State<ContainerHomePage>
         child: Scaffold(
           // appBar: AppBar(),
           body: _pages[_selectedTab],
-          bottomNavigationBar: buildBottomNavigationBar(notifBloc),
+          // bottomNavigationBar: buildBottomNavigationBar(notifBloc),
+          floatingActionButton: _selectedTab ==
+                  99 // Replace 2 with the index where you want to hide the FAB
+              ? null
+              : null,
+          // : mySpeedDialWidget(),
         ),
       ),
     );
@@ -133,41 +120,6 @@ class _ContainerHomePageState extends State<ContainerHomePage>
             mNotifBloc: notifBloc,
           ),
           label: 'Home',
-        ),
-        BottomNavigationBarItem(
-          icon: BottomIconWithBadge(
-            menuType: BottomMenuType.IOM,
-            mNotifBloc: notifBloc,
-          ),
-          label: 'IOM',
-        ),
-        BottomNavigationBarItem(
-          icon: BottomIconWithBadge(
-            menuType: BottomMenuType.PBJ,
-            mNotifBloc: notifBloc,
-          ),
-          label: 'PBJ',
-        ),
-        BottomNavigationBarItem(
-          icon: BottomIconWithBadge(
-            menuType: BottomMenuType.COMPARE,
-            mNotifBloc: notifBloc,
-          ),
-          label: 'Compare',
-        ),
-        BottomNavigationBarItem(
-          icon: BottomIconWithBadge(
-            menuType: BottomMenuType.KASBON,
-            mNotifBloc: notifBloc,
-          ),
-          label: 'Kasbon',
-        ),
-        BottomNavigationBarItem(
-          icon: BottomIconWithBadge(
-            menuType: BottomMenuType.REALISASI,
-            mNotifBloc: notifBloc,
-          ),
-          label: 'Realisasi',
         ),
         BottomNavigationBarItem(
           icon: BottomIconWithBadge(
@@ -272,6 +224,9 @@ class _BottomIconWithBadgeState extends State<BottomIconWithBadge> {
         }
 
         if (state is NotifStateSuccess) {
+          FlutterAppBadger.removeBadge();
+          FlutterAppBadger.updateBadgeCount(999);
+
           if (widget.menuType == BottomMenuType.HOME) {
             title = "Comparison";
             icon = Icon(CupertinoIcons.home);

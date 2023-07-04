@@ -1,7 +1,7 @@
-import 'package:bwa_cozy/bloc/pbj/pbj_comment_event.dart';
-import 'package:bwa_cozy/bloc/pbj/pbj_state.dart';
-import 'package:bwa_cozy/repos/pbj_repository.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:modernland_signflow/bloc/pbj/pbj_comment_event.dart';
+import 'package:modernland_signflow/bloc/pbj/pbj_state.dart';
+import 'package:modernland_signflow/repos/pbj_repository.dart';
 
 class PBJCommentBloc extends Bloc<PBJCommentEvent, PBJState> {
   final PBJRepository repo;

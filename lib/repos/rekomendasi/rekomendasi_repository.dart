@@ -1,7 +1,7 @@
 import 'dart:convert';
 
-import 'package:bwa_cozy/bloc/_wrapper/response_wrapper.dart';
-import 'package:bwa_cozy/util/storage/sessionmanager/session_manager.dart';
+import 'package:modernland_signflow/bloc/_wrapper/response_wrapper.dart';
+import 'package:modernland_signflow/util/storage/sessionmanager/session_manager.dart';
 import 'package:http/http.dart' as http;
 
 import './dto/rekomendasi_waiting_dto.dart';

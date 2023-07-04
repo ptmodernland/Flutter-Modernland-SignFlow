@@ -1,4 +1,4 @@
-import 'package:bwa_cozy/pages/profile/profile_page.dart';
+import 'package:modernland_signflow/pages/profile/profile_page.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

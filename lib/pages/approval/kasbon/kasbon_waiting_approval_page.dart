@@ -1,13 +1,14 @@
-import 'package:bwa_cozy/bloc/all_approval/approval_main_page_bloc.dart';
-import 'package:bwa_cozy/bloc/all_approval/approval_main_page_event.dart';
-import 'package:bwa_cozy/bloc/all_approval/approval_main_page_state.dart';
-import 'package:bwa_cozy/data/dio_client.dart';
-import 'package:bwa_cozy/di/service_locator.dart';
-import 'package:bwa_cozy/pages/approval/compare/detail_compare_page.dart';
-import 'package:bwa_cozy/repos/approval_main_page_repository.dart';
-import 'package:bwa_cozy/util/enum/menu_type.dart';
-import 'package:bwa_cozy/util/my_theme.dart';
-import 'package:bwa_cozy/widget/approval/item_approval_widget.dart';
+import 'package:modernland_signflow/bloc/all_approval/approval_main_page_bloc.dart';
+import 'package:modernland_signflow/bloc/all_approval/approval_main_page_event.dart';
+import 'package:modernland_signflow/bloc/all_approval/approval_main_page_state.dart';
+import 'package:modernland_signflow/data/dio_client.dart';
+import 'package:modernland_signflow/di/service_locator.dart';
+import 'package:modernland_signflow/pages/approval/compare/detail_compare_page.dart';
+import 'package:modernland_signflow/repos/approval_main_page_repository.dart';
+import 'package:modernland_signflow/util/enum/menu_type.dart';
+import 'package:modernland_signflow/util/my_theme.dart';
+import 'package:modernland_signflow/widget/approval/item_approval_widget.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -149,7 +150,9 @@ class _KasbonWaitingApprovalPageState extends State<KasbonWaitingApprovalPage> {
                           builder: (context, state) {
                             var status = "";
                             Widget dataList = Text("");
-                            if (state is ApprovalMainPageStateLoading) {}
+                            if (state is ApprovalMainPageStateLoading) {
+                              return CupertinoActivityIndicator();
+                            }
                             if (state is ApprovalMainPageStateFailure) {}
                             if (state
                                 is ApprovalMainPageStateSuccessListKasbon) {

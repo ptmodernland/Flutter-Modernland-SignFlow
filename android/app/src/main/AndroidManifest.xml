@@ -1,7 +1,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
+    <meta-data
+        android:name="io.flutter.network-policy"
+        android:resource="@xml/network_security_config" />
 
     <application
         android:label="bwa_cozy"
@@ -10,6 +14,8 @@
         <activity
             android:name=".MainActivity"
             android:exported="true"
+            android:networkSecurityConfig="@xml/network_security_config"
+            android:usesCleartextTraffic="true"
             android:label="Modernland SignFlow"
             android:launchMode="singleTop"
             android:theme="@style/LaunchTheme"

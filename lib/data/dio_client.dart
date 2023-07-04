@@ -1,5 +1,5 @@
-import 'package:bwa_cozy/data/network/endpoints/endpoints.dart';
 import 'package:dio/dio.dart';
+import 'package:modernland_signflow/data/network/endpoints/endpoints.dart';
 
 class DioClient {
   // dio instance

@@ -1,12 +1,12 @@
-import 'package:bwa_cozy/bloc/_wrapper/response_wrapper.dart';
-import 'package:bwa_cozy/bloc/iom/approval_state.dart';
-import 'package:bwa_cozy/repos/iom/approval_repository.dart';
+import 'package:modernland_signflow/bloc/_wrapper/response_wrapper.dart';
+import 'package:modernland_signflow/bloc/iom/approval_state.dart';
+import 'package:modernland_signflow/repos/iom/approval_repository.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ApprovalActionCubit extends Cubit<ApprovalState> {
   final ApprovalRepository repository;
 
-  ApprovalActionCubit(this.repository) : super(ApprovalLoading());
+  ApprovalActionCubit(this.repository) : super(ApprovalInitial());
 
   Future<void> approveIom(
       {required String noIom,
@@ -14,6 +14,8 @@ class ApprovalActionCubit extends Cubit<ApprovalState> {
       String comment = '',
       required String pin}) async {
     try {
+      emit(ApprovalLoading());
+      await Future.delayed(Duration(seconds: 2));
       final approvals = await repository.approveIom(
         noIom: noIom,
         pin: pin,
@@ -38,6 +40,8 @@ class ApprovalActionCubit extends Cubit<ApprovalState> {
       String comment = '',
       required String pin}) async {
     try {
+      emit(ApprovalLoading());
+      await Future.delayed(Duration(seconds: 2));
       final approvals = await repository.rejectIom(
         noIom: noIom,
         pin: pin,

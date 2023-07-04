@@ -1,23 +1,23 @@
-import 'package:bwa_cozy/bloc/all_approval/approval_main_page_bloc.dart';
-import 'package:bwa_cozy/bloc/all_approval/approval_main_page_event.dart';
-import 'package:bwa_cozy/bloc/all_approval/approval_main_page_state.dart';
-import 'package:bwa_cozy/bloc/notif/notif_bloc.dart';
-import 'package:bwa_cozy/bloc/notif/notif_event.dart';
-import 'package:bwa_cozy/bloc/notif/notif_state.dart';
-import 'package:bwa_cozy/data/dio_client.dart';
-import 'package:bwa_cozy/di/service_locator.dart';
-import 'package:bwa_cozy/pages/approval/kasbon/kasbon_waiting_approval_page.dart';
-import 'package:bwa_cozy/pages/approval/realisasi/realisasi_approved_all_page.dart';
-import 'package:bwa_cozy/pages/approval/realisasi/realisasi_detail_page.dart';
-import 'package:bwa_cozy/repos/approval_main_page_repository.dart';
-import 'package:bwa_cozy/repos/notif_repository.dart';
-import 'package:bwa_cozy/util/core/string/html_util.dart';
-import 'package:bwa_cozy/util/enum/menu_type.dart';
-import 'package:bwa_cozy/util/my_theme.dart';
-import 'package:bwa_cozy/widget/approval/item_approval_widget.dart';
-import 'package:bwa_cozy/widget/menus/menu_item_approval_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:modernland_signflow/bloc/all_approval/approval_main_page_bloc.dart';
+import 'package:modernland_signflow/bloc/all_approval/approval_main_page_event.dart';
+import 'package:modernland_signflow/bloc/all_approval/approval_main_page_state.dart';
+import 'package:modernland_signflow/bloc/notif/notif_bloc.dart';
+import 'package:modernland_signflow/bloc/notif/notif_event.dart';
+import 'package:modernland_signflow/bloc/notif/notif_state.dart';
+import 'package:modernland_signflow/data/dio_client.dart';
+import 'package:modernland_signflow/di/service_locator.dart';
+import 'package:modernland_signflow/pages/approval/kasbon/kasbon_waiting_approval_page.dart';
+import 'package:modernland_signflow/pages/approval/realisasi/realisasi_approved_all_page.dart';
+import 'package:modernland_signflow/pages/approval/realisasi/realisasi_detail_page.dart';
+import 'package:modernland_signflow/repos/approval_main_page_repository.dart';
+import 'package:modernland_signflow/repos/notif_repository.dart';
+import 'package:modernland_signflow/util/core/string/html_util.dart';
+import 'package:modernland_signflow/util/enum/menu_type.dart';
+import 'package:modernland_signflow/util/my_theme.dart';
+import 'package:modernland_signflow/widget/approval/item_approval_widget.dart';
+import 'package:modernland_signflow/widget/menus/menu_item_approval_widget.dart';
 
 class ApprovalRealisasiMainPage extends StatefulWidget {
   const ApprovalRealisasiMainPage({Key? key}) : super(key: key);
@@ -28,18 +28,22 @@ class ApprovalRealisasiMainPage extends StatefulWidget {
 }
 
 class _ApprovalRealisasiMainPageState extends State<ApprovalRealisasiMainPage> {
+  late NotifCoreBloc notifBloc;
+  late ApprovalMainPageBloc approvalBloc;
+
+  @override
+  void initState() {
+    super.initState();
+    var notifRepository = NotifRepository(dioClient: getIt<DioClient>());
+    notifBloc = NotifCoreBloc(notifRepository);
+
+    var approvalRepo =
+        ApprovalMainPageRepository(dioClient: getIt<DioClient>());
+    approvalBloc = ApprovalMainPageBloc(approvalRepo);
+  }
+
   @override
   Widget build(BuildContext context) {
-    double screenHeight = MediaQuery.of(context).size.height;
-    double screenWidth = MediaQuery.of(context).size.width;
-
-    var notifRepository = NotifRepository(dioClient: getIt<DioClient>());
-    NotifCoreBloc notifBloc = NotifCoreBloc(notifRepository);
-
-    ApprovalMainPageRepository approvalRepo =
-        ApprovalMainPageRepository(dioClient: getIt<DioClient>());
-    ApprovalMainPageBloc approvalBloc = ApprovalMainPageBloc(approvalRepo);
-
     return SafeArea(
       bottom: false,
       child: Scaffold(
@@ -73,14 +77,21 @@ class _ApprovalRealisasiMainPageState extends State<ApprovalRealisasiMainPage> {
                                     left: 30, right: 30, top: 10),
                                 child: Row(
                                   children: [
+                                    IconButton(
+                                      icon: Icon(Icons.arrow_back),
+                                      color: Colors.white,
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                      },
+                                    ),
                                     Align(
                                       alignment: Alignment.center,
                                       child: Text(
                                         "Realisasi Kasbon",
                                         style: MyTheme.myStylePrimaryTextStyle
                                             .copyWith(
-                                                color: Colors.white,
-                                                fontWeight: FontWeight.w800),
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.w800),
                                       ),
                                     ),
                                     Spacer(),
@@ -105,7 +116,7 @@ class _ApprovalRealisasiMainPageState extends State<ApprovalRealisasiMainPage> {
                           children: [
                             Container(
                               margin:
-                                  EdgeInsets.only(top: 20, left: 0, right: 0),
+                              EdgeInsets.only(top: 20, left: 0, right: 0),
                               width: double.infinity,
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.vertical(
@@ -123,66 +134,66 @@ class _ApprovalRealisasiMainPageState extends State<ApprovalRealisasiMainPage> {
                                           child: Column(
                                             children: [
                                               BlocBuilder<NotifCoreBloc,
-                                                      NotifCoreState>(
+                                                  NotifCoreState>(
                                                   builder: (context, state) {
-                                                var count = "";
-                                                if (state
+                                                    var count = "";
+                                                    if (state
                                                     is NotifStateLoading) {}
-                                                if (state
+                                                    if (state
                                                     is NotifStateFailure) {}
-                                                if (state
+                                                    if (state
                                                     is NotifStateSuccess) {
-                                                  count = state.totalRealisasi;
-                                                }
-                                                return MenuItemApprovalWidget(
-                                                  unreadBadgeCount: count,
-                                                  onLeftTapFunction: () {
-                                                    Navigator.push(
-                                                      context,
-                                                      MaterialPageRoute(
-                                                        builder: (context) =>
-                                                            KasbonWaitingApprovalPage(),
-                                                      ),
-                                                    ).then((value) {
-                                                      notifBloc
-                                                        ..add(
-                                                            NotifEventCount());
-                                                      approvalBloc
-                                                        ..add(RequestDataEvent(
-                                                            ApprovalListType
-                                                                .REALISASI));
-                                                      print("kocak " +
-                                                          value.toString());
-                                                    });
-                                                  },
-                                                  onRightTapFunction: () {
-                                                    Navigator.push(
-                                                      context,
-                                                      MaterialPageRoute(
-                                                        builder: (context) =>
-                                                            RealisasiAllApprovedPage(),
-                                                      ),
-                                                    ).then((value) {
-                                                      notifBloc
-                                                        ..add(
-                                                            NotifEventCount());
-                                                      approvalBloc
-                                                        ..add(RequestDataEvent(
-                                                            ApprovalListType
-                                                                .REALISASI));
-                                                      print("kocak " +
-                                                          value.toString());
-                                                    });
-                                                  },
-                                                );
-                                              }),
+                                                      count = state.totalRealisasi;
+                                                    }
+                                                    return MenuItemApprovalWidget(
+                                                      unreadBadgeCount: count,
+                                                      onLeftTapFunction: () {
+                                                        Navigator.push(
+                                                          context,
+                                                          MaterialPageRoute(
+                                                            builder: (context) =>
+                                                                KasbonWaitingApprovalPage(),
+                                                          ),
+                                                        ).then((value) {
+                                                          notifBloc
+                                                            ..add(
+                                                                NotifEventCount());
+                                                          approvalBloc
+                                                            ..add(RequestDataEvent(
+                                                                ApprovalListType
+                                                                    .REALISASI));
+                                                          print("kocak " +
+                                                              value.toString());
+                                                        });
+                                                      },
+                                                      onRightTapFunction: () {
+                                                        Navigator.push(
+                                                          context,
+                                                          MaterialPageRoute(
+                                                            builder: (context) =>
+                                                                RealisasiAllApprovedPage(),
+                                                          ),
+                                                        ).then((value) {
+                                                          notifBloc
+                                                            ..add(
+                                                                NotifEventCount());
+                                                          approvalBloc
+                                                            ..add(RequestDataEvent(
+                                                                ApprovalListType
+                                                                    .REALISASI));
+                                                          print("kocak " +
+                                                              value.toString());
+                                                        });
+                                                      },
+                                                    );
+                                                  }),
                                             ],
                                           ),
                                         )),
                                     Container(
                                       width: double.infinity,
                                       margin:
-                                          EdgeInsets.only(left: 20, right: 20),
+                                      EdgeInsets.only(left: 20, right: 20),
                                       child: Text(
                                         "Request Terbaru",
                                         textAlign: TextAlign.start,
@@ -213,7 +224,7 @@ class _ApprovalRealisasiMainPageState extends State<ApprovalRealisasiMainPage> {
                             if (state is ApprovalMainPageStateLoading) {}
                             if (state is ApprovalMainPageStateFailure) {}
                             if (state
-                                is ApprovalMainPageStateSuccessListRealisasi) {
+                            is ApprovalMainPageStateSuccessListRealisasi) {
                               var pbjList = state.datas;
 
                               if (pbjList.isEmpty) {
@@ -268,10 +279,10 @@ class _ApprovalRealisasiMainPageState extends State<ApprovalRealisasiMainPage> {
                                         MaterialPageRoute(
                                           builder: (context) =>
                                               RealisasiDetailPage(
-                                            noRealisasi:
+                                                noRealisasi:
                                                 pbjItem.noRealisasi ?? "",
-                                            isFromHistory: false,
-                                          ),
+                                                isFromHistory: false,
+                                              ),
                                         ),
                                       ).then((value) {
                                         notifBloc..add(NotifEventCount());

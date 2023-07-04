@@ -1,23 +1,23 @@
-import 'package:bwa_cozy/bloc/iom/approval_action_cubit.dart';
-import 'package:bwa_cozy/bloc/iom/approval_comment_cubit.dart';
-import 'package:bwa_cozy/bloc/iom/approval_detail_cubit.dart';
-import 'package:bwa_cozy/bloc/iom/approval_head_dept_cubit.dart';
-import 'package:bwa_cozy/bloc/iom/approval_state.dart';
-import 'package:bwa_cozy/bloc/rekomendasi/rekomendasi_action_cubit.dart';
-import 'package:bwa_cozy/bloc/rekomendasi/rekomendasi_state.dart';
-import 'package:bwa_cozy/pages/approval/iom/log/iom_log_page.dart';
-import 'package:bwa_cozy/pages/approval/koordinasi/koordinasi_choose_head.dart';
-import 'package:bwa_cozy/repos/iom/approval_repository.dart';
-import 'package:bwa_cozy/repos/rekomendasi/rekomendasi_repository.dart';
-import 'package:bwa_cozy/util/core/string/html_util.dart';
-import 'package:bwa_cozy/util/core/url/base_url.dart';
-import 'package:bwa_cozy/util/enum/action_type.dart';
-import 'package:bwa_cozy/util/my_theme.dart';
-import 'package:bwa_cozy/widget/approval/document_detail_widget.dart';
-import 'package:bwa_cozy/widget/approval/item_approval_widget.dart';
-import 'package:bwa_cozy/widget/common/user_comment_widget.dart';
-import 'package:bwa_cozy/widget/core/blurred_dialog.dart';
-import 'package:bwa_cozy/widget/core/custom_text_input.dart';
+import 'package:modernland_signflow/bloc/iom/approval_action_cubit.dart';
+import 'package:modernland_signflow/bloc/iom/approval_comment_cubit.dart';
+import 'package:modernland_signflow/bloc/iom/approval_detail_cubit.dart';
+import 'package:modernland_signflow/bloc/iom/approval_head_dept_cubit.dart';
+import 'package:modernland_signflow/bloc/iom/approval_state.dart';
+import 'package:modernland_signflow/bloc/rekomendasi/rekomendasi_action_cubit.dart';
+import 'package:modernland_signflow/bloc/rekomendasi/rekomendasi_state.dart';
+import 'package:modernland_signflow/pages/approval/iom/log/iom_log_page.dart';
+import 'package:modernland_signflow/pages/approval/koordinasi/koordinasi_choose_head.dart';
+import 'package:modernland_signflow/repos/iom/approval_repository.dart';
+import 'package:modernland_signflow/repos/rekomendasi/rekomendasi_repository.dart';
+import 'package:modernland_signflow/util/core/string/html_util.dart';
+import 'package:modernland_signflow/util/core/url/base_url.dart';
+import 'package:modernland_signflow/util/enum/action_type.dart';
+import 'package:modernland_signflow/util/my_theme.dart';
+import 'package:modernland_signflow/widget/approval/document_detail_widget.dart';
+import 'package:modernland_signflow/widget/approval/item_approval_widget.dart';
+import 'package:modernland_signflow/widget/common/user_comment_widget.dart';
+import 'package:modernland_signflow/widget/core/blurred_dialog.dart';
+import 'package:modernland_signflow/widget/core/custom_text_input.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -88,55 +88,17 @@ class _IomDetailPageState extends State<IomDetailPage> {
               return Container();
             },
           ),
-          BlocProvider<RekomendasiActionCubit>(
-            create: (context) => rekomendasictionCubit,
+          BlocProvider<ApprovalActionCubit>(
+            create: (context) => iomActionCubit,
             // Replace with your actual cubit instantiation
-            child: BlocListener<RekomendasiActionCubit, RekomendasiState>(
-              listener: (context, state) {
-                // Navigate to next screen
-                if (state is RekomendasiStateSuccess) {
-                  showDialog(
-                    context: context,
-                    useSafeArea: false,
-                    builder: (BuildContext context) {
-                      var text = state.message;
-                      return WillPopScope(
-                        onWillPop: () async {
-                          Navigator.of(context)
-                              .pop(); // Handle back button press
-                          return false; // Prevent dialog from being dismissed by back button
-                        },
-                        child: CupertinoAlertDialog(
-                          title: Text(
-                            'Success',
-                            style: TextStyle(fontWeight: FontWeight.bold),
-                          ),
-                          content: Text(text),
-                          actions: <Widget>[
-                            CupertinoDialogAction(
-                              onPressed: () {
-                                Navigator.of(context).pop(); // Close the dialog
-                                Navigator.of(context)
-                                    .pop(); // Go back to the previous page
-                              },
-                              child: Text('OK'),
-                            ),
-                          ],
-                        ),
-                      );
-                    },
-                  );
+            child: BlocBuilder<ApprovalActionCubit, ApprovalState>(
+              bloc: iomActionCubit,
+              builder: (context, state) {
+                if (state is ApprovalLoading) {
+                  return BlurredDialog(loadingText: "Please Wait");
                 }
-
-                if (state is RekomendasiStateError) {
-                  QuickAlert.show(
-                    context: context,
-                    type: QuickAlertType.error,
-                    text: state.message.toString(),
-                  );
-                }
+                return Container();
               },
-              child: Container(),
             ),
           ),
         ],
@@ -249,6 +211,10 @@ class _IomDetailPageState extends State<IomDetailPage> {
                           if (data.status != "Y" && data.status != "T") {
                             isApproved = true;
                           }
+                          if (widget.isFromHistory) {
+                            isApproved = true;
+                          }
+
                           return Container(
                             child: Column(
                               children: [
@@ -379,7 +345,7 @@ class _IomDetailPageState extends State<IomDetailPage> {
                                         children: [
                                           Expanded(
                                               child: DocumentDetailWidget(
-                                            title: "View Detail",
+                                                title: "View Detail",
                                             content: "Klik Disini",
                                             fileURL: DOC_VIEW_IOM +
                                                 (widget.idIom ?? ""),

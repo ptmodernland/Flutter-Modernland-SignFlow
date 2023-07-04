@@ -1,14 +1,13 @@
-import 'package:bwa_cozy/di/service_locator.dart';
-import 'package:bwa_cozy/pages/approval/compare/detail_compare_page.dart';
-import 'package:bwa_cozy/pages/approval/iom/iomdetail/iom_detail_page.dart';
-import 'package:bwa_cozy/pages/approval/kasbon/kasbon_detail_page.dart';
-import 'package:bwa_cozy/pages/approval/pbj/detail_pbj_page.dart';
-import 'package:bwa_cozy/pages/approval/realisasi/realisasi_detail_page.dart';
-import 'package:bwa_cozy/pages/modernland_init.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
+import 'package:modernland_signflow/di/service_locator.dart';
+import 'package:modernland_signflow/pages/approval/compare/detail_compare_page.dart';
+import 'package:modernland_signflow/pages/approval/iom/iomdetail/iom_detail_page.dart';
+import 'package:modernland_signflow/pages/approval/kasbon/kasbon_detail_page.dart';
+import 'package:modernland_signflow/pages/approval/pbj/detail_pbj_page.dart';
+import 'package:modernland_signflow/pages/approval/realisasi/realisasi_detail_page.dart';
+import 'package:modernland_signflow/pages/modernland_init.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
@@ -48,9 +47,6 @@ class _MyAppState extends State<MyApp> {
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage remoteMessage) {
       String? title = remoteMessage.notification!.title;
       String? description = remoteMessage.notification!.body;
-      print("168888");
-      Fluttertoast.showToast(msg: "assalamualaikum");
-      print("168999");
 
       // Read the target value from the data payload
       String? target = remoteMessage.data['target'];

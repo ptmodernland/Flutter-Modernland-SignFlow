@@ -1,8 +1,9 @@
-import 'package:bwa_cozy/bloc/_wrapper/response_wrapper.dart';
-import 'package:bwa_cozy/bloc/pbj/dto/ListPBJDTO.dart';
-import 'package:bwa_cozy/bloc/pbj/dto/list_komen_pbj.dart';
-import 'package:bwa_cozy/data/dio_client.dart';
-import 'package:bwa_cozy/util/storage/sessionmanager/session_manager.dart';
+import 'package:dio/dio.dart';
+import 'package:modernland_signflow/bloc/_wrapper/response_wrapper.dart';
+import 'package:modernland_signflow/bloc/pbj/dto/ListPBJDTO.dart';
+import 'package:modernland_signflow/bloc/pbj/dto/list_komen_pbj.dart';
+import 'package:modernland_signflow/data/dio_client.dart';
+import 'package:modernland_signflow/util/storage/sessionmanager/session_manager.dart';
 
 class PBJRepository {
   DioClient dioClient;
@@ -25,13 +26,12 @@ class PBJRepository {
       // Prepare the request URL
       var url =
           'https://approval.modernland.co.id/androidiom/proses_approve_pbj.jsp?$userID';
-
-      var data = {
+      var data = FormData.fromMap({
         'no_permintaan': noPermintaan,
         'id_user': userID ?? '',
         'komenad': comment ?? null,
         'passwordUser': pin ?? '',
-      };
+      });
 
       // Send the request using Dio
       var dioResponse = await dioClient.post(url, data: data);
@@ -74,15 +74,13 @@ class PBJRepository {
         userID = usersession.idUser;
       }
       // Prepare the request URL
-      var url =
-          'https://approval.modernland.co.id/androidiom/proses_cancel_pbj.jsp?$userID';
-
-      var data = {
+      var url = 'androidiom/proses_cancel_pbj.jsp?$userID';
+      var data = FormData.fromMap({
         'no_permintaan': noPermintaan,
         'id_user': userID ?? '',
         'komenad': comment ?? null,
         'passwordUser': pin ?? '',
-      };
+      });
 
       // Send the request using Dio
       var dioResponse = await dioClient.post(url, data: data);

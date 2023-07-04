@@ -1,6 +1,6 @@
-import 'package:bwa_cozy/bloc/rekomendasi/rekomendasi_state.dart';
-import 'package:bwa_cozy/repos/rekomendasi/rekomendasi_repository.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:modernland_signflow/bloc/rekomendasi/rekomendasi_state.dart';
+import 'package:modernland_signflow/repos/rekomendasi/rekomendasi_repository.dart';
 
 class RekomendasiCubit extends Cubit<RekomendasiState> {
   final RekomendasiRepository repository;

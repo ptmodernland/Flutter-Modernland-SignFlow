@@ -1,7 +1,7 @@
-import 'package:bwa_cozy/bloc/kasbon/kasbon_comment_event.dart';
-import 'package:bwa_cozy/bloc/kasbon/kasbon_state.dart';
-import 'package:bwa_cozy/repos/kasbon_repository.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:modernland_signflow/bloc/kasbon/kasbon_comment_event.dart';
+import 'package:modernland_signflow/bloc/kasbon/kasbon_state.dart';
+import 'package:modernland_signflow/repos/kasbon_repository.dart';
 
 class KasbonCommentBloc extends Bloc<KasbonCommentEvent, KasbonState> {
   final KasbonRepository repo;

@@ -1,15 +1,15 @@
 import 'dart:ui';
 
-import 'package:bwa_cozy/bloc/login/login_response.dart';
-import 'package:bwa_cozy/pages/container_home.dart';
-import 'package:bwa_cozy/pages/login_new_page.dart';
-import 'package:bwa_cozy/pages/splash/login_sheet.dart';
-import 'package:bwa_cozy/util/model/device_information_model.dart';
-import 'package:bwa_cozy/util/my_colors.dart';
-import 'package:bwa_cozy/util/my_theme.dart';
-import 'package:bwa_cozy/util/storage/sessionmanager/session_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:modernland_signflow/bloc/login/login_response.dart';
+import 'package:modernland_signflow/pages/container_home.dart';
+import 'package:modernland_signflow/pages/login_new_page.dart';
+import 'package:modernland_signflow/pages/splash/login_sheet.dart';
+import 'package:modernland_signflow/util/model/device_information_model.dart';
+import 'package:modernland_signflow/util/my_colors.dart';
+import 'package:modernland_signflow/util/my_theme.dart';
+import 'package:modernland_signflow/util/storage/sessionmanager/session_manager.dart';
 import 'package:quickalert/quickalert.dart';
 
 class SplashScreenPage extends StatefulWidget {
@@ -199,7 +199,7 @@ class _SplashScreenPageState extends State<SplashScreenPage> {
                       children: [
                         Container(
                           child: Text(
-                            "Modernland Approval revolutionizes the approval process, empowering efficient decision-making and expediting critical assessments.",
+                            "Modernland SignFlow empowering efficient decision-making and expediting critical assessments.",
                             style: MyTheme.myStyleSecondaryTextStyle.copyWith(
                               fontSize: setSubHeaderTextSize(
                                   screenWidth, screenHeight),
@@ -329,9 +329,7 @@ class _SplashScreenPageState extends State<SplashScreenPage> {
                                                       context: context,
                                                       type: QuickAlertType.info,
                                                       text:
-                                                          'Device information copied to clipboard : ' +
-                                                              snapshot.data
-                                                                  .toString(),
+                                                          'Device information copied to clipboard',
                                                     );
                                                   },
                                                   child:
@@ -405,7 +403,7 @@ class _SplashScreenPageState extends State<SplashScreenPage> {
                       ],
                     ),
                     Text(
-                      "Silakan klik salah satu nomor dibawah untuk permintaan reset password",
+                      "Silakan hubungi salah satu nomor dibawah untuk permintaan reset password",
                       style: MyTheme.myStyleSecondaryTextStyle,
                     ),
                     GestureDetector(
@@ -418,15 +416,15 @@ class _SplashScreenPageState extends State<SplashScreenPage> {
                         margin: EdgeInsets.all(10),
                         child: ListTile(
                           title: Text(
-                            "Ardi Dzariat (Untuk Website)",
+                            "Ardi Dzariat",
                             style: MyTheme.myStyleSecondaryTextStyle
                                 .copyWith(color: Colors.white),
                           ),
-                          subtitle: Text("0857-8025-8444"),
-                          trailing: CircleAvatar(
-                            backgroundImage: NetworkImage(
-                                "https://www.kindpng.com/picc/m/19-195256_whatsapp-icon-whatsapp-logo-jpg-download-hd-png.png"),
-                          ),
+                          subtitle: Text("085780258444"),
+                          // trailing: CircleAvatar(
+                          //   backgroundImage: NetworkImage(
+                          //       "https://www.kindpng.com/picc/m/19-195256_whatsapp-icon-whatsapp-logo-jpg-download-hd-png.png"),
+                          // ),
                         ),
                       ),
                     ),
@@ -445,10 +443,10 @@ class _SplashScreenPageState extends State<SplashScreenPage> {
                                 .copyWith(color: Colors.white),
                           ),
                           subtitle: Text("082113530950"),
-                          trailing: CircleAvatar(
-                            backgroundImage: NetworkImage(
-                                "https://www.kindpng.com/picc/m/19-195256_whatsapp-icon-whatsapp-logo-jpg-download-hd-png.png"),
-                          ),
+                          // trailing: CircleAvatar(
+                          //   backgroundImage: NetworkImage(
+                          //       "https://www.kindpng.com/picc/m/19-195256_whatsapp-icon-whatsapp-logo-jpg-download-hd-png.png"),
+                          // ),
                         ),
                       ),
                     ),

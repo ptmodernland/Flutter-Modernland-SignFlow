@@ -1,6 +1,6 @@
-import 'package:bwa_cozy/bloc/_wrapper/response_wrapper.dart';
-import 'package:bwa_cozy/bloc/rekomendasi/rekomendasi_state.dart';
-import 'package:bwa_cozy/repos/rekomendasi/rekomendasi_repository.dart';
+import 'package:modernland_signflow/bloc/_wrapper/response_wrapper.dart';
+import 'package:modernland_signflow/bloc/rekomendasi/rekomendasi_state.dart';
+import 'package:modernland_signflow/repos/rekomendasi/rekomendasi_repository.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class RekomendasiActionCubit extends Cubit<RekomendasiState> {
@@ -22,6 +22,8 @@ class RekomendasiActionCubit extends Cubit<RekomendasiState> {
       String comment = '',
       required String pin}) async {
     try {
+      emit(RekomendasiStateLoading());
+      await Future.delayed(Duration(seconds: 5));
       final approvals = await repository.approveKoordinasi(
         noIom: noIom,
         pin: pin,
@@ -48,6 +50,8 @@ class RekomendasiActionCubit extends Cubit<RekomendasiState> {
       String comment = '',
       required String pin}) async {
     try {
+      emit(RekomendasiStateLoading());
+      await Future.delayed(Duration(seconds: 5));
       final approvals = await repository.rejectKoordinasi(
         noIom: noIom,
         pin: pin,

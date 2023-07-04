@@ -1,10 +1,10 @@
-import 'package:bwa_cozy/bloc/_wrapper/response_wrapper.dart';
-import 'package:bwa_cozy/bloc/login/login_payload.dart';
-import 'package:bwa_cozy/bloc/login/login_response.dart';
-import 'package:bwa_cozy/data/dio_client.dart';
-import 'package:bwa_cozy/util/pref/fcm_token_helper.dart';
-import 'package:bwa_cozy/util/storage/sessionmanager/session_manager.dart';
 import 'package:dio/dio.dart';
+import 'package:modernland_signflow/bloc/_wrapper/response_wrapper.dart';
+import 'package:modernland_signflow/bloc/login/login_payload.dart';
+import 'package:modernland_signflow/bloc/login/login_response.dart';
+import 'package:modernland_signflow/data/dio_client.dart';
+import 'package:modernland_signflow/util/pref/fcm_token_helper.dart';
+import 'package:modernland_signflow/util/storage/sessionmanager/session_manager.dart';
 
 class LoginRepository {
   final DioClient dioClient;
@@ -68,6 +68,8 @@ class LoginRepository {
         'androidiom/proses_logout.php',
         data: formData,
       );
+
+      Future.delayed(Duration(seconds: 2));
 
       printLogoutLog(username, dioResponse);
 

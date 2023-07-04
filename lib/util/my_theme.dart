@@ -1,6 +1,6 @@
-import 'package:bwa_cozy/util/my_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:modernland_signflow/util/my_colors.dart';
 
 class MyTheme {
   // Color Constants

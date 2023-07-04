@@ -1,15 +1,15 @@
-import 'package:bwa_cozy/bloc/_wrapper/response_wrapper.dart';
-import 'package:bwa_cozy/bloc/compare/compare_action_event.dart';
-import 'package:bwa_cozy/bloc/compare/compare_state.dart';
-import 'package:bwa_cozy/repos/compare_repository.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:modernland_signflow/bloc/_wrapper/response_wrapper.dart';
+import 'package:modernland_signflow/bloc/compare/compare_action_event.dart';
+import 'package:modernland_signflow/bloc/compare/compare_state.dart';
+import 'package:modernland_signflow/repos/compare_repository.dart';
 
 class CompareActionBloc extends Bloc<CompareActionEvent, CompareState> {
   final CompareRepository repo;
 
   CompareActionBloc(this.repo) : super(CompareStateInitial()) {
     on<SendQCompareApprove>((event, emit) async {
-      print("on bloc sendQRCompareApprove");
+      emit(CompareStateLoading());
       try {
         final request = await repo.approveCompare(
           noPermintaan: event.noPermintaan,
@@ -29,8 +29,10 @@ class CompareActionBloc extends Bloc<CompareActionEvent, CompareState> {
         emit(CompareStateFailure(message: e.toString()));
       }
     });
-    //reject PBJ
+
+    //reject
     on<SendQCompareReject>((event, emit) async {
+      emit(CompareStateLoading());
       print("on bloc sendQRCompareReject");
       try {
         final request = await repo.rejectCompare(

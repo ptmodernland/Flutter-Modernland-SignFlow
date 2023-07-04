@@ -1,23 +1,22 @@
-import 'package:bwa_cozy/bloc/all_approval/approval_main_page_bloc.dart';
-import 'package:bwa_cozy/bloc/all_approval/approval_main_page_event.dart';
-import 'package:bwa_cozy/bloc/all_approval/approval_main_page_state.dart';
-import 'package:bwa_cozy/bloc/notif/notif_bloc.dart';
-import 'package:bwa_cozy/bloc/notif/notif_event.dart';
-import 'package:bwa_cozy/bloc/notif/notif_state.dart';
-import 'package:bwa_cozy/data/dio_client.dart';
-import 'package:bwa_cozy/di/service_locator.dart';
-import 'package:bwa_cozy/pages/approval/pbj/detail_pbj_page.dart';
-import 'package:bwa_cozy/pages/approval/pbj/filter/pbj_approved_all.dart';
-import 'package:bwa_cozy/pages/approval/pbj/pbj_waiting_approval.dart';
-import 'package:bwa_cozy/repos/approval_main_page_repository.dart';
-import 'package:bwa_cozy/repos/notif_repository.dart';
-import 'package:bwa_cozy/util/enum/menu_type.dart';
-import 'package:bwa_cozy/util/my_theme.dart';
-import 'package:bwa_cozy/widget/approval/item_approval_widget.dart';
-import 'package:bwa_cozy/widget/menus/menu_item_approval_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:fluttertoast/fluttertoast.dart';
+import 'package:modernland_signflow/bloc/all_approval/approval_main_page_bloc.dart';
+import 'package:modernland_signflow/bloc/all_approval/approval_main_page_event.dart';
+import 'package:modernland_signflow/bloc/all_approval/approval_main_page_state.dart';
+import 'package:modernland_signflow/bloc/notif/notif_bloc.dart';
+import 'package:modernland_signflow/bloc/notif/notif_event.dart';
+import 'package:modernland_signflow/bloc/notif/notif_state.dart';
+import 'package:modernland_signflow/data/dio_client.dart';
+import 'package:modernland_signflow/di/service_locator.dart';
+import 'package:modernland_signflow/pages/approval/pbj/detail_pbj_page.dart';
+import 'package:modernland_signflow/pages/approval/pbj/filter/pbj_approved_all.dart';
+import 'package:modernland_signflow/pages/approval/pbj/pbj_waiting_approval.dart';
+import 'package:modernland_signflow/repos/approval_main_page_repository.dart';
+import 'package:modernland_signflow/repos/notif_repository.dart';
+import 'package:modernland_signflow/util/enum/menu_type.dart';
+import 'package:modernland_signflow/util/my_theme.dart';
+import 'package:modernland_signflow/widget/approval/item_approval_widget.dart';
+import 'package:modernland_signflow/widget/menus/menu_item_approval_widget.dart';
 
 class ApprovalPBJMainPage extends StatefulWidget {
   const ApprovalPBJMainPage({Key? key}) : super(key: key);
@@ -27,18 +26,23 @@ class ApprovalPBJMainPage extends StatefulWidget {
 }
 
 class _ApprovalPBJMainPageState extends State<ApprovalPBJMainPage> {
+  late NotifRepository notifRepository;
+  late NotifCoreBloc notifBloc;
+
+  late ApprovalMainPageRepository approvalRepo;
+  late ApprovalMainPageBloc approvalBloc;
+
+  @override
+  void initState() {
+    super.initState();
+    notifRepository = NotifRepository(dioClient: getIt<DioClient>());
+    notifBloc = NotifCoreBloc(notifRepository);
+    approvalRepo = ApprovalMainPageRepository(dioClient: getIt<DioClient>());
+    approvalBloc = ApprovalMainPageBloc(approvalRepo);
+  }
+
   @override
   Widget build(BuildContext context) {
-    double screenHeight = MediaQuery.of(context).size.height;
-    double screenWidth = MediaQuery.of(context).size.width;
-
-    var notifRepository = NotifRepository(dioClient: getIt<DioClient>());
-    NotifCoreBloc notifBloc = NotifCoreBloc(notifRepository);
-
-    ApprovalMainPageRepository approvalRepo =
-        ApprovalMainPageRepository(dioClient: getIt<DioClient>());
-    ApprovalMainPageBloc approvalBloc = ApprovalMainPageBloc(approvalRepo);
-
     return SafeArea(
       bottom: false,
       child: Scaffold(
@@ -72,14 +76,21 @@ class _ApprovalPBJMainPageState extends State<ApprovalPBJMainPage> {
                                     left: 30, right: 30, top: 10),
                                 child: Row(
                                   children: [
+                                    IconButton(
+                                      icon: Icon(Icons.arrow_back),
+                                      color: Colors.white,
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                      },
+                                    ),
                                     Align(
                                       alignment: Alignment.center,
                                       child: Text(
                                         "Permohonan Barang dan Jasa",
                                         style: MyTheme.myStylePrimaryTextStyle
                                             .copyWith(
-                                                color: Colors.white,
-                                                fontWeight: FontWeight.w800),
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.w800),
                                       ),
                                     ),
                                     Spacer(),
@@ -104,7 +115,7 @@ class _ApprovalPBJMainPageState extends State<ApprovalPBJMainPage> {
                           children: [
                             Container(
                               margin:
-                                  EdgeInsets.only(top: 20, left: 0, right: 0),
+                              EdgeInsets.only(top: 20, left: 0, right: 0),
                               width: double.infinity,
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.vertical(
@@ -122,66 +133,66 @@ class _ApprovalPBJMainPageState extends State<ApprovalPBJMainPage> {
                                           child: Column(
                                             children: [
                                               BlocBuilder<NotifCoreBloc,
-                                                      NotifCoreState>(
+                                                  NotifCoreState>(
                                                   builder: (context, state) {
-                                                var count = "";
-                                                if (state
+                                                    var count = "";
+                                                    if (state
                                                     is NotifStateLoading) {}
-                                                if (state
+                                                    if (state
                                                     is NotifStateFailure) {}
-                                                if (state
+                                                    if (state
                                                     is NotifStateSuccess) {
-                                                  count = state.totalPermohonan;
-                                                }
-                                                return MenuItemApprovalWidget(
-                                                  unreadBadgeCount: count,
-                                                  titleLeft:
+                                                      count = state.totalPermohonan;
+                                                    }
+                                                    return MenuItemApprovalWidget(
+                                                      unreadBadgeCount: count,
+                                                      titleLeft:
                                                       "Menunggu\nApproval",
-                                                  titleRight:
+                                                      titleRight:
                                                       "History\nApproval",
-                                                  onLeftTapFunction: () {
-                                                    Navigator.push(
-                                                      context,
-                                                      MaterialPageRoute(
-                                                        builder: (context) =>
-                                                            PBJWaitingApproval(),
-                                                      ),
-                                                    ).then((value) {
-                                                      notifBloc
-                                                        ..add(
-                                                            NotifEventCount());
-                                                      approvalBloc
-                                                        ..add(RequestDataEvent(
-                                                            ApprovalListType
-                                                                .PBJ));
-                                                    });
-                                                  },
-                                                  onRightTapFunction: () {
-                                                    Navigator.push(
-                                                      context,
-                                                      MaterialPageRoute(
-                                                        builder: (context) =>
-                                                            PBJAllApprovedPage(),
-                                                      ),
-                                                    ).then((value) {
-                                                      notifBloc
-                                                        ..add(
-                                                            NotifEventCount());
-                                                      approvalBloc
-                                                        ..add(RequestDataEvent(
-                                                            ApprovalListType
-                                                                .PBJ));
-                                                    });
-                                                  },
-                                                );
-                                              }),
+                                                      onLeftTapFunction: () {
+                                                        Navigator.push(
+                                                          context,
+                                                          MaterialPageRoute(
+                                                            builder: (context) =>
+                                                                PBJWaitingApproval(),
+                                                          ),
+                                                        ).then((value) {
+                                                          notifBloc
+                                                            ..add(
+                                                                NotifEventCount());
+                                                          approvalBloc
+                                                            ..add(RequestDataEvent(
+                                                                ApprovalListType
+                                                                    .PBJ));
+                                                        });
+                                                      },
+                                                      onRightTapFunction: () {
+                                                        Navigator.push(
+                                                          context,
+                                                          MaterialPageRoute(
+                                                            builder: (context) =>
+                                                                PBJAllApprovedPage(),
+                                                          ),
+                                                        ).then((value) {
+                                                          notifBloc
+                                                            ..add(
+                                                                NotifEventCount());
+                                                          approvalBloc
+                                                            ..add(RequestDataEvent(
+                                                                ApprovalListType
+                                                                    .PBJ));
+                                                        });
+                                                      },
+                                                    );
+                                                  }),
                                             ],
                                           ),
                                         )),
                                     Container(
                                       width: double.infinity,
                                       margin:
-                                          EdgeInsets.only(left: 20, right: 20),
+                                      EdgeInsets.only(left: 20, right: 20),
                                       child: Text(
                                         "Request Terbaru",
                                         textAlign: TextAlign.start,
@@ -194,11 +205,11 @@ class _ApprovalPBJMainPageState extends State<ApprovalPBJMainPage> {
                                     ),
                                     Container(
                                       margin:
-                                          EdgeInsets.only(left: 20, right: 20),
+                                      EdgeInsets.only(left: 20, right: 20),
                                       child: Row(
                                         mainAxisSize: MainAxisSize.max,
                                         crossAxisAlignment:
-                                            CrossAxisAlignment.start,
+                                        CrossAxisAlignment.start,
                                         children: [],
                                       ),
                                     ),
@@ -261,12 +272,9 @@ class _ApprovalPBJMainPageState extends State<ApprovalPBJMainPage> {
                                     itemCode: pbjItem.noPermintaan,
                                     date: pbjItem.tglPermintaan,
                                     departmentTitle: pbjItem.departemen ?? "",
-                                    personName: (pbjItem.status ?? "") +
-                                        (pbjItem.namaUser ?? ""),
+                                    personName: (pbjItem.namaUser ?? ""),
                                     personImage: "",
                                     onPressed: (String requiredId) {
-                                      Fluttertoast.showToast(
-                                          msg: requiredId.toString());
                                       Navigator.push(
                                         context,
                                         MaterialPageRoute(

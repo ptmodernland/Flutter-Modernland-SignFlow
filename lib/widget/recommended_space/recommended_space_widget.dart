@@ -1,6 +1,6 @@
-import 'package:bwa_cozy/util/my_theme.dart';
-import 'package:bwa_cozy/widget/recommended_space/recommended_space_ui_model.dart';
 import 'package:flutter/material.dart';
+import 'package:modernland_signflow/util/my_theme.dart';
+import 'package:modernland_signflow/widget/recommended_space/recommended_space_ui_model.dart';
 
 class RecommendedSpaceWidget extends StatelessWidget {
   const RecommendedSpaceWidget({

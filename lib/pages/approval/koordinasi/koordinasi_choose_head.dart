@@ -1,18 +1,16 @@
-import 'package:bwa_cozy/bloc/iom/approval_head_dept_cubit.dart';
-import 'package:bwa_cozy/bloc/iom/approval_state.dart';
-import 'package:bwa_cozy/bloc/iom/give_koordinasi_cubit.dart';
-import 'package:bwa_cozy/bloc/stream/stream_cubit.dart';
-import 'package:bwa_cozy/repos/iom/approval_repository.dart';
-import 'package:bwa_cozy/repos/rekomendasi/rekomendasi_repository.dart';
-import 'package:bwa_cozy/repos/stream/stream_repository.dart';
-import 'package:bwa_cozy/util/enum/action_type.dart';
-import 'package:bwa_cozy/widget/approval/choose_dept_head_item.dart';
-import 'package:bwa_cozy/widget/core/blurred_dialog.dart';
-import 'package:bwa_cozy/widget/core/custom_text_input.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:modernland_signflow/bloc/iom/approval_head_dept_cubit.dart';
+import 'package:modernland_signflow/bloc/iom/approval_state.dart';
+import 'package:modernland_signflow/bloc/iom/give_koordinasi_cubit.dart';
+import 'package:modernland_signflow/repos/iom/approval_repository.dart';
+import 'package:modernland_signflow/repos/rekomendasi/rekomendasi_repository.dart';
+import 'package:modernland_signflow/util/enum/action_type.dart';
+import 'package:modernland_signflow/widget/approval/choose_dept_head_item.dart';
+import 'package:modernland_signflow/widget/core/blurred_dialog.dart';
+import 'package:modernland_signflow/widget/core/custom_text_input.dart';
 import 'package:quickalert/quickalert.dart';
 
 class KoordinasiChooseHeadPage extends StatelessWidget {

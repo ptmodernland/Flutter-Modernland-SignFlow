@@ -1,14 +1,18 @@
-import 'package:bwa_cozy/bloc/all_approval/approval_main_page_event.dart';
-import 'package:bwa_cozy/bloc/all_approval/approval_main_page_state.dart';
-import 'package:bwa_cozy/repos/approval_main_page_repository.dart';
-import 'package:bwa_cozy/util/enum/menu_type.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:modernland_signflow/bloc/all_approval/approval_main_page_event.dart';
+import 'package:modernland_signflow/bloc/all_approval/approval_main_page_state.dart';
+import 'package:modernland_signflow/repos/approval_main_page_repository.dart';
+import 'package:modernland_signflow/util/enum/menu_type.dart';
 
 class ApprovalMainPageBloc
     extends Bloc<ApprovalMainPageEvent, ApprovalMainPageState> {
   final ApprovalMainPageRepository _repo;
 
   ApprovalMainPageBloc(this._repo) : super(ApprovalMainPageStateInitial()) {
+    on<ApprovalMainPageInitialEvent>((event, emit) async {
+      emit(ApprovalMainPageStateInitial());
+    });
+
     on<RequestPBJDetailEvent>((event, emit) async {
       emit(ApprovalMainPageStateLoading());
       try {
@@ -59,6 +63,8 @@ class ApprovalMainPageBloc
       }
 
       if (event.payload == ApprovalListType.KASBON) {
+        Future.delayed(Duration(seconds: 3));
+        emit(ApprovalMainPageStateLoading());
         try {
           final request = await _repo.getKasbonWaitingList();
           if (request.data != null) {

@@ -1,8 +1,8 @@
-import 'package:bwa_cozy/bloc/_wrapper/response_wrapper.dart';
-import 'package:bwa_cozy/bloc/pbj/pbj_event.dart';
-import 'package:bwa_cozy/bloc/pbj/pbj_state.dart';
-import 'package:bwa_cozy/repos/pbj_repository.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:modernland_signflow/bloc/_wrapper/response_wrapper.dart';
+import 'package:modernland_signflow/bloc/pbj/pbj_event.dart';
+import 'package:modernland_signflow/bloc/pbj/pbj_state.dart';
+import 'package:modernland_signflow/repos/pbj_repository.dart';
 
 class PBJBloc extends Bloc<PBJEvent, PBJState> {
   final PBJRepository repo;
@@ -34,6 +34,7 @@ class PBJBloc extends Bloc<PBJEvent, PBJState> {
     //reject PBJ
     on<SendQPBJReject>((event, emit) async {
       print("on bloc sendQRPBJApprove");
+      emit(PBJStateLoading());
       try {
         final request = await repo.rejectPBJ(
           noPermintaan: event.noPermintaan,

@@ -1,5 +1,5 @@
-import 'package:bwa_cozy/bloc/common_approval_filter/common_approval_filter_bloc.dart';
-import 'package:bwa_cozy/bloc/common_approval_filter/common_approval_filter_state.dart';
+import 'package:modernland_signflow/bloc/common_approval_filter/common_approval_filter_bloc.dart';
+import 'package:modernland_signflow/bloc/common_approval_filter/common_approval_filter_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

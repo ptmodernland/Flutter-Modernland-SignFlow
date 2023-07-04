@@ -1,7 +1,7 @@
-import 'package:bwa_cozy/bloc/kasbon/dto/KasbonCommentDTO.dart';
-import 'package:bwa_cozy/bloc/kasbon/dto/KasbonDetailDTO.dart';
-import 'package:bwa_cozy/bloc/kasbon/dto/ListAllKasbonDTO.dart';
-import 'package:bwa_cozy/bloc/pbj/dto/ListPBJDTO.dart';
+import 'package:modernland_signflow/bloc/kasbon/dto/KasbonCommentDTO.dart';
+import 'package:modernland_signflow/bloc/kasbon/dto/KasbonDetailDTO.dart';
+import 'package:modernland_signflow/bloc/kasbon/dto/ListAllKasbonDTO.dart';
+import 'package:modernland_signflow/bloc/pbj/dto/ListPBJDTO.dart';
 
 abstract class KasbonState {}
 

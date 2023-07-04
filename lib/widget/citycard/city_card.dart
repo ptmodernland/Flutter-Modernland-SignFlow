@@ -1,5 +1,5 @@
-import 'package:bwa_cozy/util/my_theme.dart';
-import 'package:bwa_cozy/widget/citycard/city_ui_model.dart';
+import 'package:modernland_signflow/util/my_theme.dart';
+import 'package:modernland_signflow/widget/citycard/city_ui_model.dart';
 import 'package:flutter/material.dart';
 
 class CityCard extends StatelessWidget {
@@ -9,7 +9,6 @@ class CityCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     var cardWidth = 140.0;
     var cardHeight= 50.0;
 

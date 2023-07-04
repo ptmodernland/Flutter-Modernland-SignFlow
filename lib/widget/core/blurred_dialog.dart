@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class BlurredDialog extends StatelessWidget {
   final String loadingText;
@@ -23,10 +24,15 @@ class BlurredDialog extends StatelessWidget {
           Align(
             alignment: Alignment.center,
             child: CupertinoAlertDialog(
-              title: Text('Loading'),
+              title: Text(
+                'Loading',
+                style: GoogleFonts.roboto(),
+              ),
               content: Column(
                 children: [
-                  SizedBox(height: 20,),
+                  SizedBox(
+                    height: 20,
+                  ),
                   CupertinoActivityIndicator(),
                   SizedBox(height: 8),
                   Text(loadingText),

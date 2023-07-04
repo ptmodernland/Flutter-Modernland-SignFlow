@@ -1,7 +1,7 @@
-import 'package:bwa_cozy/bloc/_wrapper/response_wrapper.dart';
-import 'package:bwa_cozy/bloc/kasbon/kasbon_action_event.dart';
-import 'package:bwa_cozy/bloc/kasbon/kasbon_state.dart';
-import 'package:bwa_cozy/repos/kasbon_repository.dart';
+import 'package:modernland_signflow/bloc/_wrapper/response_wrapper.dart';
+import 'package:modernland_signflow/bloc/kasbon/kasbon_action_event.dart';
+import 'package:modernland_signflow/bloc/kasbon/kasbon_state.dart';
+import 'package:modernland_signflow/repos/kasbon_repository.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class KasbonActionBloc extends Bloc<KasbonActionEvent, KasbonState> {
@@ -10,6 +10,7 @@ class KasbonActionBloc extends Bloc<KasbonActionEvent, KasbonState> {
   KasbonActionBloc(this.repo) : super(KasbonStateInitial()) {
     on<SendApprove>((event, emit) async {
       print("on bloc sendQRCompareApprove");
+      emit(KasbonStateLoading());
       try {
         final request = await repo.approveKasbon(
           noPermintaan: event.noKasbon,
@@ -17,6 +18,7 @@ class KasbonActionBloc extends Bloc<KasbonActionEvent, KasbonState> {
           pin: event.pin,
         );
         if (request.status == ResourceStatus.Success) {
+          await Future.delayed(Duration(seconds: 1, milliseconds: 500));
           emit(KasbonStateSuccess(
               message: request.message.toString(),
               type: KasbonEActionType.APPROVE));
@@ -31,6 +33,7 @@ class KasbonActionBloc extends Bloc<KasbonActionEvent, KasbonState> {
     });
     //reject PBJ
     on<SendReject>((event, emit) async {
+      emit(KasbonStateLoading());
       print("on bloc sendQRCompareReject");
       try {
         final request = await repo.rejectKasbon(
@@ -39,6 +42,7 @@ class KasbonActionBloc extends Bloc<KasbonActionEvent, KasbonState> {
           pin: event.pin,
         );
         if (request.status == ResourceStatus.Success) {
+          await Future.delayed(Duration(seconds: 1, milliseconds: 500));
           emit(KasbonStateSuccess(
               message: request.message.toString(),
               type: KasbonEActionType.REJECT));

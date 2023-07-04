@@ -1,5 +1,4 @@
-import 'package:bwa_cozy/bloc/login/login_payload.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:modernland_signflow/bloc/login/login_payload.dart';
 
 abstract class LoginEvent {}
 

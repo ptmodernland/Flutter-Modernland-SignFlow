@@ -8,6 +8,8 @@ class DraggableBackButton extends StatelessWidget {
       right: 16.0,
       child: Draggable(
         child: FloatingActionButton(
+          backgroundColor: Colors.black,
+          foregroundColor: Colors.white,
           onPressed: () {
             Navigator.of(context).pop();
           },

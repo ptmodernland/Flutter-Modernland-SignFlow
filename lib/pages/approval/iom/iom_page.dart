@@ -1,24 +1,24 @@
-import 'package:bwa_cozy/bloc/all_approval/approval_main_page_bloc.dart';
-import 'package:bwa_cozy/bloc/all_approval/approval_main_page_event.dart';
-import 'package:bwa_cozy/bloc/iomcategorycounter/badge_counter_cubit.dart';
-import 'package:bwa_cozy/bloc/iomcategorycounter/badge_counter_state.dart';
-import 'package:bwa_cozy/bloc/notif/notif_bloc.dart';
-import 'package:bwa_cozy/bloc/notif/notif_event.dart';
-import 'package:bwa_cozy/bloc/notif/notif_state.dart';
-import 'package:bwa_cozy/data/dio_client.dart';
-import 'package:bwa_cozy/di/service_locator.dart';
-import 'package:bwa_cozy/pages/approval/iom/iom_approved_all_page.dart';
-import 'package:bwa_cozy/pages/approval/iom/iom_list_by_category_page.dart';
-import 'package:bwa_cozy/pages/approval/iom/iom_waiting_approval_page.dart';
-import 'package:bwa_cozy/pages/approval/koordinasi/koordinasi_history_page.dart';
-import 'package:bwa_cozy/pages/approval/koordinasi/koordinasi_waiting_all_page.dart';
-import 'package:bwa_cozy/repos/approval_main_page_repository.dart';
-import 'package:bwa_cozy/repos/badge_counter_repository.dart';
-import 'package:bwa_cozy/repos/notif_repository.dart';
-import 'package:bwa_cozy/util/enum/menu_type.dart';
-import 'package:bwa_cozy/util/my_theme.dart';
-import 'package:bwa_cozy/widget/approval/iom_menu_icon_widget.dart';
-import 'package:bwa_cozy/widget/menus/menu_item_approval_widget.dart';
+import 'package:modernland_signflow/bloc/all_approval/approval_main_page_bloc.dart';
+import 'package:modernland_signflow/bloc/all_approval/approval_main_page_event.dart';
+import 'package:modernland_signflow/bloc/iomcategorycounter/badge_counter_cubit.dart';
+import 'package:modernland_signflow/bloc/iomcategorycounter/badge_counter_state_new.dart';
+import 'package:modernland_signflow/bloc/notif/notif_bloc.dart';
+import 'package:modernland_signflow/bloc/notif/notif_event.dart';
+import 'package:modernland_signflow/bloc/notif/notif_state.dart';
+import 'package:modernland_signflow/data/dio_client.dart';
+import 'package:modernland_signflow/di/service_locator.dart';
+import 'package:modernland_signflow/pages/approval/iom/iom_approved_all_page.dart';
+import 'package:modernland_signflow/pages/approval/iom/iom_list_by_category_page.dart';
+import 'package:modernland_signflow/pages/approval/iom/iom_waiting_approval_page.dart';
+import 'package:modernland_signflow/pages/approval/koordinasi/koordinasi_history_page.dart';
+import 'package:modernland_signflow/pages/approval/koordinasi/koordinasi_waiting_all_page.dart';
+import 'package:modernland_signflow/repos/approval_main_page_repository.dart';
+import 'package:modernland_signflow/repos/badge_counter_repository.dart';
+import 'package:modernland_signflow/repos/notif_repository.dart';
+import 'package:modernland_signflow/util/enum/menu_type.dart';
+import 'package:modernland_signflow/util/my_theme.dart';
+import 'package:modernland_signflow/widget/approval/iom_menu_icon_widget.dart';
+import 'package:modernland_signflow/widget/menus/menu_item_approval_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -31,23 +31,28 @@ class ApprovalIomMainPage extends StatefulWidget {
 }
 
 class _ApprovalIomMainPageState extends State<ApprovalIomMainPage> {
+  late NotifRepository notifRepository;
+  late BadgeCounterRepository badgeCounterRepository;
+  late NotifCoreBloc notifBloc;
+  late ApprovalMainPageRepository approvalRepo;
+  late ApprovalMainPageBloc approvalBloc;
+  late BadgeCounterCubit badgeCounterCubit;
+
+  @override
+  void initState() {
+    super.initState();
+    notifRepository = NotifRepository(dioClient: getIt<DioClient>());
+    badgeCounterRepository =
+        BadgeCounterRepository(dioClient: getIt<DioClient>());
+    notifBloc = NotifCoreBloc(notifRepository);
+    approvalRepo = ApprovalMainPageRepository(dioClient: getIt<DioClient>());
+    approvalBloc = ApprovalMainPageBloc(approvalRepo);
+    badgeCounterCubit = BadgeCounterCubit(badgeCounterRepository);
+    badgeCounterCubit.fetchBadgeCounter();
+  }
+
   @override
   Widget build(BuildContext context) {
-    double screenHeight = MediaQuery.of(context).size.height;
-    double screenWidth = MediaQuery.of(context).size.width;
-
-    var notifRepository = NotifRepository(dioClient: getIt<DioClient>());
-    var badgeCounterRepository =
-        BadgeCounterRepository(dioClient: getIt<DioClient>());
-
-    NotifCoreBloc notifBloc = NotifCoreBloc(notifRepository);
-    ApprovalMainPageRepository approvalRepo =
-        ApprovalMainPageRepository(dioClient: getIt<DioClient>());
-    ApprovalMainPageBloc approvalBloc = ApprovalMainPageBloc(approvalRepo);
-
-    final badgeCounterCubit = BadgeCounterCubit(badgeCounterRepository);
-    badgeCounterCubit.fetchBadgeCounter();
-
     return SafeArea(
       bottom: false,
       child: Scaffold(
@@ -80,6 +85,13 @@ class _ApprovalIomMainPageState extends State<ApprovalIomMainPage> {
                                   EdgeInsets.only(left: 30, right: 30, top: 10),
                               child: Row(
                                 children: [
+                                  IconButton(
+                                    icon: Icon(Icons.arrow_back),
+                                    color: Colors.white,
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                  ),
                                   Align(
                                     alignment: Alignment.center,
                                     child: Text(
@@ -182,7 +194,8 @@ class _ApprovalIomMainPageState extends State<ApprovalIomMainPage> {
                                 builder: (context) => IomApprovedAllPage(),
                               ),
                             ).then((value) {
-                              notifBloc..add(NotifEventCount());
+                              initData(
+                                  badgeCounterCubit, notifBloc, approvalBloc);
                             });
                           },
                         );
@@ -217,10 +230,8 @@ class _ApprovalIomMainPageState extends State<ApprovalIomMainPage> {
                                     KoordinasiWaitingAllPage(),
                               ),
                             ).then((value) {
-                              badgeCounterCubit.fetchBadgeCounter();
-                              notifBloc.add(NotifEventCount());
-                              approvalBloc
-                                  .add(RequestDataEvent(ApprovalListType.IOM));
+                              initData(
+                                  badgeCounterCubit, notifBloc, approvalBloc);
                             });
                           },
                           onRightTapFunction: () {
@@ -230,7 +241,8 @@ class _ApprovalIomMainPageState extends State<ApprovalIomMainPage> {
                                 builder: (context) => KoordinasiHistoryPage(),
                               ),
                             ).then((value) {
-                              notifBloc..add(NotifEventCount());
+                              initData(
+                                  badgeCounterCubit, notifBloc, approvalBloc);
                             });
                           },
                         );
@@ -269,9 +281,10 @@ class _ApprovalIomMainPageState extends State<ApprovalIomMainPage> {
           Container(
             width: MediaQuery.sizeOf(context).width,
             margin: EdgeInsets.only(left: 25, right: 25, top: 20),
-            child: BlocBuilder<BadgeCounterCubit, BadgeCounterState>(
+            child: BlocBuilder<BadgeCounterCubit, BadgeCounterStateNew>(
               bloc: badgeCounterCubit..fetchBadgeCounter(),
               builder: (context, state) {
+                // if(state is BadgeNotifStateSuccess) {
                 return Wrap(
                   alignment: WrapAlignment.spaceAround,
                   spacing: 38,
@@ -288,13 +301,15 @@ class _ApprovalIomMainPageState extends State<ApprovalIomMainPage> {
                             ),
                           ),
                         ).then((value) {
-                          notifBloc..add(NotifEventCount());
+                          initData(badgeCounterCubit, notifBloc, approvalBloc);
                         });
                       },
                       child: IomMenuIconWidget(
                         iconData: CupertinoIcons.money_dollar_circle,
                         label: "Billionaire\nClub",
-                        badgeCount: state.totalMarketingClub, //done
+                        badgeCount: state is BadgeNotifStateSuccess
+                            ? state.totalMarketingClub
+                            : 0, //done
                       ),
                     ),
                     InkWell(
@@ -308,15 +323,15 @@ class _ApprovalIomMainPageState extends State<ApprovalIomMainPage> {
                             ),
                           ),
                         ).then((value) {
-                          notifBloc..add(NotifEventCount());
-                          approvalBloc
-                            ..add(RequestDataEvent(ApprovalListType.COMPARE));
+                          initData(badgeCounterCubit, notifBloc, approvalBloc);
                         });
                       },
                       child: IomMenuIconWidget(
                         iconData: CupertinoIcons.doc_chart,
                         label: "Finance\nAccounting",
-                        badgeCount: state.totalFinance, //done
+                        badgeCount: state is BadgeNotifStateSuccess
+                            ? state.totalFinance
+                            : 0, //done
                       ),
                     ),
                     InkWell(
@@ -330,13 +345,15 @@ class _ApprovalIomMainPageState extends State<ApprovalIomMainPage> {
                             ),
                           ),
                         ).then((value) {
-                          notifBloc..add(NotifEventCount());
+                          badgeCounterCubit.fetchBadgeCounter();
                         });
                       },
                       child: IomMenuIconWidget(
                         iconData: CupertinoIcons.square_stack_3d_up_fill,
                         label: "Quantity\nSurveyor",
-                        badgeCount: state.totalQS, //done
+                        badgeCount: state is BadgeNotifStateSuccess
+                            ? state.totalQS
+                            : 0, //done
                       ),
                     ),
                     InkWell(
@@ -350,13 +367,15 @@ class _ApprovalIomMainPageState extends State<ApprovalIomMainPage> {
                             ),
                           ),
                         ).then((value) {
-                          notifBloc..add(NotifEventCount());
+                          initData(badgeCounterCubit, notifBloc, approvalBloc);
                         });
                       },
                       child: IomMenuIconWidget(
                         iconData: CupertinoIcons.building_2_fill,
                         label: "Town\nManagement",
-                        badgeCount: state.totalTown,
+                        badgeCount: state is BadgeNotifStateSuccess
+                            ? state.totalTown
+                            : 0,
                       ),
                     ),
                     InkWell(
@@ -370,13 +389,15 @@ class _ApprovalIomMainPageState extends State<ApprovalIomMainPage> {
                             ),
                           ),
                         ).then((value) {
-                          notifBloc..add(NotifEventCount());
+                          initData(badgeCounterCubit, notifBloc, approvalBloc);
                         });
                       },
                       child: IomMenuIconWidget(
                         iconData: CupertinoIcons.hammer,
                         label: "Technical",
-                        badgeCount: state.totalProject,
+                        badgeCount: state is BadgeNotifStateSuccess
+                            ? state.totalProject
+                            : 0, //done
                       ),
                     ),
                     InkWell(
@@ -390,13 +411,15 @@ class _ApprovalIomMainPageState extends State<ApprovalIomMainPage> {
                             ),
                           ),
                         ).then((value) {
-                          notifBloc..add(NotifEventCount());
+                          initData(badgeCounterCubit, notifBloc, approvalBloc);
                         });
                       },
                       child: IomMenuIconWidget(
                         iconData: CupertinoIcons.person_3_fill,
                         label: "Human\nResource",
-                        badgeCount: state.totalHRD,
+                        badgeCount: state is BadgeNotifStateSuccess
+                            ? state.totalHRD
+                            : 0, //done
                       ),
                     ),
                     InkWell(
@@ -410,13 +433,15 @@ class _ApprovalIomMainPageState extends State<ApprovalIomMainPage> {
                             ),
                           ),
                         ).then((value) {
-                          notifBloc..add(NotifEventCount());
+                          initData(badgeCounterCubit, notifBloc, approvalBloc);
                         });
                       },
                       child: IomMenuIconWidget(
                         iconData: CupertinoIcons.folder,
                         label: "Legal\nOperation",
-                        badgeCount: state.totalLegal,
+                        badgeCount: state is BadgeNotifStateSuccess
+                            ? state.totalLegal
+                            : 0,
                       ),
                     ),
                     InkWell(
@@ -430,13 +455,15 @@ class _ApprovalIomMainPageState extends State<ApprovalIomMainPage> {
                             ),
                           ),
                         ).then((value) {
-                          notifBloc..add(NotifEventCount());
+                          initData(badgeCounterCubit, notifBloc, approvalBloc);
                         });
                       },
                       child: IomMenuIconWidget(
                         iconData: CupertinoIcons.shopping_cart,
                         label: "Purchasing",
-                        badgeCount: state.totalPurchasing,
+                        badgeCount: state is BadgeNotifStateSuccess
+                            ? state.totalPurchasing
+                            : 0, //done
                       ),
                     ),
                     InkWell(
@@ -450,13 +477,15 @@ class _ApprovalIomMainPageState extends State<ApprovalIomMainPage> {
                             ),
                           ),
                         ).then((value) {
-                          notifBloc..add(NotifEventCount());
+                          initData(badgeCounterCubit, notifBloc, approvalBloc);
                         });
                       },
                       child: IomMenuIconWidget(
                         iconData: CupertinoIcons.chart_bar_alt_fill,
                         label: "Business\nDevelopment",
-                        badgeCount: state.totalBDD,
+                        badgeCount: state is BadgeNotifStateSuccess
+                            ? state.totalBDD
+                            : 0,
                       ),
                     ),
                     InkWell(
@@ -470,13 +499,15 @@ class _ApprovalIomMainPageState extends State<ApprovalIomMainPage> {
                             ),
                           ),
                         ).then((value) {
-                          notifBloc..add(NotifEventCount());
+                          initData(badgeCounterCubit, notifBloc, approvalBloc);
                         });
                       },
                       child: IomMenuIconWidget(
                         iconData: CupertinoIcons.home,
                         label: "Landed\nProject",
-                        badgeCount: state.totalLanded,
+                        badgeCount: state is BadgeNotifStateSuccess
+                            ? state.totalLanded
+                            : 0,
                       ),
                     ),
                     InkWell(
@@ -490,13 +521,15 @@ class _ApprovalIomMainPageState extends State<ApprovalIomMainPage> {
                             ),
                           ),
                         ).then((value) {
-                          notifBloc..add(NotifEventCount());
+                          initData(badgeCounterCubit, notifBloc, approvalBloc);
                         });
                       },
                       child: IomMenuIconWidget(
                         iconData: CupertinoIcons.chart_bar,
                         label: "Marketing",
-                        badgeCount: state.totalMarketing,
+                        badgeCount: state is BadgeNotifStateSuccess
+                            ? state.totalMarketing
+                            : 0,
                       ),
                     ),
                     InkWell(
@@ -510,13 +543,15 @@ class _ApprovalIomMainPageState extends State<ApprovalIomMainPage> {
                             ),
                           ),
                         ).then((value) {
-                          notifBloc..add(NotifEventCount());
+                          initData(badgeCounterCubit, notifBloc, approvalBloc);
                         });
                       },
                       child: IomMenuIconWidget(
                         iconData: CupertinoIcons.check_mark_circled,
                         label: "Permit\nCertification",
-                        badgeCount: state.totalPermit,
+                        badgeCount: state is BadgeNotifStateSuccess
+                            ? state.totalPermit
+                            : 0,
                       ),
                     ),
                     InkWell(
@@ -530,13 +565,15 @@ class _ApprovalIomMainPageState extends State<ApprovalIomMainPage> {
                             ),
                           ),
                         ).then((value) {
-                          notifBloc..add(NotifEventCount());
+                          initData(badgeCounterCubit, notifBloc, approvalBloc);
                         });
                       },
                       child: IomMenuIconWidget(
                         iconData: CupertinoIcons.gift,
                         label: "Promosi",
-                        badgeCount: state.totalPromosi,
+                        badgeCount: state is BadgeNotifStateSuccess
+                            ? state.totalBDD
+                            : 0,
                       ),
                     ),
                   ],
@@ -548,5 +585,12 @@ class _ApprovalIomMainPageState extends State<ApprovalIomMainPage> {
         ],
       ),
     );
+  }
+
+  void initData(BadgeCounterCubit badgeCounterCubit, NotifCoreBloc notifBloc,
+      ApprovalMainPageBloc approvalBloc) {
+    badgeCounterCubit.fetchBadgeCounter();
+    notifBloc.add(NotifEventCount());
+    approvalBloc.add(RequestDataEvent(ApprovalListType.IOM));
   }
 }

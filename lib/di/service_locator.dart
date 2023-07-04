@@ -1,6 +1,6 @@
-import 'package:bwa_cozy/data/dio_client.dart';
 import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
+import 'package:modernland_signflow/data/dio_client.dart';
 
 final getIt = GetIt.instance;
 
