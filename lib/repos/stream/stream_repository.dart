@@ -13,7 +13,7 @@ class StreamRepository {
     var logTag = "Getting MDLN News";
     try {
       print("trying $logTag");
-      var url = 'https://snips-api.feylabs.my.id/api/mdln-focused/news';
+      var url = 'androidiom/snips/news.json';
       var dioResponse = await dioClient.get(url);
       var responseBody = dioResponse.data;
       print("$logTag : $responseBody");
@@ -41,8 +41,7 @@ class StreamRepository {
     var logTag = "Getting Shareholder Transaction";
     try {
       print("trying $logTag");
-      var url =
-          'https://snips-api.feylabs.my.id/api/mdln-focused/shareholder-transaction';
+      var url = 'androidiom/snips/shareholder-transaction.json';
       var dioResponse = await dioClient.get(url);
       var responseBody = dioResponse.data;
       print("$logTag : $responseBody");
@@ -67,7 +66,7 @@ class StreamRepository {
   }
 
   Future<ResponseWrapper<OrderbookDto>> getMDLNPrice() async {
-    var url = 'https://snips-api.feylabs.my.id/api/mdln-focused/price';
+    var url = 'androidiom/snips/price.json';
     try {
       var dioResponse = await dioClient.get(url);
       var responseBody = dioResponse.data;
