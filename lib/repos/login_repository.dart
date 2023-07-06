@@ -69,7 +69,7 @@ class LoginRepository {
         data: formData,
       );
 
-      Future.delayed(Duration(seconds: 2));
+      // Future.delayed(Duration(seconds: 2));
 
       printLogoutLog(username, dioResponse);
 

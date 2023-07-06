@@ -188,6 +188,7 @@ class _MyAppState extends State<MyApp> {
       theme: theme,
       navigatorKey: navigatorKey,
       // Set the global navigator key
+      // home: const ModernlandInitialPage(),
       home: const ModernlandInitialPage(),
     );
   }
