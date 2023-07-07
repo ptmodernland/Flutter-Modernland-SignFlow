@@ -101,7 +101,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 child: Stack(
                   children: [
                     Container(
-                      margin: EdgeInsets.all(20),
+                      margin: EdgeInsets.only(left: 20, right: 20, top: 0),
                       child: Image.asset(
                         "asset/img/icons/logo_modernland.png",
                         width: screenWidth * 0.2,
@@ -116,8 +116,43 @@ class _ProfilePageState extends State<ProfilePage> {
                           repeat: ImageRepeat.repeat,
                         ),
                       ),
-                      height: 210,
+                      height: 200,
                       width: double.infinity,
+                      child: Container(
+                        margin: EdgeInsets.only(left: 30, right: 30, top: 0),
+                      ),
+                    ),
+                    Container(
+                      margin: EdgeInsets.only(top: 50),
+                      child: Align(
+                        alignment: Alignment.centerLeft,
+                        // Align the Row to the center-left
+                        child: Row(
+                          children: [
+                            IconButton(
+                              icon: Icon(Icons.arrow_back),
+                              color: Colors.white,
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                            ),
+                            SizedBox(
+                              width: 20,
+                            ),
+                            Flexible(
+                              child: Text(
+                                "Profile",
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
+                                style: MyTheme.myStylePrimaryTextStyle.copyWith(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w800,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
                     ),
                   ],
                 ),

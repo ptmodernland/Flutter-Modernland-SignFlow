@@ -1,3 +1,7 @@
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:modernland_signflow/bloc/iom/approval_action_cubit.dart';
 import 'package:modernland_signflow/bloc/iom/approval_comment_cubit.dart';
 import 'package:modernland_signflow/bloc/iom/approval_detail_cubit.dart';
@@ -18,20 +22,15 @@ import 'package:modernland_signflow/widget/approval/item_approval_widget.dart';
 import 'package:modernland_signflow/widget/common/user_comment_widget.dart';
 import 'package:modernland_signflow/widget/core/blurred_dialog.dart';
 import 'package:modernland_signflow/widget/core/custom_text_input.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:quickalert/quickalert.dart';
 
 class IomDetailPage extends StatefulWidget {
-  const IomDetailPage(
-      {Key? key,
-      required this.idIom,
-      required this.noIom,
-      this.isFromHistory = false,
-      this.idKoordinasi = "-99",
-      this.isFromRekomendasi = false})
+  const IomDetailPage({Key? key,
+    required this.idIom,
+    required this.noIom,
+    this.isFromHistory = false,
+    this.idKoordinasi = "-99",
+    this.isFromRekomendasi = false})
       : super(key: key);
 
   final String idIom;
@@ -130,44 +129,39 @@ class _IomDetailPageState extends State<IomDetailPage> {
                               ),
                             ),
                             width: double.infinity,
-                            child: Stack(
-                              children: [
-                                Align(
-                                  alignment: Alignment.center,
-                                  child: Container(
-                                    margin: EdgeInsets.only(
-                                        left: 30, right: 30, top: 0),
-                                    child: Row(
-                                      children: [
-                                        IconButton(
-                                          icon: Icon(Icons.arrow_back),
-                                          color: Colors.white,
-                                          onPressed: () {
-                                            Navigator.of(context).pop();
-                                          },
-                                        ),
-                                        Flexible(
-                                          child: Text(
-                                            "#" +
-                                                widget.noIom +
-                                                (widget.isFromRekomendasi
-                                                    ? "\n(Rekomendasi)"
-                                                    : ""),
-                                            maxLines: 2,
-                                            overflow: TextOverflow.ellipsis,
-                                            style: MyTheme
-                                                .myStylePrimaryTextStyle
-                                                .copyWith(
-                                              color: Colors.white,
-                                              fontWeight: FontWeight.w800,
-                                            ),
-                                          ),
-                                        ),
-                                      ],
+                            child: Align(
+                              alignment: Alignment.center,
+                              child: Container(
+                                margin: EdgeInsets.only(
+                                    left: 30, right: 30, top: 0),
+                                child: Row(
+                                  children: [
+                                    IconButton(
+                                      icon: Icon(Icons.arrow_back),
+                                      color: Colors.white,
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                      },
                                     ),
-                                  ),
+                                    Flexible(
+                                      child: Text(
+                                        "#" +
+                                            widget.noIom +
+                                            (widget.isFromRekomendasi
+                                                ? "\n(Rekomendasi)"
+                                                : ""),
+                                        maxLines: 2,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: MyTheme.myStylePrimaryTextStyle
+                                            .copyWith(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.w800,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                              ],
+                              ),
                             ),
                           ),
                         ],
@@ -188,7 +182,7 @@ class _IomDetailPageState extends State<IomDetailPage> {
                         width: double.infinity,
                         decoration: BoxDecoration(
                           borderRadius:
-                              BorderRadius.vertical(top: Radius.circular(30.0)),
+                          BorderRadius.vertical(top: Radius.circular(30.0)),
                         ),
                         child: Container(),
                       ),
@@ -224,7 +218,7 @@ class _IomDetailPageState extends State<IomDetailPage> {
                                   date: data.tanggal,
                                   personName: data.namaUser,
                                   descriptiveText:
-                                      removeHtmlTags(data.perihal ?? ""),
+                                  removeHtmlTags(data.perihal ?? ""),
                                   departmentTitle: data.departemen,
                                 ),
                                 Container(
@@ -233,7 +227,7 @@ class _IomDetailPageState extends State<IomDetailPage> {
                                   width: MediaQuery.sizeOf(context).width,
                                   child: Column(
                                     crossAxisAlignment:
-                                        CrossAxisAlignment.stretch,
+                                    CrossAxisAlignment.stretch,
                                     children: [
                                       Text(
                                         "Document Header",
@@ -249,7 +243,7 @@ class _IomDetailPageState extends State<IomDetailPage> {
                                       ),
                                       Row(
                                         crossAxisAlignment:
-                                            CrossAxisAlignment.start,
+                                        CrossAxisAlignment.start,
                                         children: [
                                           Expanded(
                                             child: DocumentDetailWidget(
@@ -269,7 +263,7 @@ class _IomDetailPageState extends State<IomDetailPage> {
                                       ),
                                       Row(
                                         crossAxisAlignment:
-                                            CrossAxisAlignment.start,
+                                        CrossAxisAlignment.start,
                                         children: [
                                           Expanded(
                                             child: DocumentDetailWidget(
@@ -282,7 +276,7 @@ class _IomDetailPageState extends State<IomDetailPage> {
                                             child: DocumentDetailWidget(
                                               title: "CC : ",
                                               content:
-                                                  removeHtmlTags(data.cc ?? ""),
+                                              removeHtmlTags(data.cc ?? ""),
                                             ),
                                           ),
                                         ],
@@ -304,7 +298,7 @@ class _IomDetailPageState extends State<IomDetailPage> {
                                       ),
                                       Row(
                                         crossAxisAlignment:
-                                            CrossAxisAlignment.start,
+                                        CrossAxisAlignment.start,
                                         children: [
                                           Expanded(
                                             child: DocumentDetailWidget(
@@ -322,14 +316,14 @@ class _IomDetailPageState extends State<IomDetailPage> {
                                       ),
                                       Row(
                                         crossAxisAlignment:
-                                            CrossAxisAlignment.start,
+                                        CrossAxisAlignment.start,
                                         children: [
                                           Expanded(
                                               child: DocumentDetailWidget(
-                                            title: "Nama Karyawan :",
-                                            content:
+                                                title: "Nama Karyawan :",
+                                                content:
                                                 data.namaUser ?? "MDLN Staff",
-                                          )),
+                                              )),
                                           Expanded(
                                             child: DocumentDetailWidget(
                                               title: "Department :",
@@ -341,15 +335,15 @@ class _IomDetailPageState extends State<IomDetailPage> {
                                       ),
                                       Row(
                                         crossAxisAlignment:
-                                            CrossAxisAlignment.start,
+                                        CrossAxisAlignment.start,
                                         children: [
                                           Expanded(
                                               child: DocumentDetailWidget(
                                                 title: "View Detail",
-                                            content: "Klik Disini",
-                                            fileURL: DOC_VIEW_IOM +
-                                                (widget.idIom ?? ""),
-                                          )),
+                                                content: "Klik Disini",
+                                                fileURL: DOC_VIEW_IOM +
+                                                    (widget.idIom ?? ""),
+                                              )),
                                           Expanded(
                                             child: DocumentDetailWidget(
                                               title: "Download File",
@@ -398,7 +392,7 @@ class _IomDetailPageState extends State<IomDetailPage> {
                                             children: [
                                               CustomTextInput(
                                                 textEditController:
-                                                    messageController,
+                                                messageController,
                                                 hintTextString: 'Isi Tanggapan',
                                                 inputType: InputType.Default,
                                                 enableBorder: true,
@@ -414,9 +408,9 @@ class _IomDetailPageState extends State<IomDetailPage> {
                                                 },
                                                 textColor: Colors.black,
                                                 errorMessage:
-                                                    'Username cant be empty',
+                                                'Username cant be empty',
                                                 labelText:
-                                                    'Tanggapan/Komentar/Review',
+                                                'Tanggapan/Komentar/Review',
                                               ),
                                             ],
                                           ),
@@ -552,7 +546,7 @@ class _IomDetailPageState extends State<IomDetailPage> {
                                 userName: pbjItem.approve ?? "",
                                 postingDate: pbjItem.tgl ?? "",
                                 bottomText:
-                                    "Status : " + (pbjItem.statusApprove ?? ""),
+                                "Status : " + (pbjItem.statusApprove ?? ""),
                               );
                             },
                           );
@@ -576,14 +570,14 @@ class _IomDetailPageState extends State<IomDetailPage> {
                                 if (widget.isFromRekomendasi) {
                                   showPinInputDialog(
                                       type:
-                                          ApprovalActionType.KOORDINASI_APPROVE,
+                                      ApprovalActionType.KOORDINASI_APPROVE,
                                       description:
-                                          "\nAnda Yakin Ingin Mengapprove Koordinasi ini ?");
+                                      "\nAnda Yakin Ingin Mengapprove Koordinasi ini ?");
                                 } else {
                                   showPinInputDialog(
                                       type: ApprovalActionType.APPROVE,
                                       description:
-                                          "Anda Yakin Ingin Mengapprove Approval ini ?");
+                                      "Anda Yakin Ingin Mengapprove Approval ini ?");
                                 }
                               },
                               child: Text(
@@ -603,14 +597,14 @@ class _IomDetailPageState extends State<IomDetailPage> {
                                 if (widget.isFromRekomendasi) {
                                   showPinInputDialog(
                                       type:
-                                          ApprovalActionType.KOORDINASI_REJECT,
+                                      ApprovalActionType.KOORDINASI_REJECT,
                                       description:
-                                          "\nAnda Yakin Ingin Menolak Permintaan Koordinasi ini ?");
+                                      "\nAnda Yakin Ingin Menolak Permintaan Koordinasi ini ?");
                                 } else {
                                   showPinInputDialog(
                                       type: ApprovalActionType.REJECT,
                                       description:
-                                          "Anda Yakin Ingin Menolak Approval ini ?");
+                                      "Anda Yakin Ingin Menolak Approval ini ?");
                                 }
                               },
                               child: Text(
@@ -633,9 +627,9 @@ class _IomDetailPageState extends State<IomDetailPage> {
                                     MaterialPageRoute(
                                       builder: (context) =>
                                           KoordinasiChooseHeadPage(
-                                        idIom: widget.idIom,
-                                        nomorIom: widget.noIom,
-                                      ),
+                                            idIom: widget.idIom,
+                                            nomorIom: widget.noIom,
+                                          ),
                                     ),
                                   );
                                 },
@@ -664,9 +658,8 @@ class _IomDetailPageState extends State<IomDetailPage> {
     );
   }
 
-  void showPinInputDialog(
-      {required ApprovalActionType type,
-      String description = 'Masukkan PIN anda'}) {
+  void showPinInputDialog({required ApprovalActionType type,
+    String description = 'Masukkan PIN anda'}) {
     var pin = "";
     showDialog(
       context: context,
