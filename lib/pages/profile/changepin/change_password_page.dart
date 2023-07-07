@@ -115,34 +115,29 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
                             ),
                             width: double.infinity,
                           ),
-                          Align(
-                            alignment: Alignment.center,
-                            child: Container(
-                              margin:
-                              EdgeInsets.only(left: 30, right: 30, top: 10),
-                              child: Row(
-                                children: [
-                                  IconButton(
-                                    onPressed: () {
-                                      Navigator.pop(context);
-                                    },
-                                    icon: Icon(Icons.arrow_back_ios,
-                                        color: Colors.white),
+                          Container(
+                            margin:
+                                EdgeInsets.only(left: 30, right: 30, top: 10),
+                            child: Row(
+                              children: [
+                                IconButton(
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                  },
+                                  icon: Icon(Icons.arrow_back_ios,
+                                      color: Colors.white),
+                                ),
+                                Align(
+                                  alignment: Alignment.center,
+                                  child: Text(
+                                    "Ganti Password",
+                                    style: MyTheme.myStylePrimaryTextStyle
+                                        .copyWith(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.w800),
                                   ),
-                                  Spacer(),
-                                  Align(
-                                    alignment: Alignment.center,
-                                    child: Text(
-                                      "Ganti Password",
-                                      style: MyTheme.myStylePrimaryTextStyle
-                                          .copyWith(
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.w800),
-                                    ),
-                                  ),
-                                  Spacer(),
-                                ],
-                              ),
+                                ),
+                              ],
                             ),
                           ),
                         ],

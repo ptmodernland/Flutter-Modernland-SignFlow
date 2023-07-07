@@ -129,6 +129,9 @@ class _ProfilePageState extends State<ProfilePage> {
                         // Align the Row to the center-left
                         child: Row(
                           children: [
+                            SizedBox(
+                              width: 20,
+                            ),
                             IconButton(
                               icon: Icon(Icons.arrow_back),
                               color: Colors.white,
@@ -547,7 +550,7 @@ class _ProfilePageState extends State<ProfilePage> {
         },
         transitionDuration: Duration(milliseconds: 1500),
       ),
-          (route) => false,
+      (route) => false,
     );
   }
 

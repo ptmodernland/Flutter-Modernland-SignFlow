@@ -122,18 +122,13 @@ class _ChangePinPageState extends State<ChangePinPage> {
                                     icon: Icon(Icons.arrow_back_ios,
                                         color: Colors.white),
                                   ),
-                                  Spacer(),
-                                  Align(
-                                    alignment: Alignment.center,
-                                    child: Text(
-                                      "Ganti Pin",
-                                      style: MyTheme.myStylePrimaryTextStyle
-                                          .copyWith(
-                                              color: Colors.white,
-                                              fontWeight: FontWeight.w800),
-                                    ),
+                                  Text(
+                                    "Ganti Pin",
+                                    style: MyTheme.myStylePrimaryTextStyle
+                                        .copyWith(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.w800),
                                   ),
-                                  Spacer(),
                                 ],
                               ),
                             ),

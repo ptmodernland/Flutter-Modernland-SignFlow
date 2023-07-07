@@ -351,7 +351,7 @@ Widget showLoginButton(
               side: MaterialStateProperty.all(
                   const BorderSide(color: Colors.black))),
           child: Text(
-            "Continue as Shareholder",
+            "r",
             style: MyTheme.myStylePrimaryTextStyle.copyWith(
                 fontSize: setButtonLoginRegisterSize(screenWidth, screenHeight),
                 color: Colors.black),
