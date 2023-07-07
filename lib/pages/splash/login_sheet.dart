@@ -338,56 +338,60 @@ Widget showLoginButton(
             }
           },
         ),
-        OutlinedButton(
-          style: ButtonStyle(
-              padding: MaterialStateProperty.all<EdgeInsets>(
-                setButtonLoginRegisterPadding(context),
-              ),
-              shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(18.0),
+        Visibility(
+          visible: false,
+          child: OutlinedButton(
+            style: ButtonStyle(
+                padding: MaterialStateProperty.all<EdgeInsets>(
+                  setButtonLoginRegisterPadding(context),
                 ),
-              ),
-              side: MaterialStateProperty.all(
-                  const BorderSide(color: Colors.black))),
-          child: Text(
-            "r",
-            style: MyTheme.myStylePrimaryTextStyle.copyWith(
-                fontSize: setButtonLoginRegisterSize(screenWidth, screenHeight),
-                color: Colors.black),
+                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                  RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(18.0),
+                  ),
+                ),
+                side: MaterialStateProperty.all(
+                    const BorderSide(color: Colors.black))),
+            child: Text(
+              "r",
+              style: MyTheme.myStylePrimaryTextStyle.copyWith(
+                  fontSize:
+                      setButtonLoginRegisterSize(screenWidth, screenHeight),
+                  color: Colors.black),
+            ),
+            onPressed: () async {
+              // Save user as a guest in SessionManager
+              final user = UserDTO(
+                idUser: '-88',
+                username: 'Guest',
+                nama: 'Shareholder',
+                level: 'Investor',
+                email: '',
+                jk: '',
+                isGuest: true,
+                status: true,
+              );
+              Navigator.pushAndRemoveUntil(
+                context,
+                PageRouteBuilder(
+                  pageBuilder: (context, animation, secondaryAnimation) =>
+                      const ContainerHomePage(
+                    isFromLogin: true,
+                  ),
+                  transitionsBuilder:
+                      (context, animation, secondaryAnimation, child) {
+                    return FadeTransition(
+                      opacity: animation,
+                      child: child,
+                    );
+                  },
+                  transitionDuration: Duration(milliseconds: 1500),
+                ),
+                (route) => false,
+              );
+              await SessionManager.saveUserInSession(user);
+            },
           ),
-          onPressed: () async {
-            // Save user as a guest in SessionManager
-            final user = UserDTO(
-              idUser: '-88',
-              username: 'Guest',
-              nama: 'Shareholder',
-              level: 'Investor',
-              email: '',
-              jk: '',
-              isGuest: true,
-              status: true,
-            );
-            Navigator.pushAndRemoveUntil(
-              context,
-              PageRouteBuilder(
-                pageBuilder: (context, animation, secondaryAnimation) =>
-                    const ContainerHomePage(
-                  isFromLogin: true,
-                ),
-                transitionsBuilder:
-                    (context, animation, secondaryAnimation, child) {
-                  return FadeTransition(
-                    opacity: animation,
-                    child: child,
-                  );
-                },
-                transitionDuration: Duration(milliseconds: 1500),
-              ),
-              (route) => false,
-            );
-            await SessionManager.saveUserInSession(user);
-          },
         ),
       ],
     ),
