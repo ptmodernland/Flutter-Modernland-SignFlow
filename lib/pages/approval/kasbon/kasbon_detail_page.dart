@@ -1,3 +1,7 @@
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:modernland_signflow/bloc/compare/compare_state.dart';
 import 'package:modernland_signflow/bloc/kasbon/kasbon_action_bloc.dart';
 import 'package:modernland_signflow/bloc/kasbon/kasbon_action_event.dart';
@@ -17,18 +21,13 @@ import 'package:modernland_signflow/widget/approval/item_approval_widget.dart';
 import 'package:modernland_signflow/widget/common/user_comment_widget.dart';
 import 'package:modernland_signflow/widget/core/blurred_dialog.dart';
 import 'package:modernland_signflow/widget/core/custom_text_input.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:quickalert/quickalert.dart';
 
 class KasbonDetailPage extends StatefulWidget {
-  const KasbonDetailPage(
-      {Key? key,
-      required this.idKasbon,
-      required this.noKasbon,
-      this.isFromHistory = false})
+  const KasbonDetailPage({Key? key,
+    required this.idKasbon,
+    required this.noKasbon,
+    this.isFromHistory = false})
       : super(key: key);
 
   final String idKasbon;
@@ -172,11 +171,11 @@ class _KasbonDetailPageState extends State<KasbonDetailPage> {
                                 children: [
                                   Container(
                                     margin:
-                                        EdgeInsets.only(left: 20, right: 20),
+                                    EdgeInsets.only(left: 20, right: 20),
                                     child: Row(
                                       mainAxisSize: MainAxisSize.max,
                                       crossAxisAlignment:
-                                          CrossAxisAlignment.start,
+                                      CrossAxisAlignment.start,
                                       children: [
                                         InkWell(
                                           onTap: () {
@@ -190,7 +189,7 @@ class _KasbonDetailPageState extends State<KasbonDetailPage> {
                                                     'Success',
                                                     style: TextStyle(
                                                         fontWeight:
-                                                            FontWeight.bold),
+                                                        FontWeight.bold),
                                                   ),
                                                   content: Text(text),
                                                   actions: <Widget>[
@@ -204,7 +203,10 @@ class _KasbonDetailPageState extends State<KasbonDetailPage> {
                                                                     .noKasbon
                                                                     .toString()));
                                                       },
-                                                      child: Text('OK'),
+                                                      child: Text('OK',
+                                                          style: TextStyle(
+                                                              color:
+                                                                  Colors.blue)),
                                                     ),
                                                   ],
                                                 );
@@ -252,8 +254,10 @@ class _KasbonDetailPageState extends State<KasbonDetailPage> {
                           if (state is KasbonDetailSuccess) {
                             var data = state.data;
 
-                            var isApproved = true;
-                            if (data.status == "Y") {
+                            var isApproved = false;
+                            if (widget.isFromHistory) {
+                              isApproved = true;
+                            } else {
                               isApproved = false;
                             }
 
@@ -266,7 +270,7 @@ class _KasbonDetailPageState extends State<KasbonDetailPage> {
                                     date: data.tglKasbon,
                                     personName: data.namaUser,
                                     descriptiveText:
-                                        removeHtmlTags(data.keterangan ?? ""),
+                                    removeHtmlTags(data.keterangan ?? ""),
                                     departmentTitle: data.departemen,
                                   ),
                                   Container(
@@ -275,7 +279,7 @@ class _KasbonDetailPageState extends State<KasbonDetailPage> {
                                     width: MediaQuery.sizeOf(context).width,
                                     child: Column(
                                       crossAxisAlignment:
-                                          CrossAxisAlignment.stretch,
+                                      CrossAxisAlignment.stretch,
                                       children: [
                                         Text(
                                           "Detail Dokumen",
@@ -291,7 +295,7 @@ class _KasbonDetailPageState extends State<KasbonDetailPage> {
                                         ),
                                         Row(
                                           crossAxisAlignment:
-                                              CrossAxisAlignment.start,
+                                          CrossAxisAlignment.start,
                                           children: [
                                             Expanded(
                                               child: DocumentDetailWidget(
@@ -309,14 +313,14 @@ class _KasbonDetailPageState extends State<KasbonDetailPage> {
                                         ),
                                         Row(
                                           crossAxisAlignment:
-                                              CrossAxisAlignment.start,
+                                          CrossAxisAlignment.start,
                                           children: [
                                             Expanded(
                                                 child: DocumentDetailWidget(
-                                              title: "Nama Karyawan",
-                                              content:
+                                                  title: "Nama Karyawan",
+                                                  content:
                                                   data.namaUser ?? "MDLN Staff",
-                                            )),
+                                                )),
                                             Expanded(
                                               child: DocumentDetailWidget(
                                                 title: "Department",
@@ -328,7 +332,7 @@ class _KasbonDetailPageState extends State<KasbonDetailPage> {
                                         ),
                                         Row(
                                           crossAxisAlignment:
-                                              CrossAxisAlignment.start,
+                                          CrossAxisAlignment.start,
                                           children: [
                                             Expanded(
                                               child: DocumentDetailWidget(
@@ -340,31 +344,31 @@ class _KasbonDetailPageState extends State<KasbonDetailPage> {
                                               child: DocumentDetailWidget(
                                                 title: "Keterangan",
                                                 content:
-                                                    data.keterangan.toString(),
+                                                data.keterangan.toString(),
                                               ),
                                             ),
                                           ],
                                         ),
                                         Row(
                                           crossAxisAlignment:
-                                              CrossAxisAlignment.start,
+                                          CrossAxisAlignment.start,
                                           children: [
                                             Expanded(
                                                 child: DocumentDetailWidget(
-                                              title: "View Detail",
-                                              content: "Klik Disini",
-                                              fileURL: DOC_VIEW_KASBON +
-                                                  (widget.idKasbon ?? ""),
-                                            )),
+                                                  title: "View Detail",
+                                                  content: "Klik Disini",
+                                                  fileURL: DOC_VIEW_KASBON +
+                                                      (widget.idKasbon ?? ""),
+                                                )),
                                             Expanded(
                                               child: DocumentDetailWidget(
                                                 title: "Download File",
                                                 content: data.attchFile ?? "",
                                                 isForDownload: true,
                                                 fileURL:
-                                                    ATTACH_DOWNLOAD_KASBON +
-                                                        data.attchFile
-                                                            .toString(),
+                                                ATTACH_DOWNLOAD_KASBON +
+                                                    data.attchFile
+                                                        .toString(),
                                               ),
                                             ),
                                           ],
@@ -391,9 +395,9 @@ class _KasbonDetailPageState extends State<KasbonDetailPage> {
                                               children: [
                                                 CustomTextInput(
                                                   textEditController:
-                                                      messageController,
+                                                  messageController,
                                                   hintTextString:
-                                                      'Isi Tanggapan',
+                                                  'Isi Tanggapan',
                                                   inputType: InputType.Default,
                                                   enableBorder: true,
                                                   minLines: 3,
@@ -409,9 +413,9 @@ class _KasbonDetailPageState extends State<KasbonDetailPage> {
                                                   },
                                                   textColor: Colors.black,
                                                   errorMessage:
-                                                      'Username cant be empty',
+                                                  'Username cant be empty',
                                                   labelText:
-                                                      'Tanggapan/Komentar/Review',
+                                                  'Tanggapan/Komentar/Review',
                                                 ),
                                               ],
                                             ),
@@ -460,10 +464,6 @@ class _KasbonDetailPageState extends State<KasbonDetailPage> {
                                   physics: const NeverScrollableScrollPhysics(),
                                   itemBuilder: (context, index) {
                                     final pbjItem = commentList[index];
-                                    var isApproved = false;
-                                    if (pbjItem.status != "Y") {
-                                      isApproved = true;
-                                    }
                                     return UserCommentWidget(
                                       comment: pbjItem.komen ?? "",
                                       userName: pbjItem.approve ?? "",
@@ -476,7 +476,7 @@ class _KasbonDetailPageState extends State<KasbonDetailPage> {
                                 var emptyState = Container();
                                 return Column(
                                   crossAxisAlignment:
-                                      CrossAxisAlignment.stretch,
+                                  CrossAxisAlignment.stretch,
                                   children: [
                                     SizedBox(
                                       height: 20,
@@ -504,8 +504,8 @@ class _KasbonDetailPageState extends State<KasbonDetailPage> {
                               if (state is KasbonStateInitial) {}
                               if (state is KasbonStateLoading) {
                                 bool isCorrectState =
-                                    (state.type == KasbonEActionType.APPROVE ||
-                                        state.type == KasbonEActionType.REJECT);
+                                (state.type == KasbonEActionType.APPROVE ||
+                                    state.type == KasbonEActionType.REJECT);
                                 if (isCorrectState) {
                                   return Center(
                                     child: CupertinoActivityIndicator(),
@@ -518,14 +518,14 @@ class _KasbonDetailPageState extends State<KasbonDetailPage> {
                                   margin: EdgeInsets.only(left: 20, right: 20),
                                   child: Column(
                                     crossAxisAlignment:
-                                        CrossAxisAlignment.stretch,
+                                    CrossAxisAlignment.stretch,
                                     children: [
                                       ElevatedButton(
                                         onPressed: () {
                                           showPinInputDialog(
                                               type: KasbonEActionType.APPROVE,
                                               description:
-                                                  "Anda Yakin Ingin Mengapprove Approval ini ?");
+                                              "Anda Yakin Ingin Mengapprove Approval ini ?");
                                         },
                                         child: Text(
                                           'Approve',
@@ -544,7 +544,7 @@ class _KasbonDetailPageState extends State<KasbonDetailPage> {
                                           showPinInputDialog(
                                               type: KasbonEActionType.REJECT,
                                               description:
-                                                  "Anda Yakin Ingin Menolak Approval ini ?");
+                                              "Anda Yakin Ingin Menolak Approval ini ?");
                                         },
                                         child: Text(
                                           'Reject',
@@ -601,6 +601,7 @@ class _KasbonDetailPageState extends State<KasbonDetailPage> {
 
                               if (state is KasbonStateSuccess) {
                                 showDialog(
+                                  barrierDismissible: false,
                                   context: context,
                                   builder: (BuildContext context) {
                                     var text = "";
@@ -627,7 +628,9 @@ class _KasbonDetailPageState extends State<KasbonDetailPage> {
                                             Navigator.of(context)
                                                 .pop(); // Go back to the previous page
                                           },
-                                          child: Text('OK'),
+                                          child: Text('OK',
+                                              style: TextStyle(
+                                                  color: Colors.blue)),
                                         ),
                                       ],
                                     );
@@ -650,9 +653,8 @@ class _KasbonDetailPageState extends State<KasbonDetailPage> {
     );
   }
 
-  void showPinInputDialog(
-      {required KasbonEActionType type,
-      String description = 'Masukkan PIN anda'}) {
+  void showPinInputDialog({required KasbonEActionType type,
+    String description = 'Masukkan PIN anda'}) {
     var pin = "";
     showDialog(
       context: context,
@@ -686,7 +688,7 @@ class _KasbonDetailPageState extends State<KasbonDetailPage> {
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: Text('Cancel'),
+              child: Text('Cancel', style: TextStyle(color: Colors.red)),
             ),
             CupertinoDialogAction(
               onPressed: () {
@@ -720,7 +722,7 @@ class _KasbonDetailPageState extends State<KasbonDetailPage> {
                       this.messageController.text.toString());
                 }
               },
-              child: Text('OK'),
+              child: Text('OK', style: TextStyle(color: Colors.blue)),
             ),
           ],
         );

@@ -228,7 +228,9 @@ class _ChangePinPageState extends State<ChangePinPage> {
                                                 "Anda yakin ingin mengganti pin anda ?"),
                                             actions: <Widget>[
                                               CupertinoDialogAction(
-                                                child: Text("Batal"),
+                                                child: Text("Batal",
+                                                    style: TextStyle(
+                                                        color: Colors.red)),
                                                 onPressed: () {
                                                   // Perform any action here
                                                   // Dismiss the dialog
@@ -237,7 +239,9 @@ class _ChangePinPageState extends State<ChangePinPage> {
                                               ),
                                               CupertinoDialogAction(
                                                 isDefaultAction: true,
-                                                child: Text("Ya, Simpan"),
+                                                child: Text("Ya, Simpan",
+                                                    style: TextStyle(
+                                                        color: Colors.blue)),
                                                 onPressed: () {
                                                   loginBloc.add(
                                                       ChangePinPasswordEvent(

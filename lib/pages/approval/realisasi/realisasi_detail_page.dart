@@ -1,3 +1,7 @@
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:modernland_signflow/bloc/all_approval/approval_main_page_bloc.dart';
 import 'package:modernland_signflow/bloc/realisasi/realisasi_action_bloc.dart';
 import 'package:modernland_signflow/bloc/realisasi/realisasi_action_event.dart';
@@ -19,15 +23,10 @@ import 'package:modernland_signflow/widget/approval/item_approval_widget.dart';
 import 'package:modernland_signflow/widget/common/user_comment_widget.dart';
 import 'package:modernland_signflow/widget/core/blurred_dialog.dart';
 import 'package:modernland_signflow/widget/core/custom_text_input.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:quickalert/quickalert.dart';
 
 class RealisasiDetailPage extends StatefulWidget {
-  const RealisasiDetailPage(
-      {Key? key, required this.noRealisasi, this.isFromHistory = false})
+  const RealisasiDetailPage({Key? key, required this.noRealisasi, this.isFromHistory = false})
       : super(key: key);
   final String noRealisasi;
   final bool isFromHistory;
@@ -176,11 +175,11 @@ class _RealisasiDetailPageState extends State<RealisasiDetailPage> {
                                 children: [
                                   Container(
                                     margin:
-                                        EdgeInsets.only(left: 20, right: 20),
+                                    EdgeInsets.only(left: 20, right: 20),
                                     child: Row(
                                       mainAxisSize: MainAxisSize.max,
                                       crossAxisAlignment:
-                                          CrossAxisAlignment.start,
+                                      CrossAxisAlignment.start,
                                       children: [
                                         Text(
                                           "Detail Request #" +
@@ -247,7 +246,7 @@ class _RealisasiDetailPageState extends State<RealisasiDetailPage> {
                                     width: MediaQuery.sizeOf(context).width,
                                     child: Column(
                                       crossAxisAlignment:
-                                          CrossAxisAlignment.stretch,
+                                      CrossAxisAlignment.stretch,
                                       children: [
                                         Text(
                                           "Detail Dokumen",
@@ -263,7 +262,7 @@ class _RealisasiDetailPageState extends State<RealisasiDetailPage> {
                                         ),
                                         Row(
                                           crossAxisAlignment:
-                                              CrossAxisAlignment.start,
+                                          CrossAxisAlignment.start,
                                           children: [
                                             Expanded(
                                               child: DocumentDetailWidget(
@@ -275,20 +274,20 @@ class _RealisasiDetailPageState extends State<RealisasiDetailPage> {
                                               child: DocumentDetailWidget(
                                                 title: "Tanggal",
                                                 content:
-                                                    data.tglRealisasi ?? "",
+                                                data.tglRealisasi ?? "",
                                               ),
                                             ),
                                           ],
                                         ),
                                         Row(
                                           crossAxisAlignment:
-                                              CrossAxisAlignment.start,
+                                          CrossAxisAlignment.start,
                                           children: [
                                             Expanded(
                                                 child: DocumentDetailWidget(
-                                              title: "Nama Karyawan",
-                                              content: data.namaUser ?? "",
-                                            )),
+                                                  title: "Nama Karyawan",
+                                                  content: data.namaUser ?? "",
+                                                )),
                                             Expanded(
                                               child: DocumentDetailWidget(
                                                 title: "Department",
@@ -299,27 +298,27 @@ class _RealisasiDetailPageState extends State<RealisasiDetailPage> {
                                         ),
                                         Row(
                                           crossAxisAlignment:
-                                              CrossAxisAlignment.start,
+                                          CrossAxisAlignment.start,
                                           children: [
                                             Expanded(
                                                 child: DocumentDetailWidget(
-                                              title: "View Detail",
-                                              content: "Klik Disini",
-                                              fileURL: DOC_VIEW_REALISASI +
-                                                  data.idRealisasi.toString(),
-                                              // fileURL: DOC_VIEW_REALISASI +
-                                              //     (extractRealisasiId(data.noRealisasi??"")),
-                                            )),
+                                                  title: "View Detail",
+                                                  content: "Klik Disini",
+                                                  fileURL: DOC_VIEW_REALISASI +
+                                                      data.idRealisasi.toString(),
+                                                  // fileURL: DOC_VIEW_REALISASI +
+                                                  //     (extractRealisasiId(data.noRealisasi??"")),
+                                                )),
                                             Expanded(
                                               child: DocumentDetailWidget(
                                                 title:
-                                                    "Lihat/Download Attachment",
+                                                "Lihat/Download Attachment",
                                                 content: data.attchFile ?? "",
                                                 isForDownload: true,
                                                 fileURL:
-                                                    ATTACH_DOWNLOAD_REALISASI +
-                                                        data.attchFile
-                                                            .toString(),
+                                                ATTACH_DOWNLOAD_REALISASI +
+                                                    data.attchFile
+                                                        .toString(),
                                               ),
                                             ),
                                           ],
@@ -344,9 +343,9 @@ class _RealisasiDetailPageState extends State<RealisasiDetailPage> {
                                               children: [
                                                 CustomTextInput(
                                                   textEditController:
-                                                      messageController,
+                                                  messageController,
                                                   hintTextString:
-                                                      'Isi Tanggapan',
+                                                  'Isi Tanggapan',
                                                   inputType: InputType.Default,
                                                   enableBorder: true,
                                                   minLines: 3,
@@ -362,9 +361,9 @@ class _RealisasiDetailPageState extends State<RealisasiDetailPage> {
                                                   },
                                                   textColor: Colors.black,
                                                   errorMessage:
-                                                      'Username cant be empty',
+                                                  'Username cant be empty',
                                                   labelText:
-                                                      'Tanggapan/Komentar/Review',
+                                                  'Tanggapan/Komentar/Review',
                                                 ),
                                               ],
                                             ),
@@ -407,7 +406,7 @@ class _RealisasiDetailPageState extends State<RealisasiDetailPage> {
                                       userName: pbjItem.approve,
                                       postingDate: pbjItem.tglPermintaan,
                                       bottomText:
-                                          "Status : " + pbjItem.statusApprove,
+                                      "Status : " + pbjItem.statusApprove,
                                     );
                                   },
                                 );
@@ -417,7 +416,7 @@ class _RealisasiDetailPageState extends State<RealisasiDetailPage> {
                                     alignment: Alignment.center,
                                     child: Column(
                                       mainAxisAlignment:
-                                          MainAxisAlignment.center,
+                                      MainAxisAlignment.center,
                                       children: [
                                         Image.network(
                                           'http://feylabs.my.id/fm/mdln_asset/mdln_empty_image.png',
@@ -437,7 +436,7 @@ class _RealisasiDetailPageState extends State<RealisasiDetailPage> {
                                 }
                                 return Column(
                                   crossAxisAlignment:
-                                      CrossAxisAlignment.stretch,
+                                  CrossAxisAlignment.stretch,
                                   children: [
                                     Container(
                                       height: 1,
@@ -467,7 +466,7 @@ class _RealisasiDetailPageState extends State<RealisasiDetailPage> {
                             listener: (context, state) {
                               if (state is RealisasiStateFailure) {
                                 if (state.type ==
-                                        RealisasiEActionType.APPROVE ||
+                                    RealisasiEActionType.APPROVE ||
                                     state.type == RealisasiEActionType.REJECT) {
                                   QuickAlert.show(
                                     context: context,
@@ -479,7 +478,7 @@ class _RealisasiDetailPageState extends State<RealisasiDetailPage> {
 
                               if (state is RealisasiStateSuccess) {
                                 if (state.type ==
-                                        RealisasiEActionType.APPROVE ||
+                                    RealisasiEActionType.APPROVE ||
                                     state.type == RealisasiEActionType.REJECT) {
                                   showDialog(
                                     context: context,
@@ -514,7 +513,9 @@ class _RealisasiDetailPageState extends State<RealisasiDetailPage> {
                                                 Navigator.of(context)
                                                     .pop(); // Go back to the previous page
                                               },
-                                              child: Text('OK'),
+                                              child: Text('OK',
+                                                  style: TextStyle(
+                                                      color: Colors.blue)),
                                             ),
                                           ],
                                         ),
@@ -536,31 +537,31 @@ class _RealisasiDetailPageState extends State<RealisasiDetailPage> {
                                 if (widget.isFromHistory != true) {
                                   return Container(
                                     margin:
-                                        EdgeInsets.only(left: 20, right: 20),
+                                    EdgeInsets.only(left: 20, right: 20),
                                     child: Column(
                                       crossAxisAlignment:
-                                          CrossAxisAlignment.stretch,
+                                      CrossAxisAlignment.stretch,
                                       children: [
                                         ElevatedButton(
                                           onPressed: () {
                                             showPinInputDialog(
                                                 noKasbon:
-                                                    state.data.noKasbon ?? "",
+                                                state.data.noKasbon ?? "",
                                                 idRealisasi:
-                                                    state.data.idRealisasi ??
-                                                        "",
+                                                state.data.idRealisasi ??
+                                                    "",
                                                 noRealisasi:
-                                                    state.data.noRealisasi ??
-                                                        "",
+                                                state.data.noRealisasi ??
+                                                    "",
                                                 type:
-                                                    ApprovalActionType.APPROVE,
+                                                ApprovalActionType.APPROVE,
                                                 description:
-                                                    "Anda Yakin Ingin Mengapprove Approval ini ?");
+                                                "Anda Yakin Ingin Mengapprove Approval ini ?");
                                           },
                                           child: Text(
                                             'Approve',
                                             style:
-                                                MyTheme.myStyleButtonTextStyle,
+                                            MyTheme.myStyleButtonTextStyle,
                                           ),
                                           style: ElevatedButton.styleFrom(
                                             backgroundColor: Color(0xff33DC9F),
@@ -575,20 +576,20 @@ class _RealisasiDetailPageState extends State<RealisasiDetailPage> {
                                             showPinInputDialog(
                                                 type: ApprovalActionType.REJECT,
                                                 noKasbon:
-                                                    state.data.noKasbon ?? "",
+                                                state.data.noKasbon ?? "",
                                                 idRealisasi:
-                                                    state.data.idRealisasi ??
-                                                        "",
+                                                state.data.idRealisasi ??
+                                                    "",
                                                 noRealisasi:
-                                                    state.data.noRealisasi ??
-                                                        "",
+                                                state.data.noRealisasi ??
+                                                    "",
                                                 description:
-                                                    "Anda Yakin Ingin Menolak Approval ini ?");
+                                                "Anda Yakin Ingin Menolak Approval ini ?");
                                           },
                                           child: Text(
                                             'Reject',
                                             style:
-                                                MyTheme.myStyleButtonTextStyle,
+                                            MyTheme.myStyleButtonTextStyle,
                                           ),
                                           style: ElevatedButton.styleFrom(
                                             backgroundColor: Color(0xffFF5B5B),
@@ -674,7 +675,9 @@ class _RealisasiDetailPageState extends State<RealisasiDetailPage> {
                                               Navigator.of(context)
                                                   .pop(); // Go back to the previous page
                                             },
-                                            child: Text('OK'),
+                                            child: Text('OK',
+                                                style: TextStyle(
+                                                    color: Colors.blue)),
                                           ),
                                         ],
                                       ),
@@ -738,7 +741,7 @@ class _RealisasiDetailPageState extends State<RealisasiDetailPage> {
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: Text('Cancel'),
+              child: Text('Cancel', style: TextStyle(color: Colors.red)),
             ),
             CupertinoDialogAction(
               onPressed: () {
@@ -773,7 +776,7 @@ class _RealisasiDetailPageState extends State<RealisasiDetailPage> {
                       this.messageController.text.toString());
                 }
               },
-              child: Text('OK'),
+              child: Text('OK', style: TextStyle(color: Colors.blue)),
             ),
           ],
         );

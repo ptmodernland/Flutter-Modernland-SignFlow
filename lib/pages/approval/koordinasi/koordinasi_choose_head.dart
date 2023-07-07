@@ -106,7 +106,8 @@ class _ApprovalListState extends State<ApprovalList> {
                                       .pop(); // Go back to the previous page
                                   Navigator.of(context).pop(); //
                                 },
-                                child: Text('OK'),
+                                child: Text('OK',
+                                    style: TextStyle(color: Colors.blue)),
                               ),
                             ],
                           ),
@@ -288,7 +289,7 @@ class _ApprovalListState extends State<ApprovalList> {
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: Text('Cancel'),
+              child: Text('Cancel', style: TextStyle(color: Colors.red)),
             ),
             CupertinoDialogAction(
               onPressed: () {
@@ -301,7 +302,7 @@ class _ApprovalListState extends State<ApprovalList> {
                       pin: pin);
                 }
               },
-              child: Text('OK'),
+              child: Text('OK', style: TextStyle(color: Colors.blue)),
             ),
           ],
         );

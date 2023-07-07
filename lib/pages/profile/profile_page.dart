@@ -165,13 +165,29 @@ class _ProfilePageState extends State<ProfilePage> {
                     BlocListener<LoginBloc, LoginState>(
                       listener: (context, state) {
                         if (state is AuthStateLogoutSuccess) {
-                          QuickAlert.show(
-                              context: context,
-                              type: QuickAlertType.success,
-                              text: state.message.toString(),
-                              onConfirmBtnTap: () {
-                                proceedLogoutLocally(context);
-                              });
+                          showDialog(
+                            barrierDismissible: false,
+                            context: context,
+                            builder: (BuildContext context) {
+                              var text = "Logout Berhasil";
+                              return CupertinoAlertDialog(
+                                title: const Text(
+                                  'Success',
+                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                ),
+                                content: Text(text),
+                                actions: <Widget>[
+                                  CupertinoDialogAction(
+                                    onPressed: () {
+                                      proceedLogoutLocally(context);
+                                    },
+                                    child: Text('OK',
+                                        style: TextStyle(color: Colors.blue)),
+                                  ),
+                                ],
+                              );
+                            },
+                          );
                         }
                         if (state is AuthStateFailure) {
                           QuickAlert.show(
@@ -225,7 +241,10 @@ class _ProfilePageState extends State<ProfilePage> {
                                         "Anda akan keluar dari aplikasi ini. Apakah Anda yakin?"),
                                     actions: <Widget>[
                                       CupertinoDialogAction(
-                                        child: Text("Kembali ke Aplikasi"),
+                                        child: Text(
+                                          "Kembali ke Aplikasi",
+                                          style: TextStyle(color: Colors.red),
+                                        ),
                                         onPressed: () {
                                           // Perform any action here
                                           // Dismiss the dialog
@@ -234,7 +253,9 @@ class _ProfilePageState extends State<ProfilePage> {
                                       ),
                                       CupertinoDialogAction(
                                         isDefaultAction: true,
-                                        child: Text("Ya"),
+                                        child: Text("Ya",
+                                            style:
+                                                TextStyle(color: Colors.blue)),
                                         onPressed: () {
                                           loginBloc.add(
                                               LogoutButtonPressed(username));
