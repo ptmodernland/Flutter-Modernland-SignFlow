@@ -122,18 +122,13 @@ class _ChangePinPageState extends State<ChangePinPage> {
                                     icon: Icon(Icons.arrow_back_ios,
                                         color: Colors.white),
                                   ),
-                                  Spacer(),
-                                  Align(
-                                    alignment: Alignment.center,
-                                    child: Text(
-                                      "Ganti Pin",
-                                      style: MyTheme.myStylePrimaryTextStyle
-                                          .copyWith(
-                                              color: Colors.white,
-                                              fontWeight: FontWeight.w800),
-                                    ),
+                                  Text(
+                                    "Ganti Pin",
+                                    style: MyTheme.myStylePrimaryTextStyle
+                                        .copyWith(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.w800),
                                   ),
-                                  Spacer(),
                                 ],
                               ),
                             ),
@@ -228,7 +223,9 @@ class _ChangePinPageState extends State<ChangePinPage> {
                                                 "Anda yakin ingin mengganti pin anda ?"),
                                             actions: <Widget>[
                                               CupertinoDialogAction(
-                                                child: Text("Batal"),
+                                                child: Text("Batal",
+                                                    style: TextStyle(
+                                                        color: Colors.red)),
                                                 onPressed: () {
                                                   // Perform any action here
                                                   // Dismiss the dialog
@@ -237,7 +234,9 @@ class _ChangePinPageState extends State<ChangePinPage> {
                                               ),
                                               CupertinoDialogAction(
                                                 isDefaultAction: true,
-                                                child: Text("Ya, Simpan"),
+                                                child: Text("Ya, Simpan",
+                                                    style: TextStyle(
+                                                        color: Colors.blue)),
                                                 onPressed: () {
                                                   loginBloc.add(
                                                       ChangePinPasswordEvent(

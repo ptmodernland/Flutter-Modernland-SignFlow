@@ -614,6 +614,7 @@ class _DetailComparePageState extends State<DetailComparePage> {
 
                               if (state is CompareStateSuccess) {
                                 showDialog(
+                                  barrierDismissible: false,
                                   context: context,
                                   builder: (BuildContext context) {
                                     var text = "";
@@ -646,7 +647,9 @@ class _DetailComparePageState extends State<DetailComparePage> {
                                               Navigator.of(context)
                                                   .pop(); // Go back to the previous page
                                             },
-                                            child: Text('OK'),
+                                            child: Text('OK',
+                                                style: TextStyle(
+                                                    color: Colors.blue)),
                                           ),
                                         ],
                                       ),
@@ -706,7 +709,7 @@ class _DetailComparePageState extends State<DetailComparePage> {
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: Text('Cancel'),
+              child: Text('Cancel', style: TextStyle(color: Colors.red)),
             ),
             CupertinoDialogAction(
               onPressed: () {
@@ -740,7 +743,7 @@ class _DetailComparePageState extends State<DetailComparePage> {
                       this.messageController.text.toString());
                 }
               },
-              child: Text('OK'),
+              child: Text('OK', style: TextStyle(color: Colors.blue)),
             ),
           ],
         );

@@ -62,12 +62,16 @@ class DocumentDetailWidget extends StatelessWidget {
                           context: context,
                           builder: (BuildContext context) {
                             return CupertinoAlertDialog(
-                              title: Text('Download File'),
+                              title: Text('Download File',
+                                  style: TextStyle(
+                                      // color: Colors.blue
+                                      )),
                               content: Text(
                                   'This action will open your browser and downloading the file. Do you want to continue?'),
                               actions: [
                                 CupertinoDialogAction(
-                                  child: Text('Cancel'),
+                                  child: Text('Cancel',
+                                      style: TextStyle(color: Colors.red)),
                                   onPressed: () {
                                     Navigator.of(context).pop();
                                   },

@@ -115,34 +115,29 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
                             ),
                             width: double.infinity,
                           ),
-                          Align(
-                            alignment: Alignment.center,
-                            child: Container(
-                              margin:
-                              EdgeInsets.only(left: 30, right: 30, top: 10),
-                              child: Row(
-                                children: [
-                                  IconButton(
-                                    onPressed: () {
-                                      Navigator.pop(context);
-                                    },
-                                    icon: Icon(Icons.arrow_back_ios,
-                                        color: Colors.white),
+                          Container(
+                            margin:
+                                EdgeInsets.only(left: 30, right: 30, top: 10),
+                            child: Row(
+                              children: [
+                                IconButton(
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                  },
+                                  icon: Icon(Icons.arrow_back_ios,
+                                      color: Colors.white),
+                                ),
+                                Align(
+                                  alignment: Alignment.center,
+                                  child: Text(
+                                    "Ganti Password",
+                                    style: MyTheme.myStylePrimaryTextStyle
+                                        .copyWith(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.w800),
                                   ),
-                                  Spacer(),
-                                  Align(
-                                    alignment: Alignment.center,
-                                    child: Text(
-                                      "Ganti Password",
-                                      style: MyTheme.myStylePrimaryTextStyle
-                                          .copyWith(
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.w800),
-                                    ),
-                                  ),
-                                  Spacer(),
-                                ],
-                              ),
+                                ),
+                              ],
                             ),
                           ),
                         ],
@@ -260,28 +255,29 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
                                                     "Anda yakin ingin mengganti password anda ?"),
                                                 actions: <Widget>[
                                                   CupertinoDialogAction(
-                                                    child: Text("Batal"),
-                                                    onPressed: () {
-                                                      // Perform any action here
-                                                      // Dismiss the dialog
-                                                      Navigator.of(context)
-                                                          .pop();
-                                                    },
-                                                  ),
+                                                child: Text("Batal",
+                                                    style: TextStyle(
+                                                        color: Colors.red)),
+                                                onPressed: () {
+                                                  // Perform any action here
+                                                  // Dismiss the dialog
+                                                  Navigator.of(context).pop();
+                                                },
+                                              ),
                                                   CupertinoDialogAction(
                                                     isDefaultAction: true,
-                                                    child: Text("Ya, Simpan"),
-                                                    onPressed: () {
-                                                      loginBloc.add(
-                                                          ChangePinPasswordEvent(
-                                                              newPassword:
-                                                              _newPasswordController
-                                                                  .text,
-                                                              confirmNewPassword:
-                                                              _confirmNewPasswordController
-                                                                  .text));
-                                                      Navigator.of(context)
-                                                          .pop();
+                                                child: Text("Ya, Simpan",
+                                                    style: TextStyle(
+                                                        color: Colors.blue)),
+                                                onPressed: () {
+                                                  loginBloc.add(ChangePinPasswordEvent(
+                                                      newPassword:
+                                                          _newPasswordController
+                                                              .text,
+                                                      confirmNewPassword:
+                                                          _confirmNewPasswordController
+                                                              .text));
+                                                  Navigator.of(context).pop();
                                                     },
                                                   ),
                                                 ],

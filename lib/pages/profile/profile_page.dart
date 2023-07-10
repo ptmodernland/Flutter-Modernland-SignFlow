@@ -101,7 +101,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 child: Stack(
                   children: [
                     Container(
-                      margin: EdgeInsets.all(20),
+                      margin: EdgeInsets.only(left: 20, right: 20, top: 0),
                       child: Image.asset(
                         "asset/img/icons/logo_modernland.png",
                         width: screenWidth * 0.2,
@@ -116,8 +116,46 @@ class _ProfilePageState extends State<ProfilePage> {
                           repeat: ImageRepeat.repeat,
                         ),
                       ),
-                      height: 210,
+                      height: 200,
                       width: double.infinity,
+                      child: Container(
+                        margin: EdgeInsets.only(left: 30, right: 30, top: 0),
+                      ),
+                    ),
+                    Container(
+                      margin: EdgeInsets.only(top: 50),
+                      child: Align(
+                        alignment: Alignment.centerLeft,
+                        // Align the Row to the center-left
+                        child: Row(
+                          children: [
+                            SizedBox(
+                              width: 20,
+                            ),
+                            IconButton(
+                              icon: Icon(Icons.arrow_back),
+                              color: Colors.white,
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                            ),
+                            SizedBox(
+                              width: 20,
+                            ),
+                            Flexible(
+                              child: Text(
+                                "Profile",
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
+                                style: MyTheme.myStylePrimaryTextStyle.copyWith(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w800,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
                     ),
                   ],
                 ),
@@ -130,13 +168,29 @@ class _ProfilePageState extends State<ProfilePage> {
                     BlocListener<LoginBloc, LoginState>(
                       listener: (context, state) {
                         if (state is AuthStateLogoutSuccess) {
-                          QuickAlert.show(
-                              context: context,
-                              type: QuickAlertType.success,
-                              text: state.message.toString(),
-                              onConfirmBtnTap: () {
-                                proceedLogoutLocally(context);
-                              });
+                          showDialog(
+                            barrierDismissible: false,
+                            context: context,
+                            builder: (BuildContext context) {
+                              var text = "Logout Berhasil";
+                              return CupertinoAlertDialog(
+                                title: const Text(
+                                  'Success',
+                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                ),
+                                content: Text(text),
+                                actions: <Widget>[
+                                  CupertinoDialogAction(
+                                    onPressed: () {
+                                      proceedLogoutLocally(context);
+                                    },
+                                    child: Text('OK',
+                                        style: TextStyle(color: Colors.blue)),
+                                  ),
+                                ],
+                              );
+                            },
+                          );
                         }
                         if (state is AuthStateFailure) {
                           QuickAlert.show(
@@ -190,7 +244,10 @@ class _ProfilePageState extends State<ProfilePage> {
                                         "Anda akan keluar dari aplikasi ini. Apakah Anda yakin?"),
                                     actions: <Widget>[
                                       CupertinoDialogAction(
-                                        child: Text("Kembali ke Aplikasi"),
+                                        child: Text(
+                                          "Kembali ke Aplikasi",
+                                          style: TextStyle(color: Colors.red),
+                                        ),
                                         onPressed: () {
                                           // Perform any action here
                                           // Dismiss the dialog
@@ -199,7 +256,9 @@ class _ProfilePageState extends State<ProfilePage> {
                                       ),
                                       CupertinoDialogAction(
                                         isDefaultAction: true,
-                                        child: Text("Ya"),
+                                        child: Text("Ya",
+                                            style:
+                                                TextStyle(color: Colors.blue)),
                                         onPressed: () {
                                           loginBloc.add(
                                               LogoutButtonPressed(username));
@@ -491,7 +550,7 @@ class _ProfilePageState extends State<ProfilePage> {
         },
         transitionDuration: Duration(milliseconds: 1500),
       ),
-          (route) => false,
+      (route) => false,
     );
   }
 

@@ -1,3 +1,7 @@
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:modernland_signflow/bloc/all_approval/approval_main_page_bloc.dart';
 import 'package:modernland_signflow/bloc/all_approval/approval_main_page_event.dart';
 import 'package:modernland_signflow/bloc/all_approval/approval_main_page_state.dart';
@@ -18,10 +22,6 @@ import 'package:modernland_signflow/widget/approval/document_detail_widget.dart'
 import 'package:modernland_signflow/widget/approval/item_approval_widget.dart';
 import 'package:modernland_signflow/widget/common/user_comment_widget.dart';
 import 'package:modernland_signflow/widget/core/custom_text_input.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:quickalert/quickalert.dart';
 
 class DetailPBJPage extends StatefulWidget {
@@ -145,7 +145,7 @@ class _DetailPBJPageState extends State<DetailPBJPage> {
                           children: [
                             Container(
                               margin:
-                                  EdgeInsets.only(top: 20, left: 0, right: 0),
+                              EdgeInsets.only(top: 20, left: 0, right: 0),
                               width: double.infinity,
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.vertical(
@@ -156,11 +156,11 @@ class _DetailPBJPageState extends State<DetailPBJPage> {
                                   children: [
                                     Container(
                                       margin:
-                                          EdgeInsets.only(left: 20, right: 20),
+                                      EdgeInsets.only(left: 20, right: 20),
                                       child: Row(
                                         mainAxisSize: MainAxisSize.max,
                                         crossAxisAlignment:
-                                            CrossAxisAlignment.start,
+                                        CrossAxisAlignment.start,
                                         children: [
                                           Text(
                                             "Detail Request #" +
@@ -228,7 +228,7 @@ class _DetailPBJPageState extends State<DetailPBJPage> {
                                       width: MediaQuery.sizeOf(context).width,
                                       child: Column(
                                         crossAxisAlignment:
-                                            CrossAxisAlignment.stretch,
+                                        CrossAxisAlignment.stretch,
                                         children: [
                                           SizedBox(
                                             height: 20,
@@ -248,7 +248,7 @@ class _DetailPBJPageState extends State<DetailPBJPage> {
                                           ),
                                           Row(
                                             crossAxisAlignment:
-                                                CrossAxisAlignment.start,
+                                            CrossAxisAlignment.start,
                                             children: [
                                               Expanded(
                                                 child: DocumentDetailWidget(
@@ -266,13 +266,13 @@ class _DetailPBJPageState extends State<DetailPBJPage> {
                                           ),
                                           Row(
                                             crossAxisAlignment:
-                                                CrossAxisAlignment.start,
+                                            CrossAxisAlignment.start,
                                             children: [
                                               Expanded(
                                                   child: DocumentDetailWidget(
-                                                title: "Nama Karyawan",
-                                                content: data.namaUser,
-                                              )),
+                                                    title: "Nama Karyawan",
+                                                    content: data.namaUser,
+                                                  )),
                                               Expanded(
                                                 child: DocumentDetailWidget(
                                                   title: "Department",
@@ -283,16 +283,16 @@ class _DetailPBJPageState extends State<DetailPBJPage> {
                                           ),
                                           Row(
                                             crossAxisAlignment:
-                                                CrossAxisAlignment.start,
+                                            CrossAxisAlignment.start,
                                             children: [
                                               Expanded(
                                                   child: DocumentDetailWidget(
-                                                title: "View Detail",
-                                                content: "Klik Disini",
-                                                fileURL: DOC_VIEW_PBJ +
-                                                    data.noPermintaan
-                                                        .toString(),
-                                              )),
+                                                    title: "View Detail",
+                                                    content: "Klik Disini",
+                                                    fileURL: DOC_VIEW_PBJ +
+                                                        data.noPermintaan
+                                                            .toString(),
+                                                  )),
                                               Expanded(
                                                 child: DocumentDetailWidget(
                                                   title: "Download File",
@@ -325,16 +325,16 @@ class _DetailPBJPageState extends State<DetailPBJPage> {
                                                 children: [
                                                   CustomTextInput(
                                                     textEditController:
-                                                        messageController,
+                                                    messageController,
                                                     hintTextString:
-                                                        'Isi Tanggapan',
+                                                    'Isi Tanggapan',
                                                     inputType:
-                                                        InputType.Default,
+                                                    InputType.Default,
                                                     enableBorder: true,
                                                     minLines: 3,
                                                     themeColor:
-                                                        Theme.of(context)
-                                                            .primaryColor,
+                                                    Theme.of(context)
+                                                        .primaryColor,
                                                     cornerRadius: 18.0,
                                                     textValidator: (value) {
                                                       if (value?.isEmpty ??
@@ -345,9 +345,9 @@ class _DetailPBJPageState extends State<DetailPBJPage> {
                                                     },
                                                     textColor: Colors.black,
                                                     errorMessage:
-                                                        'Username cant be empty',
+                                                    'Username cant be empty',
                                                     labelText:
-                                                        'Tanggapan/Komentar/Review',
+                                                    'Tanggapan/Komentar/Review',
                                                   ),
                                                 ],
                                               ),
@@ -379,7 +379,7 @@ class _DetailPBJPageState extends State<DetailPBJPage> {
                                     itemCount: commentList.length,
                                     shrinkWrap: true,
                                     physics:
-                                        const NeverScrollableScrollPhysics(),
+                                    const NeverScrollableScrollPhysics(),
                                     itemBuilder: (context, index) {
                                       final pbjItem = commentList[index];
                                       var isApproved = false;
@@ -396,7 +396,7 @@ class _DetailPBJPageState extends State<DetailPBJPage> {
                                         userName: pbjItem.approve,
                                         postingDate: pbjItem.tglPermintaan,
                                         bottomText:
-                                            "Status : " + pbjItem.statusApprove,
+                                        "Status : " + pbjItem.statusApprove,
                                       );
                                     },
                                   );
@@ -407,7 +407,7 @@ class _DetailPBJPageState extends State<DetailPBJPage> {
                                       alignment: Alignment.center,
                                       child: Column(
                                         mainAxisAlignment:
-                                            MainAxisAlignment.center,
+                                        MainAxisAlignment.center,
                                         children: [
                                           Image.network(
                                             'http://feylabs.my.id/fm/mdln_asset/mdln_empty_image.png',
@@ -427,10 +427,10 @@ class _DetailPBJPageState extends State<DetailPBJPage> {
                                   }
                                   return Container(
                                     margin:
-                                        EdgeInsets.only(left: 10, right: 10),
+                                    EdgeInsets.only(left: 10, right: 10),
                                     child: Column(
                                       crossAxisAlignment:
-                                          CrossAxisAlignment.stretch,
+                                      CrossAxisAlignment.stretch,
                                       children: [
                                         SizedBox(
                                           height: 20,
@@ -457,7 +457,7 @@ class _DetailPBJPageState extends State<DetailPBJPage> {
                               listener: (context, state) {
                                 if (state is PBJStateFailure) {
                                   if (state.type ==
-                                          PBJEStateActionType.APPROVE ||
+                                      PBJEStateActionType.APPROVE ||
                                       state.type ==
                                           PBJEStateActionType.REJECT) {
                                     QuickAlert.show(
@@ -470,7 +470,7 @@ class _DetailPBJPageState extends State<DetailPBJPage> {
 
                                 if (state is PBJStateSuccess) {
                                   if (state.type ==
-                                          PBJEStateActionType.APPROVE ||
+                                      PBJEStateActionType.APPROVE ||
                                       state.type ==
                                           PBJEStateActionType.REJECT) {
                                     showDialog(
@@ -506,7 +506,9 @@ class _DetailPBJPageState extends State<DetailPBJPage> {
                                                   Navigator.of(context)
                                                       .pop(); // Go back to the previous page
                                                 },
-                                                child: Text('OK'),
+                                                child: Text('OK',
+                                                    style: TextStyle(
+                                                        color: Colors.blue)),
                                               ),
                                             ],
                                           ),
@@ -524,7 +526,7 @@ class _DetailPBJPageState extends State<DetailPBJPage> {
                                 if (state is PBJStateInitial) {}
                                 if (state is PBJStateLoading) {
                                   bool isCorrectState = (state.type ==
-                                          PBJEStateActionType.APPROVE ||
+                                      PBJEStateActionType.APPROVE ||
                                       state.type == PBJEStateActionType.REJECT);
                                   if (isCorrectState) {
                                     return Center(
@@ -536,23 +538,23 @@ class _DetailPBJPageState extends State<DetailPBJPage> {
                                 if (widget.isFromHistory != true) {
                                   return Container(
                                     margin:
-                                        EdgeInsets.only(left: 20, right: 20),
+                                    EdgeInsets.only(left: 20, right: 20),
                                     child: Column(
                                       crossAxisAlignment:
-                                          CrossAxisAlignment.stretch,
+                                      CrossAxisAlignment.stretch,
                                       children: [
                                         ElevatedButton(
                                           onPressed: () {
                                             showPinInputDialog(
                                                 type:
-                                                    ApprovalActionType.APPROVE,
+                                                ApprovalActionType.APPROVE,
                                                 description:
-                                                    "Anda Yakin Ingin Mengapprove Approval ini ?");
+                                                "Anda Yakin Ingin Mengapprove Approval ini ?");
                                           },
                                           child: Text(
                                             'Approve',
                                             style:
-                                                MyTheme.myStyleButtonTextStyle,
+                                            MyTheme.myStyleButtonTextStyle,
                                           ),
                                           style: ElevatedButton.styleFrom(
                                             backgroundColor: Color(0xff33DC9F),
@@ -567,12 +569,12 @@ class _DetailPBJPageState extends State<DetailPBJPage> {
                                             showPinInputDialog(
                                                 type: ApprovalActionType.REJECT,
                                                 description:
-                                                    "Anda Yakin Ingin Menolak Approval ini ?");
+                                                "Anda Yakin Ingin Menolak Approval ini ?");
                                           },
                                           child: Text(
                                             'Reject',
                                             style:
-                                                MyTheme.myStyleButtonTextStyle,
+                                            MyTheme.myStyleButtonTextStyle,
                                           ),
                                           style: ElevatedButton.styleFrom(
                                             backgroundColor: Color(0xffFF5B5B),
@@ -618,9 +620,8 @@ class _DetailPBJPageState extends State<DetailPBJPage> {
     );
   }
 
-  void showPinInputDialog(
-      {required ApprovalActionType type,
-      String description = 'Masukkan PIN anda'}) {
+  void showPinInputDialog({required ApprovalActionType type,
+    String description = 'Masukkan PIN anda'}) {
     var pin = "";
     showDialog(
       context: context,
@@ -654,7 +655,7 @@ class _DetailPBJPageState extends State<DetailPBJPage> {
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: Text('Cancel'),
+              child: Text('Cancel', style: TextStyle(color: Colors.red)),
             ),
             CupertinoDialogAction(
               onPressed: () {
@@ -685,7 +686,7 @@ class _DetailPBJPageState extends State<DetailPBJPage> {
                       this.messageController.text.toString());
                 }
               },
-              child: Text('OK'),
+              child: Text('OK', style: TextStyle(color: Colors.blue)),
             ),
           ],
         );

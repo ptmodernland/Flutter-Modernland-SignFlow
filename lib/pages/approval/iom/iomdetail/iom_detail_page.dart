@@ -1,3 +1,7 @@
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:modernland_signflow/bloc/iom/approval_action_cubit.dart';
 import 'package:modernland_signflow/bloc/iom/approval_comment_cubit.dart';
 import 'package:modernland_signflow/bloc/iom/approval_detail_cubit.dart';
@@ -18,10 +22,6 @@ import 'package:modernland_signflow/widget/approval/item_approval_widget.dart';
 import 'package:modernland_signflow/widget/common/user_comment_widget.dart';
 import 'package:modernland_signflow/widget/core/blurred_dialog.dart';
 import 'package:modernland_signflow/widget/core/custom_text_input.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:quickalert/quickalert.dart';
 
 class IomDetailPage extends StatefulWidget {
@@ -130,44 +130,39 @@ class _IomDetailPageState extends State<IomDetailPage> {
                               ),
                             ),
                             width: double.infinity,
-                            child: Stack(
-                              children: [
-                                Align(
-                                  alignment: Alignment.center,
-                                  child: Container(
-                                    margin: EdgeInsets.only(
-                                        left: 30, right: 30, top: 0),
-                                    child: Row(
-                                      children: [
-                                        IconButton(
-                                          icon: Icon(Icons.arrow_back),
-                                          color: Colors.white,
-                                          onPressed: () {
-                                            Navigator.of(context).pop();
-                                          },
-                                        ),
-                                        Flexible(
-                                          child: Text(
-                                            "#" +
-                                                widget.noIom +
-                                                (widget.isFromRekomendasi
-                                                    ? "\n(Rekomendasi)"
-                                                    : ""),
-                                            maxLines: 2,
-                                            overflow: TextOverflow.ellipsis,
-                                            style: MyTheme
-                                                .myStylePrimaryTextStyle
-                                                .copyWith(
-                                              color: Colors.white,
-                                              fontWeight: FontWeight.w800,
-                                            ),
-                                          ),
-                                        ),
-                                      ],
+                            child: Align(
+                              alignment: Alignment.center,
+                              child: Container(
+                                margin: EdgeInsets.only(
+                                    left: 30, right: 30, top: 0),
+                                child: Row(
+                                  children: [
+                                    IconButton(
+                                      icon: Icon(Icons.arrow_back),
+                                      color: Colors.white,
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                      },
                                     ),
-                                  ),
+                                    Flexible(
+                                      child: Text(
+                                        "#" +
+                                            widget.noIom +
+                                            (widget.isFromRekomendasi
+                                                ? "\n(Rekomendasi)"
+                                                : ""),
+                                        maxLines: 2,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: MyTheme.myStylePrimaryTextStyle
+                                            .copyWith(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.w800,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                              ],
+                              ),
                             ),
                           ),
                         ],
@@ -345,7 +340,7 @@ class _IomDetailPageState extends State<IomDetailPage> {
                                         children: [
                                           Expanded(
                                               child: DocumentDetailWidget(
-                                                title: "View Detail",
+                                            title: "View Detail",
                                             content: "Klik Disini",
                                             fileURL: DOC_VIEW_IOM +
                                                 (widget.idIom ?? ""),
@@ -450,6 +445,53 @@ class _IomDetailPageState extends State<IomDetailPage> {
                                     return false; // Prevent dialog from being dismissed by back button
                                   },
                                   child: CupertinoAlertDialog(
+                                    title: const Text(
+                                      'Success',
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                    content: Text(text),
+                                    actions: <Widget>[
+                                      CupertinoDialogAction(
+                                        onPressed: () {
+                                          Navigator.of(context)
+                                              .pop(); // Close the dialog
+                                          Navigator.of(context)
+                                              .pop(); // Go back to the previous page
+                                        },
+                                        child: const Text(
+                                          'OK',
+                                          style: TextStyle(color: Colors.blue),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              },
+                            );
+                          }
+
+                          if (state is ApprovalStateApproveError) {
+                            QuickAlert.show(
+                              context: context,
+                              type: QuickAlertType.error,
+                              text: state.message.toString(),
+                            );
+                          }
+
+                          if (state is ApprovalStateRejectSuccess) {
+                            showDialog(
+                              context: context,
+                              useSafeArea: false,
+                              builder: (BuildContext context) {
+                                var text = state.message;
+                                return WillPopScope(
+                                  onWillPop: () async {
+                                    Navigator.of(context)
+                                        .pop(); // Handle back button press
+                                    return false; // Prevent dialog from being dismissed by back button
+                                  },
+                                  child: CupertinoAlertDialog(
                                     title: Text(
                                       'Success',
                                       style: TextStyle(
@@ -472,27 +514,68 @@ class _IomDetailPageState extends State<IomDetailPage> {
                               },
                             );
                           }
-
-                          if (state is ApprovalStateApproveError) {
-                            QuickAlert.show(
-                              context: context,
-                              type: QuickAlertType.error,
-                              text: state.message.toString(),
-                            );
-                          }
-
-                          if (state is ApprovalStateRejectSuccess) {
-                            QuickAlert.show(
-                              context: context,
-                              type: QuickAlertType.success,
-                              text: state.message.toString(),
-                            );
-                          }
                           if (state is ApprovalStateRejectError) {
                             QuickAlert.show(
                               context: context,
                               type: QuickAlertType.error,
                               text: state.message.toString(),
+                            );
+                          }
+                        },
+                        child: Container(),
+                      ),
+                    ),
+                    BlocProvider<RekomendasiActionCubit>(
+                      create: (context) => rekomendasictionCubit,
+                      // Replace with your actual cubit instantiation
+                      child: BlocListener<RekomendasiActionCubit,
+                          RekomendasiState>(
+                        listener: (context, state) {
+                          // Navigate to next screen
+                          if (state is RekomendasiStateError) {
+                            QuickAlert.show(
+                              context: context,
+                              type: QuickAlertType.error,
+                              text: state.message.toString(),
+                            );
+                          }
+
+                          if (state is RekomendasiStateSuccess) {
+                            showDialog(
+                              context: context,
+                              useSafeArea: false,
+                              builder: (BuildContext context) {
+                                var text = state.message;
+                                return WillPopScope(
+                                  onWillPop: () async {
+                                    Navigator.of(context)
+                                        .pop(); // Handle back button press
+                                    return false; // Prevent dialog from being dismissed by back button
+                                  },
+                                  child: CupertinoAlertDialog(
+                                    title: Text(
+                                      'Success',
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                    content: Text(text),
+                                    actions: <Widget>[
+                                      CupertinoDialogAction(
+                                        onPressed: () {
+                                          Navigator.of(context)
+                                              .pop(); // Close the dialog
+                                          Navigator.of(context)
+                                              .pop(); // Go back to the previous page
+                                        },
+                                        child: Text(
+                                          'OK',
+                                          style: TextStyle(color: Colors.blue),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              },
                             );
                           }
                         },
@@ -700,7 +783,7 @@ class _IomDetailPageState extends State<IomDetailPage> {
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: Text('Cancel'),
+              child: Text('Cancel', style: TextStyle(color: Colors.red)),
             ),
             CupertinoDialogAction(
               onPressed: () {
@@ -749,7 +832,7 @@ class _IomDetailPageState extends State<IomDetailPage> {
                       this.messageController.text.toString());
                 }
               },
-              child: Text('OK'),
+              child: Text('OK', style: TextStyle(color: Colors.blue)),
             ),
           ],
         );
